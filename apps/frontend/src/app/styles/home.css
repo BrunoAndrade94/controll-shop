@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .home {
+    @apply flex flex-col justify-center items-center gap-10 h-dvh;
+  }
+  .image-background {
+    @apply bg-[url('../../../public/images/background/home.jpeg')] bg-cover;
+    /* @apply bg-zinc-700; */
+  }
+}

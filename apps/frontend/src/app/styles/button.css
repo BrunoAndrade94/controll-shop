@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .botao {
+    @apply flex justify-center items-center;
+    @apply gap-2 rounded-md px-4 h-10;
+    @apply text-sm font-semibold;
+    @apply text-lg uppercase;
+  }
+
+  .botao.azul {
+    @apply bg-blue-600;
+  }
+
+  .botao.azul:hover {
+    @apply bg-blue-700;
+  }
+
+  .botao.roxo {
+    @apply bg-purple-600;
+  }
+
+  .botao.roxo:hover {
+    @apply bg-purple-700;
+  }
+
+  .botao.vermelho {
+    @apply bg-red-600;
+  }
+
+  .botao.vermelho:hover {
+    @apply bg-red-700;
+  }
+
+  .botao.laranja {
+    @apply bg-orange-600;
+  }
+
+  .botao.laranja:hover {
+    @apply bg-orange-700;
+  }
+
+  .botao.verde {
+    @apply bg-green-600;
+  }
+
+  .botao.verde:hover {
+    @apply bg-green-700;
+  }
+}

@@ -1,0 +1,143 @@
+GET http://localhost:4000/buys/get/all
+
+###
+http://localhost:4000/products
+
+###
+GET http://localhost:4000/products/get/all
+
+###
+GET http://localhost:4000/products/get/?search=ice
+
+###
+GET http://localhost:4000/products/get/8fdd223c-34d1-48b6-b25c-b658e565a0aa
+
+
+###
+GET http://localhost:4000/products/get/mark/83562c16-2781-4256-becf-4cb18550f360
+
+###
+GET http://localhost:4000/buys/get/07e5ac6d-029a-4708-a222-69e9ea1e073c
+
+###
+PUT http://localhost:4000/products/delete/32238ca5-24e8-4261-820c-088d8f274eb3
+
+###
+GET http://localhost:4000/buys/1f18bb1a-e263-4c39-9c63-b1e5a5a93901
+
+###
+PUT http://localhost:4000/locals/delete/69db36cb-c507-401a-b48d-a3262493f460
+Content-Type: application/json
+
+{
+	"description": "açougue"
+}
+
+###
+POST http://localhost:4000/locals/new
+Content-Type: application/json
+
+{
+	"description": "açougue"
+}
+
+###
+POST http://localhost:4000/products/new
+Content-Type: application/json
+
+{
+	"description": "maconha",
+	"codeBar": "edqwe",
+	"lastPrice": 28.3,
+	"markId": "d5468578-2d6e-435e-88c2-6c534be30b53"
+}
+
+###
+PUT http://localhost:4000/products/update/ca3714e3-2da4-4588-8dd2-583485b5c767
+Content-Type: application/json
+
+{
+	"description": "arroz"
+}
+
+
+###
+POST http://localhost:4000/buys/new
+Content-Type: application/json
+
+{
+	"localId": "1",
+  "products": [
+    {
+      "id": "3",
+      "amount": 3,
+      "unitPrice": 3
+    },
+    {
+      "id": "1",
+      "amount": 4,
+      "unitPrice": 4
+    },
+		    {
+      "id": "1",
+      "amount": 4,
+      "unitPrice": 4
+    },
+		    {
+      "id": "1",
+      "amount": 4,
+      "unitPrice": 4
+    }
+  ]
+}
+
+
+
+###
+POST http://localhost:4000/buys/new
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "productId": "f87452eb-51a2-43c2-8496-cafc4786a2c1",
+      "amount": 33.88,
+      "unitPrice": 50.08
+    },
+		{
+      "productId": "f87452eb-51a2-43c2-8496-cafc4786a2c1",
+      "amount": 33.88,
+      "unitPrice": 50.08
+    },
+		{
+      "productId": "f87452eb-51a2-43c2-8496-cafc4786a2c1",
+      "amount": 33.88,
+      "unitPrice": 50.08
+    },
+		{
+      "productId": "f87452eb-51a2-43c2-8496-cafc4786a2c1",
+      "amount": 33.88,
+      "unitPrice": 50.08
+    },
+	    {
+      "productId": "f87452eb-51a2-43c2-8496-cafc4786a2c1",
+      "amount": 33.88,
+      "unitPrice": 50.08
+    },
+		{
+      "productId": "f87452eb-51a2-43c2-8496-cafc4786a2c1",
+      "amount": 33.88,
+      "unitPrice": 50.08
+    },
+		{
+      "productId": "f87452eb-51a2-43c2-8496-cafc4786a2c1",
+      "amount": 33.88,
+      "unitPrice": 50.08
+    },
+		{
+      "productId": "f87452eb-51a2-43c2-8496-cafc4786a2c1",
+      "amount": 33.88,
+      "unitPrice": 50.08
+    }
+  ]
+}
