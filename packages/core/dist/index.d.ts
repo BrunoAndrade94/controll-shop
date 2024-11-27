@@ -51,6 +51,8 @@ declare const marks: Mark[];
 
 declare const products: Product[];
 
+declare function CreateEmptyProduct(): Partial<Product>;
+
 declare function ComplementLocal(partialLocal: Partial<Local>): Local;
 
 declare function ComplementProduct(partialProduct: Partial<Product>): Product;
@@ -84,4 +86,4 @@ declare const _default: {
     GetProductDescription: string;
 };
 
-export { type Buy, type BuyProducts, ComplementLocal, ComplementProduct, Data, FormartMoney as FormatMoney, Id, type Local, _default$1 as LocalRoute, type Mark, type Product, _default as ProductRoute, TotalValue, UpdateProduct, buys as constBuys, locals as constLocals, marks as constMarks, products as constProducts };
+export { type Buy, type BuyProducts, ComplementLocal, ComplementProduct, CreateEmptyProduct, Data, FormartMoney as FormatMoney, Id, type Local, _default$1 as LocalRoute, type Mark, type Product, _default as ProductRoute, TotalValue, UpdateProduct, buys as constBuys, locals as constLocals, marks as constMarks, products as constProducts };

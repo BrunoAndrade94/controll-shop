@@ -8,6 +8,10 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        sm: "500px", // Alterar o tamanho mínimo do `sm`
+        xl: "1400px", // Alterar o tamanho mínimo do `xl`
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

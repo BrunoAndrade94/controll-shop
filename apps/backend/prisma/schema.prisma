@@ -13,7 +13,7 @@ datasource db {
 
 model Local {
   id          String   @id @default(uuid())
-  description String
+  description String   @unique
   createDate  DateTime
   active      Boolean
   Buy         Buy[]
@@ -23,7 +23,7 @@ model Local {
 
 model Mark {
   id          String    @id @default(uuid())
-  description String
+  description String    @unique
   createDate  DateTime
   active      Boolean
   Product     Product[]
@@ -33,7 +33,7 @@ model Mark {
 
 model Product {
   id          String        @id @default(uuid())
-  description String
+  description String        @unique
   codeBar     String
   lastPrice   Float
   markId      String

@@ -31,6 +31,18 @@ export class ProductService {
     });
   }
 
+  // TODO: MUDAR DE FINDMANY PARA A FINDUNIQUE
+  async seProductGetDescription(description: string): Promise<Product | null> {
+    return this.prisma.product.findUnique({
+      select: {
+        description: true,
+      },
+      where: {
+        description: description,
+      },
+    }) as any;
+  }
+
   async seProductsAll() {
     try {
       const productsAll = await this.prisma.product.findMany({

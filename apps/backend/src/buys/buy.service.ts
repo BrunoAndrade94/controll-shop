@@ -21,6 +21,7 @@ export class BuyService {
 
     return this.prisma.buy.create({
       data: {
+        // TODO: TIRAR ESSE NEW DATE()
         buyDate: new Date(),
         totalValue: totalValueBuy,
         countProducts: countProducts,
@@ -41,7 +42,7 @@ export class BuyService {
   }
 
   async prGetBuyProducts(): Promise<BuyProducts[]> {
-    return this.prisma.buyProducts.findMany() as any;
+    return (await this.prisma.buyProducts.findMany()) as any;
   }
 
   async prGetAllBuys(): Promise<Buy[]> {

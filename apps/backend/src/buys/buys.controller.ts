@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { BuyService } from './buy.service';
 
 @Controller('buys')
@@ -8,8 +15,7 @@ export class BuysController {
   @Get('get/all')
   async coGetBuys() {
     try {
-      const buys = await this.repository.prGetAllBuys();
-      return { buys };
+      return await this.repository.prGetAllBuys();
     } catch (error) {
       return { message: 'Erro ao buscar produtos', error };
     }
@@ -18,8 +24,7 @@ export class BuysController {
   @Get('/products/get/all')
   async coGetBuyProducts() {
     try {
-      const buys = await this.repository.prGetBuyProducts();
-      return { buys };
+      return await this.repository.prGetBuyProducts();
     } catch (error) {
       return { message: 'Erro ao buscar produtos', error };
     }
@@ -50,8 +55,9 @@ export class BuysController {
       const { localId, products } = body;
 
       if (!Array.isArray(products) || products.length === 0) {
-        throw new Error(
+        throw new HttpException(
           'Você precisa incluir ao menos um produto para realizar a compra.',
+          400,
         );
       }
 

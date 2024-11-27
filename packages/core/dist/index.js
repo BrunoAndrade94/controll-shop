@@ -22,6 +22,7 @@ var src_exports = {};
 __export(src_exports, {
   ComplementLocal: () => ComplementLocal,
   ComplementProduct: () => ComplementProduct,
+  CreateEmptyProduct: () => CreateEmptyProduct,
   Data: () => Data,
   FormatMoney: () => FormartMoney,
   Id: () => Id,
@@ -349,12 +350,25 @@ var product_routes_default = {
   GetProductDescription
 };
 
+// src/functions/create/CreateEmptyProduct.ts
+function CreateEmptyProduct() {
+  return {
+    id: Id.new(),
+    createDate: /* @__PURE__ */ new Date(),
+    description: "",
+    markId: "",
+    codeBar: "",
+    lastPrice: 0,
+    active: true
+  };
+}
+
 // src/functions/complement/ComplementLocal.ts
 function ComplementLocal(partialLocal) {
   const Local = {
     // pode vazio
-    id: partialLocal.id ?? Id.new(),
-    createDate: partialLocal.createDate ?? /* @__PURE__ */ new Date(),
+    id: partialLocal.id,
+    createDate: partialLocal.createDate,
     active: true,
     // nao pode vazio
     description: partialLocal.description.toUpperCase()
@@ -381,8 +395,8 @@ function ComplementProduct(partialProduct) {
   }
   const product = {
     // pode vazio
-    id: partialProduct.id ?? Id.new(),
-    createDate: partialProduct.createDate ?? /* @__PURE__ */ new Date(),
+    id: partialProduct.id,
+    createDate: partialProduct.createDate,
     active: true,
     // nao pode vazio
     codeBar: partialProduct.codeBar,
@@ -414,6 +428,7 @@ function UpdateProduct(product) {
 0 && (module.exports = {
   ComplementLocal,
   ComplementProduct,
+  CreateEmptyProduct,
   Data,
   FormatMoney,
   Id,

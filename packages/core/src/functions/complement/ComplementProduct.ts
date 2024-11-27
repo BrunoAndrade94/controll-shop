@@ -13,8 +13,8 @@ export default function ComplementProduct(
 
   const product: Product = {
     // pode vazio
-    id: partialProduct.id ?? Id.new(),
-    createDate: partialProduct.createDate ?? new Date(),
+    id: partialProduct.id,
+    createDate: partialProduct.createDate,
     active: true,
 
     // nao pode vazio

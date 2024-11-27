@@ -1,7 +1,10 @@
 GET http://localhost:4000/buys/get/all
 
 ###
-http://localhost:4000/products
+GET http://localhost:4000/products
+
+###
+http://localhost:4000/products/new/validade/description/MACONHA
 
 ###
 GET http://localhost:4000/products/get/all
@@ -12,7 +15,7 @@ GET http://localhost:4000/products/get/?search=ice
 ###
 GET http://localhost:4000/products/get/8fdd223c-34d1-48b6-b25c-b658e565a0aa
 
-
+ 
 ###
 GET http://localhost:4000/products/get/mark/83562c16-2781-4256-becf-4cb18550f360
 

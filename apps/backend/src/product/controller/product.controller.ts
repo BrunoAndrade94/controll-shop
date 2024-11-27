@@ -6,6 +6,15 @@ import { ProductService } from '../service/product.service';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Get('/new/validade/description/:description')
+  async validateDescription(@Param('description') description: string) {
+    const product =
+      await this.productService.seProductGetDescription(description);
+    return {
+      inUse: !!product,
+    };
+  }
+
   @Get('get')
   async coProductsDescription(@Query('search') search?: string) {
     return this.productService.seProductsDescription(search);
@@ -27,7 +36,7 @@ export class ProductController {
 
   @Put('delete/:id')
   async coProductDelete(@Param('id') id: string) {
-    return this.productService.seProductDelete(id);
+    return await this.productService.seProductDelete(id);
   }
 
   @Post('new')

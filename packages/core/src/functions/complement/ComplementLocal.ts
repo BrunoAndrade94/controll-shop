@@ -1,5 +1,4 @@
 import { Local } from "../../models";
-import { Id } from "../../shared";
 
 export default function ComplementLocal(partialLocal: Partial<Local>): Local {
   // const errors = ValidateLocal(partialLocal);
@@ -10,8 +9,8 @@ export default function ComplementLocal(partialLocal: Partial<Local>): Local {
 
   const Local: Local = {
     // pode vazio
-    id: partialLocal.id ?? Id.new(),
-    createDate: partialLocal.createDate ?? new Date(),
+    id: partialLocal.id,
+    createDate: partialLocal.createDate,
     active: true,
 
     // nao pode vazio

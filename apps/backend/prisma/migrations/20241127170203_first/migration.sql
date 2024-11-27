@@ -47,3 +47,12 @@ CREATE TABLE "buy-products" (
     CONSTRAINT "buy-products_buyId_fkey" FOREIGN KEY ("buyId") REFERENCES "buys" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "buy-products_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "locals_description_key" ON "locals"("description");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "marks_description_key" ON "marks"("description");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "products_description_key" ON "products"("description");
