@@ -20,7 +20,7 @@ export default function Home() {
         <Link className="botao laranja" href={"/products/new"}>
           {"NOVO PRODUTO"}
         </Link>
-        <Link className="botao laranja" href={"/"}>
+        <Link className="botao laranja" href={"/marks/new"}>
           {"NOVA MARCA"}
         </Link>
       </div>

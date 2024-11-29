@@ -7,8 +7,8 @@ export class LocalService {
   constructor(private readonly prisma: PrismaProvider) {}
 
   // Obter todos os locals (com busca opcional)
-  seLocalsDescription(search?: string) {
-    return this.prisma.local.findMany({
+  async seLocalsDescription(search?: string) {
+    return await this.prisma.local.findMany({
       where: search
         ? {
             active: true,
@@ -39,7 +39,7 @@ export class LocalService {
       return await this.prisma.local.create({
         data: {
           id: local.id,
-          description: local.description.toUpperCase(),
+          description: local.description,
           createDate: local.createDate,
           active: local.active,
         },

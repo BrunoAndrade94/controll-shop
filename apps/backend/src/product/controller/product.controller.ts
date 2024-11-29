@@ -6,13 +6,11 @@ import { ProductService } from '../service/product.service';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get('/new/validade/description/:description')
+  @Get('new/validate/description/:description')
   async validateDescription(@Param('description') description: string) {
     const product =
       await this.productService.seProductGetDescription(description);
-    return {
-      inUse: !!product,
-    };
+    return { inUse: product };
   }
 
   @Get('get')

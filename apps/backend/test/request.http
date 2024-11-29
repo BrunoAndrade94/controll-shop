@@ -4,7 +4,10 @@ GET http://localhost:4000/buys/get/all
 GET http://localhost:4000/products
 
 ###
-http://localhost:4000/products/new/validade/description/MACONHA
+GET http://localhost:4000/products/new/validate/description/maconha
+
+###
+GET https://172.17.10.134:4000/products/new/validate/description/s
 
 ###
 GET http://localhost:4000/products/get/all
@@ -15,7 +18,6 @@ GET http://localhost:4000/products/get/?search=ice
 ###
 GET http://localhost:4000/products/get/8fdd223c-34d1-48b6-b25c-b658e565a0aa
 
- 
 ###
 GET http://localhost:4000/products/get/mark/83562c16-2781-4256-becf-4cb18550f360
 
@@ -41,7 +43,7 @@ POST http://localhost:4000/locals/new
 Content-Type: application/json
 
 {
-	"description": "açougue"
+	"description": "açougdsadasue"
 }
 
 ###
@@ -49,10 +51,10 @@ POST http://localhost:4000/products/new
 Content-Type: application/json
 
 {
-	"description": "maconha",
-	"codeBar": "edqwe",
+	"description": "arr3oz",
+	"codeBar": "edqdwe",
 	"lastPrice": 28.3,
-	"markId": "d5468578-2d6e-435e-88c2-6c534be30b53"
+	"markId": "ea9669b2-6d04-42d1-b0fc-d2893bfde80c"
 }
 
 ###

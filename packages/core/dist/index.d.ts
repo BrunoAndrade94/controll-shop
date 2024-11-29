@@ -1,4 +1,4 @@
-import { Mark as Mark$1 } from 'core';
+import { Mark as Mark$1, Local as Local$1, Product as Product$1 } from 'core';
 
 interface BuyProducts {
     id: string;
@@ -51,13 +51,17 @@ declare const marks: Mark[];
 
 declare const products: Product[];
 
+declare function CreateEmptyMark(): Partial<Mark>;
+
 declare function CreateEmptyProduct(): Partial<Product>;
 
-declare function ComplementLocal(partialLocal: Partial<Local>): Local;
+declare function ComplementLocal(partialLocal: Partial<Local$1>): Local$1;
 
-declare function ComplementProduct(partialProduct: Partial<Product>): Product;
+declare function ComplementProduct(partialProduct: Partial<Product$1>): Product$1;
 
-declare function FormartMoney(valor: number): string;
+declare function FormartMoney$1(valor: number): string;
+
+declare function FormartMoney(valor: string): number;
 
 declare function UpdateProduct(product: Partial<Product>): Partial<Product>;
 
@@ -86,4 +90,4 @@ declare const _default: {
     GetProductDescription: string;
 };
 
-export { type Buy, type BuyProducts, ComplementLocal, ComplementProduct, CreateEmptyProduct, Data, FormartMoney as FormatMoney, Id, type Local, _default$1 as LocalRoute, type Mark, type Product, _default as ProductRoute, TotalValue, UpdateProduct, buys as constBuys, locals as constLocals, marks as constMarks, products as constProducts };
+export { type Buy, type BuyProducts, ComplementLocal, ComplementProduct, CreateEmptyMark, CreateEmptyProduct, Data, FormartMoney$1 as FormatMoney, FormartMoney as FormatStringMoney, Id, type Local, _default$1 as LocalRoute, type Mark, type Product, _default as ProductRoute, TotalValue, UpdateProduct, buys as constBuys, locals as constLocals, marks as constMarks, products as constProducts };

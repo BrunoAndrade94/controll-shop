@@ -8,7 +8,7 @@ export class ProductService {
 
   // Obter todos os produtos (com busca opcional)
   async seProductsDescription(search?: string) {
-    return this.prisma.product.findMany({
+    return await this.prisma.product.findMany({
       where: search
         ? {
             active: true,
@@ -31,16 +31,16 @@ export class ProductService {
     });
   }
 
-  // TODO: MUDAR DE FINDMANY PARA A FINDUNIQUE
   async seProductGetDescription(description: string): Promise<Product | null> {
-    return this.prisma.product.findUnique({
+    return (await this.prisma.product.findUnique({
+      where: {
+        active: true,
+        description: description.toUpperCase(),
+      },
       select: {
         description: true,
       },
-      where: {
-        description: description,
-      },
-    }) as any;
+    })) as any;
   }
 
   async seProductsAll() {
@@ -60,10 +60,10 @@ export class ProductService {
       const newProduct = await this.prisma.product.create({
         data: {
           id: product.id,
-          description: product.description.toUpperCase(),
+          description: product.description,
           codeBar: product.codeBar,
           lastPrice: product.lastPrice,
-          markId: product.markId,
+          markId: 'ea9669b2-6d04-42d1-b0fc-d2893bfde80c',
           createDate: product.createDate,
           active: product.active,
         },

@@ -1,4 +1,4 @@
-import { Local } from "../../models";
+import { Local } from "core";
 
 export default function ComplementLocal(partialLocal: Partial<Local>): Local {
   // const errors = ValidateLocal(partialLocal);
@@ -8,13 +8,10 @@ export default function ComplementLocal(partialLocal: Partial<Local>): Local {
   // }
 
   const Local: Local = {
-    // pode vazio
     id: partialLocal.id,
     createDate: partialLocal.createDate,
-    active: true,
-
-    // nao pode vazio
     description: partialLocal.description.toUpperCase(),
+    active: true,
   } as Local;
 
   return Local;

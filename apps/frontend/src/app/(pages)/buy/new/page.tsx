@@ -1,8 +1,8 @@
 "use client";
 import { GetLocalDescription } from "@/app/hook/local/get-local-description";
 import { GetProductDescription } from "@/app/hook/product/get-products-description";
-import { FormatMoney } from "core";
-import Link from "next/link";
+import ButtonHome from "@/components/shared/Button-Home";
+import { FormatMoney, FormatStringMoney } from "core";
 import { useState } from "react";
 
 export default function ProductSearch() {
@@ -104,7 +104,7 @@ export default function ProductSearch() {
     productsList.reduce((acc, item) => acc + item.totalValue, 0);
 
   return (
-    <div className="relative lg:w-full max-w-lg mx-auto space-y-2 p-6 pt-4 bg-red-100 bg-opacity-20 rounded-3xl">
+    <div className="lg:w-full max-w-lg mx-auto space-y-2 p-6 pt-4 bg-red-100 bg-opacity-20 rounded-3xl">
       <div className="flex justify-between items-center p-2 space-x-3">
         <h1 className="text-2xl font-bold text-center select-none">
           Nova Compra
@@ -118,12 +118,12 @@ export default function ProductSearch() {
             placeholder="Local"
             value={searchLocal}
             onChange={handleLocationInputChange}
-            className="w-full text-black border px-3 py-2 rounded shadow"
+            className={`w-full text-black border px-3 py-2 rounded shadow ${productsList.length > 0 ? "cursor-not-allowed select-none" : ""}`}
           />
 
           {/* Lista de locais */}
           {!loading && showListLocal && searchLocal && (
-            <ul className="absolute bg-zinc-300 border rounded mt-2 shadow-md max-h-48 overflow-y-auto">
+            <ul className="absolute z-50 bg-zinc-300 border rounded mt-2 shadow-md max-h-48 overflow-y-auto">
               {locals.map((location) => (
                 <li
                   key={location.id}
@@ -139,16 +139,7 @@ export default function ProductSearch() {
           )}
         </div>
 
-        <div>
-          <button type="button" title="Clique para voltar">
-            <Link
-              href={"../"}
-              className="w-full bg-green-800 text-white py-2 px-4 rounded-lg hover:bg-green-600"
-            >
-              {"<<"}
-            </Link>
-          </button>
-        </div>
+        <ButtonHome />
       </div>
 
       <div className="relative text-center items-center">
@@ -192,7 +183,7 @@ export default function ProductSearch() {
             value={product.mark.description}
             disabled
             placeholder="Marca"
-            className="text-black border w-full px-3 py-2 rounded shadow bg-zinc-300"
+            className="text-black border w-full px-3 py-2 rounded shadow bg-zinc-300 cursor-not-allowed"
           />
         </div>
 
@@ -206,9 +197,7 @@ export default function ProductSearch() {
             }
             placeholder="Valor"
             onChange={(e) => {
-              const numericValue = parseFloat(
-                e.target.value.replace(/[^\d]/g, "").replace(",", ".")
-              );
+              const numericValue = FormatStringMoney(e.target.value);
               setProduct({
                 ...product,
                 lastPrice: isNaN(numericValue) ? 0 : numericValue / 100,
@@ -262,7 +251,7 @@ export default function ProductSearch() {
               : "Veja seu carrinho"
           }
           disabled={productsList.length < 1}
-          className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+          className={`w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 ${productsList.length < 1 ? "cursor-not-allowed select-none bg-zinc-400 hover:bg-zinc-400" : ""}`}
           onClick={() => setShowOverlay(true)}
         >
           Mostrar Carrinho
@@ -274,9 +263,9 @@ export default function ProductSearch() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10 text-black">
           <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-sm">
             <h2 className="text-lg font-bold mb-4">Produtos do Carrinho</h2>
-            <ul className="max-h-64 overflow-y-auto">
-              {productsList.map((item, index) => (
-                <li key={index} className="p-2 border-b">
+            {productsList.map((item, index) => (
+              <ul key={index} className="max-h-64 overflow-y-auto">
+                <li className="p-2 border-b">
                   <div>
                     <strong># {index + 1}:</strong> {item.description}
                   </div>
@@ -288,8 +277,8 @@ export default function ProductSearch() {
                     </div>
                   </div>
                 </li>
-              ))}
-            </ul>
+              </ul>
+            ))}
             <div className="mt-4 text-end pr-2">
               <div className="font-bold">
                 Valor Total: R$ {FormatMoney(calculateTotalPurchase())}

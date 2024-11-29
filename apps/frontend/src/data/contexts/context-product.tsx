@@ -6,17 +6,18 @@ import { useRouter } from "next/navigation";
 import { createContext, useCallback, useEffect, useState } from "react";
 import useApi from "../hooks/use-api";
 
-const urlGetProduct = "/products/get";
-const urlNewProducts = "/products/new";
-const urlValidateProducts = "/products/new/validate/description";
-const urlNewProductsSucess = "/products/new/sucess";
+const urlGetProduct = "/products/get/";
+const urlNewProducts = "/products/new/";
+const urlValidateProducts = "/products/new/validate/description/";
+// const urlValidateProducts = "/products/get/?search=";
+const urlNewProductsSucess = "/products/new/sucess/";
 
 export interface ContextProductProps {
   product: Partial<Product>;
   descriptionInUse: boolean;
 
   saveProduct(): Promise<void>;
-  updateProduct(product: Product): void;
+  updateProduct(product: Partial<Product>): void;
   loadingProduct(id: string): Promise<void>;
 }
 
@@ -26,7 +27,7 @@ export function ProviderContextProduct(props: any) {
   const { httpGet, httpPost } = useApi();
   const router = useRouter();
 
-  const [descriptionInUse, setDescriptionInUse] = useState(true);
+  const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [product, setProduct] =
     useState<Partial<Product>>(CreateEmptyProduct());
 
@@ -34,18 +35,18 @@ export function ProviderContextProduct(props: any) {
     async function () {
       try {
         const productCreate = await httpPost(urlNewProducts, product);
-        router.push(urlNewProductsSucess);
+        // router.push(urlNewProductsSucess);
 
         setProduct({
           ...productCreate,
-          createDate: Data.unformat(productCreate.createDate),
+          // createDate: Data.unformat(productCreate.createDate),
         });
       } catch (error) {
         // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
         console.error(error);
       }
     },
-    [product, httpPost, router]
+    [product, httpPost]
   );
 
   const loadingProduct = useCallback(
@@ -67,6 +68,10 @@ export function ProviderContextProduct(props: any) {
   const validateDescription = useCallback(
     async function () {
       try {
+        if (product.description == "") {
+          console.error("Informe uma descrição");
+        }
+
         const { inUse } = await httpGet(
           `${urlValidateProducts}${product.description}`
         );

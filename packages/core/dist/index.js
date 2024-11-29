@@ -22,9 +22,11 @@ var src_exports = {};
 __export(src_exports, {
   ComplementLocal: () => ComplementLocal,
   ComplementProduct: () => ComplementProduct,
+  CreateEmptyMark: () => CreateEmptyMark,
   CreateEmptyProduct: () => CreateEmptyProduct,
   Data: () => Data,
   FormatMoney: () => FormartMoney,
+  FormatStringMoney: () => FormartMoney2,
   Id: () => Id,
   LocalRoute: () => local_routes_default,
   ProductRoute: () => product_routes_default,
@@ -350,6 +352,16 @@ var product_routes_default = {
   GetProductDescription
 };
 
+// src/functions/create/CreateEmptyMark.ts
+function CreateEmptyMark() {
+  return {
+    id: Id.new(),
+    createDate: /* @__PURE__ */ new Date(),
+    description: "",
+    active: true
+  };
+}
+
 // src/functions/create/CreateEmptyProduct.ts
 function CreateEmptyProduct() {
   return {
@@ -366,33 +378,16 @@ function CreateEmptyProduct() {
 // src/functions/complement/ComplementLocal.ts
 function ComplementLocal(partialLocal) {
   const Local = {
-    // pode vazio
     id: partialLocal.id,
     createDate: partialLocal.createDate,
-    active: true,
-    // nao pode vazio
-    description: partialLocal.description.toUpperCase()
+    description: partialLocal.description.toUpperCase(),
+    active: true
   };
   return Local;
 }
 
-// src/functions/validate/ValidateProduct.ts
-function ValidateProduct(product) {
-  const errors = [];
-  if (!product.description) errors.push("Descri\xE7\xE3o obrigat\xF3ria");
-  if (!product.codeBar) errors.push("C\xF3digo de Barras obrigat\xF3ria");
-  if (!product.lastPrice) errors.push("Pre\xE7o inicial obrigat\xF3ria");
-  if (!+product.lastPrice) errors.push("Pre\xE7o incorreto");
-  if (!product.markId) errors.push("Marca \xE9 obrigat\xF3ria");
-  return errors;
-}
-
 // src/functions/complement/ComplementProduct.ts
 function ComplementProduct(partialProduct) {
-  const errors = ValidateProduct(partialProduct);
-  if (errors.length) {
-    throw new Error(errors.join("\n"));
-  }
   const product = {
     // pode vazio
     id: partialProduct.id,
@@ -417,6 +412,11 @@ function FormartMoney(valor) {
   }).format(valor);
 }
 
+// src/functions/format/FormatStringMoney.ts
+function FormartMoney2(valor) {
+  return parseFloat(valor.replace(/[^\d]/g, "").replace(",", "."));
+}
+
 // src/functions/update/update-product.ts
 function UpdateProduct(product) {
   return {
@@ -428,9 +428,11 @@ function UpdateProduct(product) {
 0 && (module.exports = {
   ComplementLocal,
   ComplementProduct,
+  CreateEmptyMark,
   CreateEmptyProduct,
   Data,
   FormatMoney,
+  FormatStringMoney,
   Id,
   LocalRoute,
   ProductRoute,

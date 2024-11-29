@@ -1,15 +1,13 @@
-import { Product } from "../../models";
-import { Id } from "../../shared";
-import ValidateProduct from "../validate/ValidateProduct";
+import { Product } from "core";
 
 export default function ComplementProduct(
   partialProduct: Partial<Product>
 ): Product {
-  const errors = ValidateProduct(partialProduct);
+  // const errors = ValidateProduct(partialProduct);
 
-  if (errors.length) {
-    throw new Error(errors.join("\n"));
-  }
+  // if (errors.length) {
+  //   throw new Error(errors.join("\n"));
+  // }
 
   const product: Product = {
     // pode vazio
