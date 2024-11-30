@@ -9,7 +9,7 @@ export interface MyInputProps extends React.HTMLProps<HTMLInputElement> {
 
 export default function MyInput(props: MyInputProps) {
   return (
-    <div className="flex flex-col gap-2 ">
+    <div className="flex flex-col gap-2">
       <div className="flex flex-col text-center">
         {/* {props.label && <label>{props.label}</label>} */}
         {<p>{props.description}</p>}
@@ -20,7 +20,7 @@ export default function MyInput(props: MyInputProps) {
         placeholder={props.label}
         {...props}
         type={props.type ?? "text"}
-        className="w-full px-3 py-2 mt-3 rounded-lg placeholder:text-white placeholder:focus:text-zinc-500"
+        className="w-full px-3 py-2 mt-3 rounded-lg bg-zinc-300 text-black placeholder:text-black placeholder:focus:text-zinc-500"
       />
       {props.error && (
         <span className="pl-2 text-sm text-red-500">{props.error}</span>

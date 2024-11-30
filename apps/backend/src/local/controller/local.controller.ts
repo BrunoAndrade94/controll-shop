@@ -1,23 +1,13 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Global,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ComplementLocal, Local } from 'core';
 import { LocalService } from '../service/local.service';
 
-@Global()
 @Controller('locals')
 export class LocalController {
   constructor(private readonly localService: LocalService) {}
 
   @Get('get')
-  async coLocalsDescription(@Query('search') search?: string) {
+  async coLocalsDescription(@Query('search') search: string) {
     return this.localService.seLocalsDescription(search);
   }
 
@@ -26,18 +16,30 @@ export class LocalController {
     return this.localService.seLocalsAll();
   }
 
+  @Get('new/validate/description/:description')
+  async validateDescription(@Param('description') description: string) {
+    const local = await this.localService.seLocalGetDescription(description);
+    return { inUse: !!local };
+  }
+
   @Put('update/:id')
   async coLocalUpdate(
     @Param('id') id: string,
     @Body()
     localData: Partial<Local>,
   ) {
-    return this.localService.seLocalUpdate(id, localData);
+    const localComplete = ComplementLocal(localData);
+
+    return await this.localService.seLocalUpdate(id, localComplete);
   }
 
   @Put('delete/:id')
   async coLocalDelete(@Param('id') id: string) {
-    return this.localService.seLocalDelete(id);
+    try {
+      return await this.localService.seLocalDelete(id);
+    } catch (error) {
+      return { message: 'Erro ao deletar local', error };
+    }
   }
 
   @Post('new')
@@ -52,7 +54,7 @@ export class LocalController {
 
       const newLocal = await this.localService.seLocalNew(localComplete);
 
-      return { message: 'Local criado com sucesso', product: newLocal };
+      return { message: 'Local criado com sucesso', local: newLocal };
     } catch (error) {
       return { message: 'Erro ao criar local', error };
     }

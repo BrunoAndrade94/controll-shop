@@ -6,11 +6,12 @@ import { FormatMoney, FormatStringMoney } from "core";
 import { useState } from "react";
 
 export default function ProductSearch() {
+  const [showList, setShowList] = useState(false); // Controla exibição da lista de busca
+  const [showListLocal, setShowListLocal] = useState(false); // Controla exibição da lista de busca
+  // -------------
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLocal, setSearchLocal] = useState("");
   const [productsList, setProductsList] = useState<any[]>([]); // Lista de produtos adicionados
-  const [showList, setShowList] = useState(false); // Controla exibição da lista de busca
-  const [showListLocal, setShowListLocal] = useState(false); // Controla exibição da lista de busca
   const [showOverlay, setShowOverlay] = useState(false); // Controla exibição da sobreposição
 
   const [product, setProduct] = useState({

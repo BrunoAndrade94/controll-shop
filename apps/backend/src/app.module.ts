@@ -4,10 +4,11 @@ import { AppService } from './app.service';
 import { DbModule } from './db/db.module';
 import { PrismaProvider } from './db/prisma.provider';
 import { LocalModule } from './local/local.module';
+import { MarkModule } from './mark/mark.module';
 import { ProductModule } from './product/product.module';
 
 @Module({
-  imports: [DbModule, ProductModule, LocalModule],
+  imports: [DbModule, ProductModule, LocalModule, MarkModule],
   controllers: [AppController],
   providers: [AppService, PrismaProvider],
 })

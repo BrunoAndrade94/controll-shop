@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { CreateEmptyProduct, Data, Product } from "core";
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useEffect, useState } from "react";
-import useApi from "../hooks/use-api";
+import useApi from "../../hooks/use-api";
+import useProduct from "../../hooks/use-mark";
 
 const urlGetProduct = "/products/get/";
 const urlNewProducts = "/products/new/";
@@ -14,7 +14,11 @@ const urlNewProductsSucess = "/products/new/sucess/";
 
 export interface ContextProductProps {
   product: Partial<Product>;
+  markDescription?: string;
   descriptionInUse: boolean;
+
+  marksLocal: Partial<Product>[]; // Inclui as produtos disponíveis
+  productsLocal: Partial<Product>[]; // Inclui as produtos disponíveis
 
   saveProduct(): Promise<void>;
   updateProduct(product: Partial<Product>): void;
@@ -25,7 +29,11 @@ const ContextProduct = createContext<ContextProductProps>({} as any);
 
 export function ProviderContextProduct(props: any) {
   const { httpGet, httpPost } = useApi();
+
   const router = useRouter();
+  const { marksLocal } = useProduct();
+
+  const [productsLocal, setProductsLocal] = useState<Partial<Product>[]>([]);
 
   const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [product, setProduct] =
@@ -35,18 +43,17 @@ export function ProviderContextProduct(props: any) {
     async function () {
       try {
         const productCreate = await httpPost(urlNewProducts, product);
-        // router.push(urlNewProductsSucess);
+        router.push(urlNewProductsSucess);
 
         setProduct({
           ...productCreate,
-          // createDate: Data.unformat(productCreate.createDate),
         });
       } catch (error) {
         // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
         console.error(error);
       }
     },
-    [product, httpPost]
+    [product, httpPost, router]
   );
 
   const loadingProduct = useCallback(
@@ -102,11 +109,26 @@ export function ProviderContextProduct(props: any) {
     if (product?.description) validateDescription();
   }, [product?.description, validateDescription]);
 
+  // Carrega todas as produtos na inicialização
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const marks = await httpGet(urlGetProduct); // Requisição à API
+        setProductsLocal(marks); // Atualiza o estado com os dados corretos
+      } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+      }
+    }
+    loadProducts();
+  }, [httpGet]);
+
   return (
     <ContextProduct.Provider
       value={{
         product: product,
         descriptionInUse: descriptionInUse,
+        marksLocal,
+        productsLocal,
         updateProduct: setProduct,
         saveProduct,
         loadingProduct,

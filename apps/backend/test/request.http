@@ -1,7 +1,13 @@
 GET http://localhost:4000/buys/get/all
 
 ###
-GET http://localhost:4000/products
+GET http://localhost:4000/marks/get/all
+
+###
+GET http://localhost:4000/locals/get/all
+
+###
+GET http://localhost:4000/locals/new/validate/description/arroz
 
 ###
 GET http://localhost:4000/products/new/validate/description/maconha
@@ -39,11 +45,19 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:4000/marks/new
+Content-Type: application/json
+
+{
+	"description": "perdigão"
+}
+
+###
 POST http://localhost:4000/locals/new
 Content-Type: application/json
 
 {
-	"description": "açougdsadasue"
+	"description": "padaria"
 }
 
 ###

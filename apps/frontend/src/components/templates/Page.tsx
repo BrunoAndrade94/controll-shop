@@ -15,7 +15,7 @@ export default function Pagina(props: PaginaProps) {
     >
       <Logo />
       <main
-        className={`flex-1 flex flex-col justify-center pt-5 container pl-10 pr-10 ${props.className}`}
+        className={`flex-1 flex flex-col justify-center pt-5 container ml-40 mr-40 pl-10 pr-10 ${props.className}`}
       >
         {props.children}
       </main>

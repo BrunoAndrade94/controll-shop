@@ -14,14 +14,14 @@ export default function Home() {
         <Link className="botao laranja" href={"/buy/new"}>
           {"NOVA COMPRA"}
         </Link>
-        <Link className="botao laranja" href={"/"}>
-          {"NOVO LOCAL"}
-        </Link>
         <Link className="botao laranja" href={"/products/new"}>
           {"NOVO PRODUTO"}
         </Link>
         <Link className="botao laranja" href={"/marks/new"}>
           {"NOVA MARCA"}
+        </Link>
+        <Link className="botao laranja" href={"/locals/new"}>
+          {"NOVO LOCAL"}
         </Link>
       </div>
       <div className="space-y-2">
@@ -30,6 +30,12 @@ export default function Home() {
         </Link>
         <Link className="botao roxo" href={"/buy/list"}>
           {"LISTA DE COMPRAS"}
+        </Link>
+        <Link className="botao roxo" href={"/marks/list"}>
+          {"LISTA DE MARCAS"}
+        </Link>
+        <Link className="botao roxo" href={"/locals/list"}>
+          {"LISTA DE LOCAIS"}
         </Link>
       </div>
     </div>

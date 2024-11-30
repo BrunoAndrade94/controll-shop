@@ -1,4 +1,4 @@
-import { Local } from "core";
+import { Id, Local } from "core";
 
 export default function ComplementLocal(partialLocal: Partial<Local>): Local {
   // const errors = ValidateLocal(partialLocal);
@@ -7,12 +7,12 @@ export default function ComplementLocal(partialLocal: Partial<Local>): Local {
   //   throw new Error(errors.join("\n"));
   // }
 
-  const Local: Local = {
-    id: partialLocal.id,
-    createDate: partialLocal.createDate,
+  const local: Local = {
+    id: partialLocal.id || Id.new(),
+    createDate: partialLocal.createDate || new Date(),
     description: partialLocal.description.toUpperCase(),
     active: true,
   } as Local;
 
-  return Local;
+  return local;
 }

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import ContextMark from "./context-mark";
+import ContextMark from "../contexts/mark/context-mark";
 
 const useMark = () => useContext(ContextMark);
 

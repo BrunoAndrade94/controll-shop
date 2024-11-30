@@ -10,6 +10,10 @@
     @apply text-lg uppercase;
   }
 
+  .botao.disabled {
+    @apply bg-zinc-400 cursor-not-allowed opacity-50;
+  }
+
   .botao.azul {
     @apply bg-blue-600;
   }

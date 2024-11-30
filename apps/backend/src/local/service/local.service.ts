@@ -7,20 +7,33 @@ export class LocalService {
   constructor(private readonly prisma: PrismaProvider) {}
 
   // Obter todos os locals (com busca opcional)
-  async seLocalsDescription(search?: string) {
-    return await this.prisma.local.findMany({
-      where: search
-        ? {
-            active: true,
-            description: {
-              contains: search,
-            },
-          }
-        : undefined,
+  async seLocalsDescription(search: string): Promise<Local | null> {
+    return (await this.prisma.local.findMany({
+      where: {
+        active: true,
+        description: {
+          contains: search,
+        },
+      },
       select: {
+        id: true,
         description: true,
       },
-    });
+      orderBy: [{ description: 'asc' }],
+    })) as any;
+  }
+
+  async seLocalGetDescription(description: string): Promise<Local | null> {
+    return (await this.prisma.local.findUnique({
+      where: {
+        active: true,
+        description: description.toUpperCase(),
+      },
+      select: {
+        id: true,
+        description: true,
+      },
+    })) as any;
   }
 
   async seLocalsAll() {
@@ -70,9 +83,9 @@ export class LocalService {
   async seLocalUpdate(id: string, localData: Partial<Local>) {
     try {
       return await this.prisma.local.update({
-        where: { id: id },
+        where: { id: id, active: true },
         data: {
-          description: localData.description.toUpperCase(),
+          description: localData.description,
         },
       });
     } catch (error) {

@@ -15,12 +15,12 @@ export class ProductController {
 
   @Get('get')
   async coProductsDescription(@Query('search') search?: string) {
-    return this.productService.seProductsDescription(search);
+    return await this.productService.seProductsDescription(search);
   }
 
   @Get('get/all')
   async coProductsAll() {
-    return this.productService.seProductsAll();
+    return await this.productService.seProductsAll();
   }
 
   @Put('update/:id')
@@ -29,7 +29,7 @@ export class ProductController {
     @Body()
     productData: Partial<Product>,
   ) {
-    return this.productService.seProductUpdate(id, productData);
+    return await this.productService.seProductUpdate(id, productData);
   }
 
   @Put('delete/:id')
