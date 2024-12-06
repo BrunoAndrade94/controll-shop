@@ -1,10 +1,12 @@
 "use client";
 
+import useMessage from "@/data/hooks/use-message";
 import { CreateEmptyLocal, Local } from "core";
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useEffect, useState } from "react";
 import useApi from "../../hooks/use-api";
 
+const urlLocal = "/locals/";
 const urlGetLocal = "/locals/get/";
 const urlNewLocals = "/locals/new/";
 const urlValidateLocals = "/locals/new/validate/description/";
@@ -12,21 +14,29 @@ const urlNewLocalsSucess = "/locals/new/sucess/";
 
 export interface ContextLocalProps {
   local: Partial<Local>;
+
   descriptionInUse: boolean;
-  localsLocal: Partial<Local>[];
+  setDescriptionInUse: (value: boolean) => void;
+
+  localsData: Partial<Local>[];
+
+  queryLocals: string;
+  setQueryLocals: (value: string) => void;
 
   saveLocal(): Promise<void>;
   updateLocal(local: Partial<Local>): void;
-  loadingLocal(id: string): Promise<void>;
+  loadingLocal(): Promise<void>;
 }
 
 const ContextLocal = createContext<ContextLocalProps>({} as any);
 
 export function ProviderContextLocal(props: any) {
-  const { httpGet, httpPost } = useApi();
   const router = useRouter();
+  const { msgSucess } = useMessage();
+  const { httpGet, httpPost } = useApi();
 
-  const [localsLocal, setLocalsLocal] = useState<Partial<Local>[]>([]);
+  const [queryLocals, setQueryLocals] = useState("");
+  const [localsData, setLocalsData] = useState<Partial<Local>[]>([]);
 
   const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [local, setLocal] = useState<Partial<Local>>(CreateEmptyLocal());
@@ -35,94 +45,64 @@ export function ProviderContextLocal(props: any) {
     async function () {
       try {
         const localCreate = await httpPost(urlNewLocals, local);
-        // router.push(urlNewLocalsSucess);
 
         setLocal({
           ...localCreate,
         });
+
+        msgSucess(
+          `${local.description?.toUpperCase()} cadastrado com sucesso.`
+        );
+
+        router.push(urlLocal);
+
+        setQueryLocals("");
       } catch (error) {
         // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
         console.error(error);
       }
     },
-    [local, httpPost]
+    [local, httpPost, router, setQueryLocals, msgSucess]
   );
 
   const loadingLocal = useCallback(
-    async function (description: string) {
-      try {
-        const local = await httpGet(`${urlGetLocal}${description}`);
-
-        setLocal({
-          ...local,
-          // createDate: Data.unformat(local.createDate),
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [setLocal, httpGet]
-  );
-
-  const validateDescription = useCallback(
     async function () {
       try {
-        if (local.description == "") {
-          console.error("Informe uma descrição");
-        }
+        const locals = await httpGet(`${urlGetLocal}`);
 
-        const { inUse } = await httpGet(
-          `${urlValidateLocals}${local.description}`
-        );
-
-        setDescriptionInUse(inUse);
+        setLocalsData(locals);
       } catch (error) {
-        // TODO: IMPLEMENTAR ERRO
         console.error(error);
       }
     },
-    [httpGet, local]
+    [httpGet, setLocalsData]
   );
-
-  // TODO: IMPLEMENTAR EM CONTEXT-BUY
-  // const adicionarConvidado = useCallback(
-  //   async function () {
-  //     try {
-  //       await httpPost(`/eventos/${evento.alias}/convidado`, convidado);
-  //       router.push("/convite/obrigado");
-  //     } catch (error: any) {
-  //       adicionarErro(error.messagem ?? "Ocorreu um erro inesperado!");
-  //     }
-  //   },
-  //   [httpPost, evento, convidado, router]
-  // );
-
-  useEffect(() => {
-    if (local?.description) validateDescription();
-  }, [local?.description, validateDescription]);
 
   // Carrega todas as produtos na inicialização
   useEffect(() => {
     async function loadLocals() {
       try {
-        const locals = await httpGet(urlGetLocal); // Requisição à API
-        setLocalsLocal(locals); // Atualiza o estado com os dados corretos
+        const locals = await httpGet(urlGetLocal);
+        setLocalsData(locals);
       } catch (error) {
-        console.error("Erro ao carregar produtos:", error);
+        console.error("Erro ao carregar:", error);
       }
     }
     loadLocals();
-  }, [httpGet]);
+  }, [httpGet, localsData]);
 
   return (
     <ContextLocal.Provider
       value={{
+        localsData,
+        queryLocals,
         local: local,
         descriptionInUse: descriptionInUse,
-        localsLocal,
-        updateLocal: setLocal,
         saveLocal,
         loadingLocal,
+        setQueryLocals,
+        setDescriptionInUse,
+        updateLocal: setLocal,
       }}
     >
       {props.children}

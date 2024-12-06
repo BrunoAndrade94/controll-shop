@@ -1,10 +1,12 @@
 "use client";
 
+import useMessage from "@/data/hooks/use-message";
 import { CreateEmptyMark, Mark } from "core";
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useEffect, useState } from "react";
 import useApi from "../../hooks/use-api";
 
+const urlMark = "/marks/";
 const urlGetMark = "/marks/get/";
 const urlNewMarks = "/marks/new/";
 const urlValidateMarks = "/marks/new/validate/description/";
@@ -13,20 +15,28 @@ const urlNewMarksSucess = "/marks/new/sucess/";
 export interface ContextMarkProps {
   mark: Partial<Mark>;
   descriptionInUse: boolean;
-  marksLocal: Partial<Mark>[];
+  setDescriptionInUse: (value: boolean) => void;
+
+  marksData: Partial<Mark>[];
+
+  queryMarks: string;
+  setQueryMarks: (value: string) => void;
 
   saveMark(): Promise<void>;
   updateMark(mark: Partial<Mark>): void;
-  loadingMark(id: string): Promise<void>;
+  loadingMark(): Promise<void>;
 }
 
 const ContextMark = createContext<ContextMarkProps>({} as any);
 
 export function ProviderContextMark(props: any) {
-  const { httpGet, httpPost } = useApi();
   const router = useRouter();
+  const { msgSucess } = useMessage();
+  const { httpGet, httpPost } = useApi();
 
-  const [marksLocal, setMarksLocal] = useState<Partial<Mark>[]>([]);
+  const [queryMarks, setQueryMarks] = useState("");
+
+  const [marksData, setMarksData] = useState<Partial<Mark>[]>([]);
   const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [mark, setMark] = useState<Partial<Mark>>(CreateEmptyMark());
 
@@ -34,54 +44,56 @@ export function ProviderContextMark(props: any) {
     async function () {
       try {
         const markCreate = await httpPost(urlNewMarks, mark);
-        // router.push(urlNewMarksSucess);
 
         setMark({
           ...markCreate,
         });
+
+        msgSucess(`${mark.description?.toUpperCase()} cadastrado com sucesso.`);
+
+        router.push(urlMark);
+
+        setQueryMarks("");
       } catch (error) {
         // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
         console.error(error);
       }
     },
-    [mark, httpPost]
+    [mark, httpPost, msgSucess, router]
   );
 
   const loadingMark = useCallback(
-    async function (description: string) {
-      try {
-        const mark = await httpGet(`${urlValidateMarks}${description}`);
-
-        setMark({
-          ...mark,
-          description: mark.createDate,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [setMark, httpGet]
-  );
-
-  const validateDescription = useCallback(
     async function () {
       try {
-        if (mark.description == "") {
-          console.error("Informe uma descrição");
-        }
+        const marks = await httpGet(`${urlValidateMarks}`);
 
-        const { inUse } = await httpGet(
-          `${urlValidateMarks}${mark.description}`
-        );
-
-        setDescriptionInUse(inUse);
+        setMarksData(marks);
       } catch (error) {
-        // TODO: IMPLEMENTAR ERRO
         console.error(error);
       }
     },
-    [httpGet, mark]
+    [setMarksData, httpGet]
   );
+
+  // const validateDescription = useCallback(
+  //   async function () {
+  //     try {
+  //       if (mark.description == "") {
+  //         console.error("Informe uma descrição");
+  //       }
+
+  //       const { inUse } = await httpGet(
+  //         `${urlValidateMarks}${mark.description}`
+  //       );
+
+  //       setDescriptionInUse(inUse);
+  //     } catch (error) {
+  //       // TODO: IMPLEMENTAR ERRO
+  //       console.error(error);
+  //     }
+  //   },
+  //   [httpGet, mark]
+  // );
 
   // TODO: IMPLEMENTAR EM CONTEXT-BUY
   // const adicionarConvidado = useCallback(
@@ -96,32 +108,35 @@ export function ProviderContextMark(props: any) {
   //   [httpPost, evento, convidado, router]
   // );
 
-  useEffect(() => {
-    if (mark?.description) validateDescription();
-  }, [mark?.description, validateDescription]);
+  // useEffect(() => {
+  //   if (mark?.description) validateDescription();
+  // }, [mark?.description, validateDescription]);
 
   // Carrega todas as marcas na inicialização
   useEffect(() => {
     async function loadMarks() {
       try {
         const marks = await httpGet(urlGetMark); // Requisição à API
-        setMarksLocal(marks); // Atualiza o estado com os dados corretos
+        setMarksData(marks); // Atualiza o estado com os dados corretos
       } catch (error) {
         console.error("Erro ao carregar marcas:", error);
       }
     }
     loadMarks();
-  }, [httpGet]);
+  }, [httpGet, marksData]);
 
   return (
     <ContextMark.Provider
       value={{
         mark: mark,
-        marksLocal: marksLocal,
-        descriptionInUse: descriptionInUse,
+        marksData: marksData,
+        descriptionInUse,
+        setDescriptionInUse,
         updateMark: setMark,
         saveMark,
         loadingMark,
+        queryMarks,
+        setQueryMarks,
       }}
     >
       {props.children}

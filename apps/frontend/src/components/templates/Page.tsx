@@ -11,7 +11,7 @@ export default function Pagina(props: PaginaProps) {
       className="
 				flex flex-col items-center
 				py-5 min-h-screen
-				bg-slate-700"
+				bg-slate-700 h-dvh"
     >
       <Logo />
       <main

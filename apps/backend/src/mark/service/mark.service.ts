@@ -39,6 +39,9 @@ export class MarkService {
     try {
       return await this.prisma.mark.findMany({
         where: { active: true },
+        orderBy: {
+          createDate: 'desc',
+        },
       });
     } catch (error) {
       console.error('Erro ao buscar o marcaa', error.message);

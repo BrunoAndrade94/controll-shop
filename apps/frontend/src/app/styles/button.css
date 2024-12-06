@@ -53,4 +53,12 @@
   .botao.verde:hover {
     @apply bg-green-400;
   }
+
+  .botao.amarelo {
+    @apply bg-yellow-600;
+  }
+
+  .botao.amarelo:hover {
+    @apply bg-yellow-400;
+  }
 }

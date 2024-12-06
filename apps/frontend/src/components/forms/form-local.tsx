@@ -3,10 +3,47 @@ import MyInput from "../shared/My-Input";
 import Steps from "../shared/Steps";
 
 export default function FormLocal() {
-  const { local, saveLocal, updateLocal, descriptionInUse } = useLocal();
+  const {
+    local,
+    saveLocal,
+    updateLocal,
+    descriptionInUse,
+    setDescriptionInUse,
+    localsData,
+    queryLocals,
+    setQueryLocals,
+    loadingLocal,
+  } = useLocal();
+
+  const authNextStep: boolean[] = [!!queryLocals && !descriptionInUse];
+
   const labels = ["Descrição"];
 
-  const authNextStep: boolean[] = [!!local.description && !descriptionInUse];
+  const observation = `${
+    descriptionInUse
+      ? "Local já cadastrado. Informe outro."
+      : queryLocals
+        ? "Local liberado para uso."
+        : "Informe para verificar."
+  }`;
+
+  const onChange = (localUser: string) => {
+    setQueryLocals(localUser);
+    if (
+      localsData.some(
+        (localData) =>
+          localData.description?.toUpperCase() === localUser.toUpperCase()
+      )
+    ) {
+      if (localUser.length > 0) {
+        setDescriptionInUse(true); // Define como existente
+      }
+      updateLocal({ ...local, description: "" }); // Limpa a marca atual
+    } else {
+      setDescriptionInUse(false); // Marca liberada para uso
+      updateLocal({ ...local, description: localUser }); // Atualiza com o valor digitado
+    }
+  };
 
   return (
     <div>
@@ -18,13 +55,13 @@ export default function FormLocal() {
       >
         <div className="flex flex-col gap-5">
           <MyInput
-            label="Descrição"
-            description="Informe a Local"
-            observation={`${(local.description?.length || 0) > 0 ? "Local liberado para uso." : "Informe o local para verificar se já existe."}`}
-            value={local.description ?? ""}
-            onChange={(event) =>
-              updateLocal({ ...local, description: event.target.value })
-            }
+            label="Informe o novo Local"
+            observation={observation}
+            value={queryLocals ?? ""}
+            onFocus={loadingLocal}
+            onChange={(event) => {
+              onChange(event.target.value);
+            }}
             error={descriptionInUse ? "Local já está em uso." : ""}
           />
         </div>

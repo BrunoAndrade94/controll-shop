@@ -13,9 +13,14 @@ export class ProductController {
     return { inUse: product };
   }
 
-  @Get('get')
+  @Get('get/:search')
   async coProductsDescription(@Query('search') search?: string) {
     return await this.productService.seProductsDescription(search);
+  }
+
+  @Get('get/id/:id')
+  async coProductId(@Param('id') id: string) {
+    return await this.productService.seProductId(id);
   }
 
   @Get('get/all')

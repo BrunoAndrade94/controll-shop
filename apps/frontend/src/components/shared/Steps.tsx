@@ -11,6 +11,7 @@ export interface StepsProps {
 
 export default function Steps(props: StepsProps) {
   const [stepCurrent, setStepCurrent] = useState(0);
+  const [showList, setShowList] = useState(false);
   const int = props.labels.length;
 
   function noStepPrevious() {
@@ -63,9 +64,11 @@ export default function Steps(props: StepsProps) {
   const authNextStep = props.authNextStep?.[stepCurrent] ?? true;
 
   return (
-    <div className="relative flex-1 flex flex-col gap-10 w-full">
+    <div className="flex-1 flex flex-col gap-10 w-full">
       <div className="self-center">{renderLabels()}</div>
-      <div className="select-none">{props.children[stepCurrent]}</div>
+      <div className="select-none flex flex-col text-center">
+        {props.children[stepCurrent]}
+      </div>
       <div className="flex justify-between flex-col space-y-2 sm:flex-row sm:space-y-0">
         {noStepNext() ? (
           <button
@@ -88,6 +91,12 @@ export default function Steps(props: StepsProps) {
           </button>
         )}
 
+        {/* {showList && (
+          <button className="botao azul" type="button">
+            <span>Carrinho</span>
+          </button>
+        )} */}
+
         <button
           type="button"
           hidden={noStepPrevious()}
@@ -97,9 +106,9 @@ export default function Steps(props: StepsProps) {
         >
           <span>Anterior</span>
         </button>
-        <button type="button" className={"botao vermelho"} onClick={() => {}}>
+        {/* <button type="button" className={"botao vermelho"} onClick={() => {}}>
           <span>Limpar</span>
-        </button>
+        </button> */}
       </div>
     </div>
   );

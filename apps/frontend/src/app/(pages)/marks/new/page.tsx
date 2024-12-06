@@ -5,10 +5,10 @@ import Window from "@/components/shared/Window";
 import useMark from "@/data/hooks/use-mark";
 
 export default function PageNewMark() {
-  const { mark } = useMark();
+  const { queryMarks } = useMark();
 
-  const markCurrent = `${mark.description?.toUpperCase() || "Nova Marca"}`;
-  const markTitle = `${!!mark.description ? "Nova Marca" : "Cadastro de Marca"}`;
+  const markCurrent = `${queryMarks?.toUpperCase() || "Nova Marca"}`;
+  const markTitle = `${!!queryMarks ? "Nova Marca" : "Cadastrar nova Marca"}`;
 
   return (
     <div>

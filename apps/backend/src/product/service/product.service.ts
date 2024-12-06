@@ -43,6 +43,7 @@ export class ProductService {
         id: true,
         description: true,
         lastPrice: true,
+        codeBar: true,
         mark: {
           select: {
             id: true,
@@ -50,7 +51,7 @@ export class ProductService {
           },
         },
       },
-      orderBy: [{ description: 'asc' }],
+      orderBy: [{ createDate: 'desc' }],
     })) as any;
   }
 
@@ -66,11 +67,25 @@ export class ProductService {
     })) as any;
   }
 
+  async seProductId(id: string) {
+    try {
+      return await this.prisma.product.findUnique({
+        where: {
+          id: id,
+          active: true,
+        },
+      });
+    } catch (error) {
+      console.error('Erro ao buscar o produto', error.message);
+      throw error;
+    }
+  }
+
   async seProductsAll() {
     try {
       const productsAll = await this.prisma.product.findMany({
         where: { active: true },
-        orderBy: [{ description: 'asc' }],
+        orderBy: [{ createDate: 'desc' }],
       });
       return productsAll;
     } catch (error) {

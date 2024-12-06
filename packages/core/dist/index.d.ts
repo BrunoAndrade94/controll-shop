@@ -51,6 +51,8 @@ declare const marks: Mark[];
 
 declare const products: Product[];
 
+declare function CreateEmptyBuy(): Partial<Buy>;
+
 declare function CreateEmptyLocal(): Partial<Local>;
 
 declare function CreateEmptyMark(): Partial<Mark>;
@@ -63,9 +65,19 @@ declare function ComplementMark(partialMark: Partial<Mark$1>): Mark$1;
 
 declare function ComplementProduct(partialProduct: Partial<Product$1>): Product$1;
 
+declare function CalcTotalPrice(amount: number, price: number): number;
+
+type Items = {
+    amount: number;
+    unitPrice: number;
+}[];
+declare function CalcTotalValueBuy(items: Items): number;
+
 declare function FormartMoney(valor: number): string;
 
 declare function FormartStringMoney(valor: string): number;
+
+declare function FormatToFixed(value: number, toFixed?: number): number;
 
 declare function UpdateProduct(product: Partial<Product>): Partial<Product>;
 
@@ -94,4 +106,4 @@ declare const _default: {
     GetProductDescription: string;
 };
 
-export { type Buy, type BuyProducts, ComplementLocal, ComplementMark, ComplementProduct, CreateEmptyLocal, CreateEmptyMark, CreateEmptyProduct, Data, FormartMoney as FormatMoney, FormartStringMoney as FormatStringMoney, Id, type Local, _default$1 as LocalRoute, type Mark, type Product, _default as ProductRoute, TotalValue, UpdateProduct, buys as constBuys, locals as constLocals, marks as constMarks, products as constProducts };
+export { type Buy, type BuyProducts, CalcTotalPrice, CalcTotalValueBuy, ComplementLocal, ComplementMark, ComplementProduct, CreateEmptyBuy, CreateEmptyLocal, CreateEmptyMark, CreateEmptyProduct, Data, FormartMoney as FormatMoney, FormartStringMoney as FormatStringMoney, FormatToFixed, Id, type Local, _default$1 as LocalRoute, type Mark, type Product, _default as ProductRoute, TotalValue, UpdateProduct, buys as constBuys, locals as constLocals, marks as constMarks, products as constProducts };

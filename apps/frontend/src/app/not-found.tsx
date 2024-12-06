@@ -4,7 +4,7 @@ import imageNotFound from "../../public/images/not-found/robo-not-found.webp";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center m-[6rem]">
+    <div className="flex flex-col items-center mt-14">
       <Image
         priority
         src={imageNotFound}

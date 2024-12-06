@@ -5,10 +5,10 @@ import Window from "@/components/shared/Window";
 import useProduct from "@/data/hooks/use-product";
 
 export default function PageNewProduct() {
-  const { product } = useProduct();
+  const { queryProducts } = useProduct();
 
-  const productCurrent = `${product.description?.toUpperCase() || "Novo Produto"}`;
-  const productTitle = `${!!product.description ? "Novo Produto" : "Cadastro de Produto"}`;
+  const productCurrent = `${queryProducts?.toUpperCase() || "Novo Produto"}`;
+  const productTitle = `${!!queryProducts ? "Novo Produto" : "Cadastro de Produto"}`;
 
   return (
     <div>

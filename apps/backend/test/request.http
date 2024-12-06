@@ -10,7 +10,7 @@ GET http://localhost:4000/locals/get/all
 GET http://localhost:4000/locals/new/validate/description/arroz
 
 ###
-GET http://localhost:4000/products/new/validate/description/maconha
+GET http://localhost:4000/products/new/validate/description/as
 
 ###
 GET https://172.17.10.134:4000/products/new/validate/description/s
@@ -22,7 +22,7 @@ GET http://localhost:4000/products/get/all
 GET http://localhost:4000/products/get/?search=ice
 
 ###
-GET http://localhost:4000/products/get/8fdd223c-34d1-48b6-b25c-b658e565a0aa
+GET http://localhost:4000/products/get/lojinha
 
 ###
 GET http://localhost:4000/products/get/mark/83562c16-2781-4256-becf-4cb18550f360
@@ -65,7 +65,7 @@ POST http://localhost:4000/products/new
 Content-Type: application/json
 
 {
-	"description": "arr3oz",
+	"description": "ardr3oz",
 	"codeBar": "edqdwe",
 	"lastPrice": 28.3,
 	"markId": "ea9669b2-6d04-42d1-b0fc-d2893bfde80c"
@@ -85,27 +85,22 @@ POST http://localhost:4000/buys/new
 Content-Type: application/json
 
 {
-	"localId": "1",
+	"localId": "950283af-2e94-4c98-bcc0-53429cc1f2f5",
   "products": [
     {
-      "id": "3",
-      "amount": 3,
-      "unitPrice": 3
+      "productId": "f8155d94-fe5a-4f65-99b6-92508b053bc0",
+      "amount": 14.4,
+      "unitPrice": 354.46
     },
     {
-      "id": "1",
-      "amount": 4,
-      "unitPrice": 4
+      "productId": "13b280da-5c2c-4989-bae9-2e74d2983f7a",
+      "amount": 23,
+      "unitPrice": 3.99
     },
 		    {
-      "id": "1",
-      "amount": 4,
-      "unitPrice": 4
-    },
-		    {
-      "id": "1",
-      "amount": 4,
-      "unitPrice": 4
+      "productId": "938a96bc-75a9-47cd-99fa-d2ae26d6f545",
+      "amount": 94,
+      "unitPrice": 43.43
     }
   ]
 }

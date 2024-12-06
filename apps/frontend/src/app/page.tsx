@@ -8,34 +8,25 @@ export default function Home() {
         <Logo />
         {/* <p className="text-zinc-500 font-light w-96 leading-6 text-center select-none">
           {"DESCRICAO_HOME"}
-        </p> */}
+					</p> */}
       </div>
       <div className="space-y-2">
-        <Link className="botao laranja" href={"/buy/new"}>
-          {"NOVA COMPRA"}
-        </Link>
-        <Link className="botao laranja" href={"/products/new"}>
-          {"NOVO PRODUTO"}
-        </Link>
-        <Link className="botao laranja" href={"/marks/new"}>
-          {"NOVA MARCA"}
-        </Link>
-        <Link className="botao laranja" href={"/locals/new"}>
-          {"NOVO LOCAL"}
+        <Link className="botao vermelho" href={"/buys"}>
+          {"TESTEs EM ANDAMENTO"}
         </Link>
       </div>
       <div className="space-y-2">
-        <Link className="botao roxo" href={"/products/list"}>
-          {"LISTA DE PRODUTOS"}
+        <Link className="botao verde" href={"/buys"}>
+          {"COMPRA"}
         </Link>
-        <Link className="botao roxo" href={"/buy/list"}>
-          {"LISTA DE COMPRAS"}
+        <Link className="botao verde" href={"/products"}>
+          {"PRODUTO"}
         </Link>
-        <Link className="botao roxo" href={"/marks/list"}>
-          {"LISTA DE MARCAS"}
+        <Link className="botao verde" href={"/marks"}>
+          {"MARCA (VALIDADO)"}
         </Link>
-        <Link className="botao roxo" href={"/locals/list"}>
-          {"LISTA DE LOCAIS"}
+        <Link className="botao verde" href={"/locals"}>
+          {"LOCAL (VALIDADO)"}
         </Link>
       </div>
     </div>

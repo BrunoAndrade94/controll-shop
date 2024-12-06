@@ -1,4 +1,4 @@
-import { Product } from "core";
+import { Id, Product } from "core";
 
 export default function ComplementProduct(
   partialProduct: Partial<Product>
@@ -11,8 +11,8 @@ export default function ComplementProduct(
 
   const product: Product = {
     // pode vazio
-    id: partialProduct.id,
-    createDate: partialProduct.createDate,
+    id: partialProduct.id || Id.new(),
+    createDate: partialProduct.createDate || new Date(),
     active: true,
 
     // nao pode vazio
