@@ -1,10 +1,23 @@
+###
 GET http://localhost:4000/buys/get/all
 
 ###
 GET http://localhost:4000/marks/get/all
 
+
+///////////////////////////////
+
 ###
 GET http://localhost:4000/locals/get/all
+
+###
+PUT http://localhost:4000/locals/delete/cb99db88-30b4-4a57-b153-ac798a8ff764
+
+
+///////////////////////////////
+
+###
+GET http://localhost:4000/buys/get/by-product/f8155d94-fe5a-4f65-99b6-92508b053bc0
 
 ###
 GET http://localhost:4000/locals/new/validate/description/arroz
@@ -19,19 +32,20 @@ GET https://172.17.10.134:4000/products/new/validate/description/s
 GET http://localhost:4000/products/get/all
 
 ###
+PUT http://localhost:4000/products/delete/c36864ab-f03a-4e79-97f8-57a4382abf7b
+
+###
 GET http://localhost:4000/products/get/?search=ice
 
 ###
-GET http://localhost:4000/products/get/lojinha
+GET http://localhost:4000/products/get/f8155d94-fe5a-4f65-99b6-92508b053bc0
 
 ###
 GET http://localhost:4000/products/get/mark/83562c16-2781-4256-becf-4cb18550f360
 
 ###
 GET http://localhost:4000/buys/get/07e5ac6d-029a-4708-a222-69e9ea1e073c
-
-###
-PUT http://localhost:4000/products/delete/32238ca5-24e8-4261-820c-088d8f274eb3
+x
 
 ###
 GET http://localhost:4000/buys/1f18bb1a-e263-4c39-9c63-b1e5a5a93901
@@ -89,18 +103,8 @@ Content-Type: application/json
   "products": [
     {
       "productId": "f8155d94-fe5a-4f65-99b6-92508b053bc0",
-      "amount": 14.4,
-      "unitPrice": 354.46
-    },
-    {
-      "productId": "13b280da-5c2c-4989-bae9-2e74d2983f7a",
-      "amount": 23,
-      "unitPrice": 3.99
-    },
-		    {
-      "productId": "938a96bc-75a9-47cd-99fa-d2ae26d6f545",
-      "amount": 94,
-      "unitPrice": 43.43
+      "amount": 1.4,
+      "unitPrice": 561.46
     }
   ]
 }

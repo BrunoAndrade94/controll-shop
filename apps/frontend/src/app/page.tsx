@@ -1,32 +1,44 @@
+import CategoryIcon from "@mui/icons-material/Category";
+import FlagCircleIcon from "@mui/icons-material/FlagCircle";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Link from "next/link";
 import Logo from "../components/templates/Logo";
 
 export default function Home() {
   return (
-    <div className="home image-background">
-      <div className="flex flex-col items-center gap-4">
+    <div className="page image-background h-dvh bg-cover bg-center bg-no-repeat">
+      <div className="-mt-56">
         <Logo />
-        {/* <p className="text-zinc-500 font-light w-96 leading-6 text-center select-none">
-          {"DESCRICAO_HOME"}
-					</p> */}
       </div>
-      <div className="space-y-2">
-        <Link className="botao vermelho" href={"/buys"}>
-          {"TESTEs EM ANDAMENTO"}
+      <div className="space-y-2 mt-28">
+        <Link
+          className="botao verde flex flex-row justify-between"
+          href={"/buys"}
+        >
+          {"COMPRAR"}
+          <ShoppingCartIcon />
         </Link>
-      </div>
-      <div className="space-y-2">
-        <Link className="botao verde" href={"/buys"}>
-          {"COMPRA"}
-        </Link>
-        <Link className="botao verde" href={"/products"}>
+        <Link
+          className="botao azul flex flex-row justify-between"
+          href={"/products"}
+        >
           {"PRODUTO"}
+          <CategoryIcon />
         </Link>
-        <Link className="botao verde" href={"/marks"}>
-          {"MARCA (VALIDADO)"}
+        <Link
+          className="botao laranja flex flex-row justify-between"
+          href={"/marks"}
+        >
+          {"MARCA"}
+          <FlagCircleIcon />
         </Link>
-        <Link className="botao verde" href={"/locals"}>
-          {"LOCAL (VALIDADO)"}
+        <Link
+          className="botao amarelo flex flex-row justify-between"
+          href={"/locals"}
+        >
+          {"LOCAL"}
+          <LocalLibraryIcon />
         </Link>
       </div>
     </div>

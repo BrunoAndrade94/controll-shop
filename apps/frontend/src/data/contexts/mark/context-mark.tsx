@@ -18,10 +18,12 @@ export interface ContextMarkProps {
   setDescriptionInUse: (value: boolean) => void;
 
   marksData: Partial<Mark>[];
+  setMarksData: React.Dispatch<React.SetStateAction<Partial<Mark>[]>>;
 
   queryMarks: string;
   setQueryMarks: (value: string) => void;
 
+  resetMark(): void;
   saveMark(): Promise<void>;
   updateMark(mark: Partial<Mark>): void;
   loadingMark(): Promise<void>;
@@ -39,6 +41,11 @@ export function ProviderContextMark(props: any) {
   const [marksData, setMarksData] = useState<Partial<Mark>[]>([]);
   const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [mark, setMark] = useState<Partial<Mark>>(CreateEmptyMark());
+
+  const resetMark = useCallback(() => {
+    setMark({});
+    setQueryMarks("");
+  }, []);
 
   const saveMark = useCallback(
     async function () {
@@ -129,14 +136,16 @@ export function ProviderContextMark(props: any) {
     <ContextMark.Provider
       value={{
         mark: mark,
-        marksData: marksData,
-        descriptionInUse,
-        setDescriptionInUse,
-        updateMark: setMark,
-        saveMark,
-        loadingMark,
         queryMarks,
+        descriptionInUse,
+        marksData: marksData,
+        saveMark,
+        resetMark,
+        loadingMark,
+        setMarksData,
         setQueryMarks,
+        updateMark: setMark,
+        setDescriptionInUse,
       }}
     >
       {props.children}

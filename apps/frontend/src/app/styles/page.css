@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .page {
+    @apply flex flex-col justify-center items-center h-dvh;
+  }
+  .image-background {
+    @apply bg-[url('../../../public/images/background/carrinho-bg.jpg')] bg-cover;
+    /* @apply bg-zinc-700; */
+  }
+}

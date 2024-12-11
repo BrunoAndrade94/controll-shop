@@ -6,11 +6,55 @@ import { PrismaProvider } from 'src/db/prisma.provider';
 export class BuyService {
   constructor(readonly prisma: PrismaProvider) {}
 
+  async seGetBuysByProductId(productId: string) {
+    return await this.prisma.buy.findMany({
+      where: {
+        products: {
+          some: {
+            productId: productId, // Filtra pela associação com o produto
+          },
+        },
+      },
+      select: {
+        id: true,
+        buyDate: true,
+        local: {
+          select: {
+            description: true, // Nome do local
+          },
+        },
+        products: {
+          where: {
+            productId: productId,
+          },
+          select: {
+            unitPrice: true, // Valor do produto na compra
+            products: {
+              select: {
+                description: true, // Nome do produto
+                lastPrice: true, // Último preço do produto
+                mark: {
+                  select: {
+                    description: true, // Nome da marca
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        buyDate: 'desc',
+      },
+    });
+  }
+
   async seNewBuy(data: { localId: string; products: Partial<BuyProducts>[] }) {
     try {
       const { localId, products } = data;
 
       const countProducts = products.length;
+
       const totalValue = products.reduce(
         (acc, item) => +(acc + item.amount * item.unitPrice).toFixed(2),
         0,
@@ -52,7 +96,13 @@ export class BuyService {
   }
 
   async seGetBuyProducts(): Promise<BuyProducts[]> {
-    return (await this.prisma.buyProducts.findMany()) as any;
+    return (await this.prisma.buyProducts.findMany({
+      orderBy: {
+        buys: {
+          buyDate: 'desc',
+        },
+      },
+    })) as any;
   }
 
   async seGetAllBuys(): Promise<Buy[]> {
@@ -78,6 +128,9 @@ export class BuyService {
             },
           },
         },
+      },
+      orderBy: {
+        buyDate: 'desc',
       },
     })) as any;
   }

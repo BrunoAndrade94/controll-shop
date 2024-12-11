@@ -5,10 +5,11 @@ import { CreateEmptyProduct, Mark, Product } from "core";
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useEffect, useState } from "react";
 import useApi from "../../hooks/use-api";
-import useProduct from "../../hooks/use-mark";
+import useMark from "../../hooks/use-mark";
 
 const urlProduct = "/products/";
 const urlGetProduct = "/products/get/all/";
+const urlDeleteProduct = "/products/delete/";
 const urlNewProducts = "/products/new/";
 const urlValidateProducts = "/products/new/validate/description/";
 // const urlValidateProducts = "/products/get/?search=";
@@ -23,14 +24,18 @@ export interface ContextProductProps {
   setDescriptionInUse: (value: boolean) => void;
 
   productsData: Partial<Product>[]; // Inclui as produtos disponíveis
+  setProductsData: React.Dispatch<React.SetStateAction<Partial<Product>[]>>;
+
   marksData: Partial<Mark>[]; // Inclui as produtos disponíveis
 
   queryProducts: string;
   setQueryProducts: (value: string) => void;
 
+  resetProduct(): void;
   saveProduct(): Promise<void>;
-  updateProduct(product: Partial<Product>): void;
   loadingProduct(): Promise<void>;
+  deleteProduct(id: string): void;
+  updateProduct(product: Partial<Product>): void;
 }
 
 const ContextProduct = createContext<ContextProductProps>({} as any);
@@ -38,16 +43,51 @@ const ContextProduct = createContext<ContextProductProps>({} as any);
 export function ProviderContextProduct(props: any) {
   const router = useRouter();
   const { msgSucess } = useMessage();
-  const { httpGet, httpPost } = useApi();
+  const { httpGet, httpPost, httpPut } = useApi();
 
-  const { marksData } = useProduct();
+  const { marksData, resetMark } = useMark();
 
   const [productsData, setProductsData] = useState<Partial<Product>[]>([]);
-  const [queryProducts, setQueryProducts] = useState("");
+  const [queryProducts, setQueryProducts] = useState<string>("");
 
   const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [product, setProduct] =
     useState<Partial<Product>>(CreateEmptyProduct());
+
+  const loadingProduct = useCallback(
+    async function () {
+      try {
+        const product = await httpGet(`${urlGetProduct}`);
+
+        setProductsData(product);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [httpGet, setProductsData]
+  );
+
+  const resetProduct = useCallback(() => {
+    setProduct({});
+    resetMark();
+    setQueryProducts("");
+    setProductsData([]);
+    loadingProduct();
+  }, [loadingProduct, resetMark]);
+
+  const deleteProduct = useCallback(
+    async function (id: string) {
+      try {
+        if (id.length > 0) {
+          await httpPut(urlDeleteProduct, id);
+        }
+      } catch (error) {
+        // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
+        console.error(error);
+      }
+    },
+    [httpPut]
+  );
 
   const saveProduct = useCallback(
     async function () {
@@ -64,26 +104,13 @@ export function ProviderContextProduct(props: any) {
 
         router.push(urlProduct);
 
-        setQueryProducts("");
+        resetProduct();
       } catch (error) {
         // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
         console.error(error);
       }
     },
-    [product, httpPost, router, msgSucess]
-  );
-
-  const loadingProduct = useCallback(
-    async function () {
-      try {
-        const product = await httpGet(`${urlGetProduct}`);
-
-        setProductsData(product);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [httpGet, setProductsData]
+    [product, httpPost, router, msgSucess, resetProduct]
   );
 
   // const validateDescription = useCallback(
@@ -143,16 +170,19 @@ export function ProviderContextProduct(props: any) {
   return (
     <ContextProduct.Provider
       value={{
+        marksData,
+        productsData,
+        queryProducts,
         product: product,
         descriptionInUse: descriptionInUse,
-        marksData,
-        queryProducts,
-        productsData,
-        updateProduct: setProduct,
-        setDescriptionInUse,
-        setQueryProducts,
         saveProduct,
+        resetProduct,
+        deleteProduct,
         loadingProduct,
+        setProductsData,
+        setQueryProducts,
+        setDescriptionInUse,
+        updateProduct: setProduct,
       }}
     >
       {props.children}

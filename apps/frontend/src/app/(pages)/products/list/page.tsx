@@ -1,20 +1,14 @@
 "use client";
 
 import MyList from "@/components/lists/my-list";
+import useBuy from "@/data/hooks/use-buy";
 import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
 
 export default function PageProductList() {
   const { msgSucess } = useMessage();
-  const { product, loadingProduct, productsData } = useProduct();
-
-  // const headers: any = {
-  //   description: "Descrição",
-  //   lastPrice: "Preço",
-  //   mark: {
-  //     description: "Marca",
-  //   },
-  // };
+  const { deleteProduct } = useProduct();
+  const { buy, loadingBuyProducts, productsData } = useBuy();
 
   const columns = [
     { key: "description", label: "Descrição" },
@@ -26,14 +20,19 @@ export default function PageProductList() {
     { key: "mark.description", label: "Marca" },
   ];
 
-  const clicou = () => {
-    msgSucess("Marca selecionada com sucesso");
-  };
+  const columnsModal = columns;
 
   return (
     <div className="flex flex-col items-center">
       <div>
-        <MyList columns={columns} data={productsData}></MyList>
+        <MyList
+          windowTitle="Produtos"
+          windowLabel="consultas, modificações e muito mais..."
+          columns={columns}
+          columnsModal={columnsModal}
+          data={productsData}
+          onClick={deleteProduct}
+        />
       </div>
     </div>
   );

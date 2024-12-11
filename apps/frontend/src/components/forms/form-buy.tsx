@@ -7,9 +7,13 @@ import useLocal from "@/data/hooks/use-local";
 import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
 import { Local, Product } from "core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MyInput from "../shared/My-Input";
 import Steps from "../shared/Steps";
+import FormBuyCart from "./form-buy-cart";
+
+// import BarcodeReader from "react-barcode-reader";
+import Quagga from "quagga";
 
 // Tipo para a lista de produtos no contexto de compra
 type BuyProductItem = {
@@ -22,15 +26,67 @@ type BuyProductItem = {
 };
 
 export default function FormBuy() {
-  const { buy, saveBuy, updateBuy } = useBuy();
-  const { msgSucess } = useMessage();
+  /// INICIO TESTE DE CAMERA
+  const [showScanner, setShowScanner] = useState(false);
 
-  const { productsData, queryProducts, setQueryProducts } = useProduct();
+  const startScanner = () => {
+    setShowScanner(true);
+    Quagga.init(
+      {
+        inputStream: {
+          name: "Live",
+          type: "LiveStream",
+          target: document.querySelector("#scanner"), // Alvo onde o scanner será exibido
+        },
+        decoder: {
+          readers: ["code_128_reader"], // Tipos de código de barras suportados
+        },
+      },
+      (err: Error) => {
+        if (err) {
+          console.error("Erro ao inicializar Quagga:", err);
+          return;
+        }
+        Quagga.start();
+      }
+    );
+
+    Quagga.onDetected((result: any) => {
+      if (result && result.codeResult) {
+        console.log("Código detectado:", result.codeResult.code);
+        Quagga.stop();
+        setShowScanner(false); // Fecha o scanner após leitura
+      }
+    });
+  };
+
+  const stopScanner = () => {
+    Quagga.stop();
+    setShowScanner(false);
+  };
+
+  // const handleOnChangeProduct = (value: any) => {
+  //   setQueryProducts(value);
+  //   const filteredProducts = productsData.filter((product) =>
+  //     product.description?.toUpperCase().includes(value.toUpperCase())
+  //   );
+  //   setFilteredProducts(filteredProducts);
+  // };
+
+  /// FIM TESTE DE CAMERA
+  const { buy, saveBuy, updateBuy } = useBuy();
+  const { msgSucess, msgError } = useMessage();
+
+  const [totalValueBuy, setTotalValueBuy] = useState(0);
+
+  const { productsData, setProductsData, queryProducts, setQueryProducts } =
+    useProduct();
   const [filteredProducts, setFilteredProducts] = useState<Partial<Product>[]>(
     []
   );
 
-  const { localsData, queryLocals, setQueryLocals } = useLocal();
+  const { localsData, queryLocals, setQueryLocals, setDescriptionInUse } =
+    useLocal();
   const [filteredLocals, setFilteredLocals] = useState<Partial<Local>[]>([]);
 
   const [showList, setShowList] = useState(false);
@@ -38,12 +94,32 @@ export default function FormBuy() {
 
   const [productsList, setProductsList] = useState<BuyProductItem[]>([]);
 
+  const labels = ["Local de Compra", "Adicionar Produtos"];
+
   const authNextStep: boolean[] = [!!buy.localId, productsList.length > 0];
 
+  function calculateTotalValue(
+    productsList: { amount: number; unitPrice: number }[]
+  ): number {
+    return productsList.reduce(
+      (acc, product) => +(acc + product.amount * product.unitPrice).toFixed(2),
+      0
+    );
+  }
+
+  const atualizarListaProduto = (description: string) => {
+    return productsData.filter(
+      (productData) =>
+        productData.description?.toUpperCase() !== description.toUpperCase()
+    );
+  };
+
   const handleAddProduct = (product: any) => {
-    const alreadyExists = productsList.some((p) => p.productId === product.id);
-    if (!alreadyExists) {
-      setProductsList((prev) => [
+    setProductsData(atualizarListaProduto(product.description));
+    setFilteredProducts(atualizarListaProduto(product.description));
+
+    setProductsList((prev) => {
+      const updatedList = [
         ...prev,
         {
           productId: product.id,
@@ -53,11 +129,20 @@ export default function FormBuy() {
           amount: 1,
           totalPrice: product.lastPrice,
         },
-      ]);
-      msgSucess(`${product.description} incluido no carrinho.`);
-    }
+      ];
+
+      // Recalcular o valor total
+      setTotalValueBuy(calculateTotalValue(updatedList));
+
+      return updatedList;
+    });
+
+    msgSucess(
+      `${product.description} INCLUÍDO. ***VALOR DE R$ ${product.lastPrice}`
+    );
+
     setQueryProducts("");
-    setShowList(false);
+    // setShowList(true);
   };
 
   const handleSelectLocal = (localId: string, description: string) => {
@@ -69,11 +154,11 @@ export default function FormBuy() {
 
   const handleUpdateProduct = (
     productId: string,
-    field: keyof BuyProductItem,
+    field: string,
     value: number
   ) => {
-    setProductsList((prev) =>
-      prev.map((product) =>
+    setProductsList((prev) => {
+      const updatedList = prev.map((product) =>
         product.productId === productId
           ? {
               ...product,
@@ -85,14 +170,25 @@ export default function FormBuy() {
                   : product.totalPrice,
             }
           : product
-      )
-    );
+      );
+
+      // Recalcular o valor total após a atualização
+      setTotalValueBuy(calculateTotalValue(updatedList));
+
+      return updatedList;
+    });
   };
 
   const handleRemoveProduct = (productId: string) => {
-    setProductsList((prev) =>
-      prev.filter((product) => product.productId !== productId)
-    );
+    setProductsList((prev) => {
+      const updatedList = prev.filter(
+        (product) => product.productId !== productId
+      );
+
+      // Recalcular o valor total após a remoção
+      setTotalValueBuy(calculateTotalValue(updatedList));
+      return updatedList;
+    });
   };
 
   const handleSaveBuy = () => {
@@ -108,21 +204,82 @@ export default function FormBuy() {
     msgSucess("Compra realizada com sucesso.");
   };
 
-  useEffect(() => {
-    // if (queryLocals) {
-    const filtered = localsData.filter((local) =>
-      local.description?.toUpperCase().includes(queryLocals.toUpperCase())
+  const handleSearchProduct = (description: string) => {
+    // Busca produtos que contenham a string digitada
+    const filteredProducts = productsData.filter((productData) =>
+      productData.description?.toUpperCase().includes(description.toUpperCase())
     );
-    setFilteredLocals(filtered);
-    setShowList(!!filtered);
-    return;
-    // } else {
-    //   setFilteredLocals([]);
-    //   setShowList(false);
-    //   setQueryLocals("");
-    //   updateBuy({});
-    // }
-  }, [localsData, queryLocals, setQueryLocals, updateBuy]);
+
+    setFilteredProducts(filteredProducts);
+  };
+
+  const handleSelectProduct = (id: string) => {
+    // remover produto da lista
+    const updatedProductsData = productsData.filter(
+      (product) => product.id !== id
+    );
+
+    setProductsData(updatedProductsData);
+
+    // Atualizar filteredProducts para refletir a lista atualizada
+    const updatedFilteredProducts = filteredProducts.filter(
+      (product) => product.id !== id
+    );
+    setFilteredProducts(updatedFilteredProducts);
+  };
+
+  const handleOnChangeProduct = (value: string) => {
+    setQueryProducts(value);
+
+    if (value.length === 0) {
+      setShowList(true);
+      setQueryProducts("");
+      updateBuy({ ...buy, products: [] });
+      setFilteredProducts(productsData);
+      return;
+    }
+
+    handleSearchProduct(queryProducts);
+
+    // handleSelectProduct(queryProducts);
+  };
+
+  const handleOnChangeLocal = (value: string) => {
+    setQueryLocals(value);
+
+    if (value.length === 0) {
+      setShowList(true);
+      setQueryLocals("");
+      updateBuy({});
+      return;
+    }
+    // Busca produtos que contenham a string digitada
+    const filteredLocals = localsData.filter((localData) =>
+      localData.description?.toUpperCase().includes(value.toUpperCase())
+    );
+
+    setFilteredLocals(filteredLocals);
+  };
+
+  // useEffect(() => {
+  //   cleanAll();
+  // }, [cleanAll]);
+
+  // useEffect(() => {
+  //   // if (queryLocals) {
+  //   const filtered = localsData.filter((local) =>
+  //     local.description?.toUpperCase().includes(queryLocals.toUpperCase())
+  //   );
+  //   setFilteredLocals(filtered);
+  //   setShowList(!!filtered);
+  //   return;
+  //   // } else {
+  //   //   setFilteredLocals([]);
+  //   //   setShowList(false);
+  //   //   setQueryLocals("");
+  //   //   updateBuy({});
+  //   // }
+  // }, [localsData, queryLocals, setQueryLocals, updateBuy]);
 
   // useEffect(() => {
   //   if (queryProducts) {
@@ -144,15 +301,16 @@ export default function FormBuy() {
   return (
     <div>
       <Steps
-        labels={["Local de Compra", "Adicionar Produtos"]}
+        labels={labels}
         labelAction="Finalizar Compra"
         actionExec={handleSaveBuy}
         authNextStep={authNextStep}
       >
         <div className="relative flex flex-col">
           <MyInput
-            label="Selecione um local"
+            label={`${localsData.length === 0 ? "Procurando locais.." : "Selecione um local"}`}
             value={queryLocals ?? ""}
+            disabled={localsData.length === 0}
             onBlur={() => {
               setShowList(false);
               setFilteredLocals([]);
@@ -162,8 +320,9 @@ export default function FormBuy() {
               setFilteredLocals(localsData);
             }}
             onChange={(event) => {
-              setQueryLocals(event.target.value);
+              handleOnChangeLocal(event.target.value);
             }}
+            className={`${localsData.length === 0 ? "bg-gray-200 border-dashed border-gray-400 opacity-50 cursor-not-allowed p-2 rounded-md w-full" : ""}`}
           />
           {!buy.localId && showList && (
             <div
@@ -184,21 +343,40 @@ export default function FormBuy() {
             </div>
           )}
         </div>
+
         <div className="relative flex flex-col">
-          <MyInput
-            label="Selecione um produto"
-            value={queryProducts ?? ""}
-            onBlur={() => {
-              setShowList(false);
-              setFilteredProducts([]);
-            }}
-            onFocus={() => {
-              setShowList(true);
-              setShowCart(false);
-              setFilteredProducts(productsData);
-            }}
-            onChange={(event) => setQueryProducts(event.target.value)}
-          />
+          <div className="flex flex-row text-center items-end -mt-5">
+            <div className="flex-1 items-center">
+              <MyInput
+                label={`${productsData.length === 0 ? "Procurando produtos.." : "Selecione um produto"}`}
+                value={queryProducts ?? ""}
+                disabled={productsData.length === 0}
+                onBlur={() => {
+                  setShowList(false);
+                  setFilteredProducts([]);
+                }}
+                onFocus={() => {
+                  setShowList(true);
+                  setShowCart(false);
+                  setFilteredProducts(productsData);
+                }}
+                onChange={(event) => handleOnChangeProduct(event.target.value)}
+                className={`${productsData.length === 0 ? "bg-gray-200 border-dashed border-gray-400 opacity-50 cursor-not-allowed p-2 rounded-md w-full" : ""}`}
+              />
+            </div>
+            <div className="ml-2">
+              <button
+                type="button"
+                className="botao verde"
+                onClick={() => {
+                  msgError("AINDA NÃO SOU FUNCIONAL");
+                }}
+              >
+                QRCODE
+              </button>
+            </div>
+          </div>
+
           {!showCart && showList && (
             <div
               onMouseDown={(e) => e.preventDefault()}
@@ -219,94 +397,33 @@ export default function FormBuy() {
               ))}
             </div>
           )}
-          {!showList && productsList.length > 0 && (
-            <button
-              type="button"
-              className="w-full botao amarelo mt-2"
-              onClick={() => {
-                if (showCart) {
-                  setShowCart(false);
-                } else {
-                  setShowCart(true);
-                }
-              }}
-            >
-              Carrinho ({productsList.length})
-            </button>
-          )}
+
           {showCart && (
-            <div className="mt-2 max-h-52 overflow-auto rounded-lg">
-              {productsList.map((product) => (
-                <div
-                  key={product.productId}
-                  className="flex items-center gap-4 p-2 pt-1 border rounded-md bg-zinc-200 mb-2 mr-2"
-                >
-                  <div className="flex-1">
-                    <div className="flex flex-row justify-between items-center">
-                      <div className="text-lg text-start">
-                        {product.description}
-                      </div>
-                      <div className="text-red-500 font-bold ml-2">
-                        <button
-                          type="button"
-                          title="Excluir"
-                          onClick={() => handleRemoveProduct(product.productId)}
-                        >
-                          X
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex flex-row justify-between items-center">
-                      <div className="text-gray-500 text-xs">
-                        {product.mark}
-                      </div>
-                    </div>
-                    <div className="flex flex-col justify-between items-center">
-                      <div>
-                        <label className="text-sm">Quantidade:</label>
-                        <input
-                          placeholder="quantidade"
-                          type="number"
-                          min="1"
-                          value={product.amount ?? 1}
-                          onChange={(e) =>
-                            handleUpdateProduct(
-                              product.productId,
-                              "amount",
-                              +e.target.value
-                            )
-                          }
-                          className="w-16 border bg-zinc-300/0 rounded-lg p-1 text-center text-black"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm">Preço: R$</label>
-                        <input
-                          className="w-20 border bg-zinc-300/0 rounded-lg p-1 text-center text-black m-1"
-                          placeholder="Preço"
-                          type="number"
-                          min="0"
-                          value={product.unitPrice.toFixed(2) ?? 0}
-                          onChange={(e) =>
-                            handleUpdateProduct(
-                              product.productId,
-                              "unitPrice",
-                              +e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500 justify-between items-center">
-                      Total: R$ {product.totalPrice.toFixed(2) ?? 0}
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="w-full -mb-8">
+              <FormBuyCart
+                listCurrent={productsList}
+                handleRemoveProduct={handleRemoveProduct}
+                handleUpdateProduct={handleUpdateProduct}
+              />
             </div>
           )}
         </div>
       </Steps>
+      {!showList && productsList.length > 0 && (
+        <button
+          type="button"
+          className="w-full botao amarelo mt-2"
+          onClick={() => {
+            if (showCart) {
+              setShowCart(false);
+            } else {
+              setShowCart(true);
+            }
+          }}
+        >
+          Carrinho ({productsList.length}) R$ {totalValueBuy}
+        </button>
+      )}
     </div>
   );
 }

@@ -20,6 +20,7 @@ export default function FormProduct() {
     productsData,
     queryProducts,
     setQueryProducts,
+    resetProduct,
   } = useProduct();
   const labels = ["Descrição", "Valor Inicial", "Código de Barras", "Marca"];
   // VERIFICADO
@@ -36,23 +37,86 @@ export default function FormProduct() {
     msgSucess(`${description} selecionado`);
   };
 
-  const handleOnChange = (productUser: string) => {
-    setQueryProducts(productUser);
-    const productExist = productsData.some(
-      (productData) =>
-        productData.description?.toUpperCase() === queryProducts.toUpperCase()
+  // const handleOnChangeProduct = (productUser: string) => {
+  //   setQueryProducts(productUser);
+  //   const productExist = productsData.some(
+  //     (productData) =>
+  //       productData.description?.toUpperCase() === queryProducts.toUpperCase()
+  //   );
+
+  //   if (queryProducts.length > 0 && productExist) {
+  //     setDescriptionInUse(true); // Define como existente
+  //     updateProduct({ ...product, description: "" }); // Limpa a marca atual
+  //   } else if (queryProducts.length > 0 && !productExist) {
+  //     setDescriptionInUse(false); // Marca liberada para uso
+  //     updateProduct({ ...product, description: queryProducts }); // Atualiza com o valor digitado
+  //   }
+  // };
+
+  const handleOnChangeProduct = (productUser: string) => {
+    setQueryProducts(productUser); // Atualiza o estado com o texto digitado pelo usuário
+
+    // Busca produtos que contenham a string digitada
+    const filteredProducts = productsData.filter((productData) =>
+      productData.description?.toUpperCase().includes(productUser.toUpperCase())
     );
 
-    if (queryProducts.length > 0 && productExist) {
-      setDescriptionInUse(true); // Define como existente
-      updateProduct({ ...product, description: "" }); // Limpa a marca atual
-    } else if (queryProducts.length > 0 && !productExist) {
-      setDescriptionInUse(false); // Marca liberada para uso
-      updateProduct({ ...product, description: queryProducts }); // Atualiza com o valor digitado
+    if (filteredProducts.length > 0) {
+      // Caso existam produtos semelhantes
+      setDescriptionInUse(
+        filteredProducts.some(
+          (productData) =>
+            productData.description?.toUpperCase() === productUser.toUpperCase()
+        )
+      );
+
+      // Atualiza o estado com os produtos filtrados (opcional)
+      setFilteredMarks(filteredProducts);
+    } else {
+      // Caso nenhum produto corresponda
+      setDescriptionInUse(false);
+      updateProduct({ ...product, description: productUser });
+      setFilteredMarks([]); // Limpa sugestões
     }
   };
 
-  const onChange = (markUser: string) => {
+  const handleOnChangeMark = (markUser: string) => {
+    setQueryMarks(markUser); // Atualiza o estado com o texto digitado pelo usuário
+
+    if (markUser.length === 0) {
+      // Se o campo está vazio
+      setShowList(true);
+      setDescriptionInUse(false); // Marca não está em uso
+      // updateMark({ ...mark, description: "" }); // Limpa a marca selecionada
+      product.markId = "";
+      // setFilteredMarks([]); // Limpa as sugestões
+      return;
+    }
+    // Busca produtos que contenham a string digitada
+    const filteredMarks = marksData.filter((markData) =>
+      markData.description?.toUpperCase().includes(markUser.toUpperCase())
+    );
+
+    if (filteredMarks.length > 0) {
+      // Caso existam produtos semelhantes
+      setDescriptionInUse(
+        filteredMarks.some(
+          (markData) =>
+            markData.description?.toUpperCase() === markUser.toUpperCase()
+        )
+      );
+
+      // Atualiza o estado com os produtos filtrados (opcional)
+      setFilteredMarks(filteredMarks);
+    } else {
+      // Caso nenhum produto corresponda
+      setDescriptionInUse(false);
+      updateMark({ ...mark, description: markUser });
+      setFilteredMarks([]); // Limpa sugestões
+    }
+  };
+
+  const onChangeMark = (markUser: string) => {
     setQueryMarks(markUser);
 
     const filtered = marksData.filter(
@@ -116,9 +180,25 @@ export default function FormProduct() {
           observation={observation}
           // TODO: TROCAR DE BANCO DE DADOS (CONSULTA DIRETAA)
           // PARA CONSULTA COM A LISTA LOCAL
-          onChange={(event) => handleOnChange(event.target.value)}
+          onChange={(event) => handleOnChangeProduct(event.target.value)}
           error={descriptionInUse ? "Produto informado já está em uso." : ""}
         />
+        {showList && (
+          <div
+            onMouseDown={(e) => e.preventDefault()}
+            className="relative top-full left-0 w-full bg-white border rounded-xl border-gray-300 shadow-lg max-h-52 overflow-auto"
+          >
+            {filteredMarks.map((product) => (
+              <div
+                key={product.id}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+                onClick={() => handleOnChangeProduct(product.description || "")}
+              >
+                {product.description}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex flex-col gap-5">
         <MyInput
@@ -155,7 +235,7 @@ export default function FormProduct() {
             setFilteredMarks(marksData);
           }}
           label="Marca"
-          onChange={(event) => onChange(event.target.value)}
+          onChange={(event) => handleOnChangeMark(event.target.value)}
         />
         {/* TODO: AARRUMAR BUG QUE MOSTRA A LISTA DEPOIS DE CLICAR EM SALVAR */}
         {/* Lista de Marcas filtradas */}

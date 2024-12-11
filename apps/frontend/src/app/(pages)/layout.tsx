@@ -9,16 +9,16 @@ import Pagina from "../../components/templates/Page";
 export default function Layout(props: any) {
   return (
     <ProviderContextMessage>
-      <ProviderContextBuy>
-        <ProviderContextLocal>
-          <ProviderContextProduct>
-            <ProviderContextMark>
+      <ProviderContextMark>
+        <ProviderContextProduct>
+          <ProviderContextLocal>
+            <ProviderContextBuy>
               <Pagina>{props.children}</Pagina>
               <Toaster />
-            </ProviderContextMark>
-          </ProviderContextProduct>
-        </ProviderContextLocal>
-      </ProviderContextBuy>
+            </ProviderContextBuy>
+          </ProviderContextLocal>
+        </ProviderContextProduct>
+      </ProviderContextMark>
     </ProviderContextMessage>
   );
 }

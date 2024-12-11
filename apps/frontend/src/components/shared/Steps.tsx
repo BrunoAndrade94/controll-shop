@@ -1,4 +1,5 @@
 "use client";
+import useBuy from "@/data/hooks/use-buy";
 import { useState } from "react";
 
 export interface StepsProps {
@@ -11,8 +12,7 @@ export interface StepsProps {
 
 export default function Steps(props: StepsProps) {
   const [stepCurrent, setStepCurrent] = useState(0);
-  const [showList, setShowList] = useState(false);
-  const int = props.labels.length;
+  // const { showCart } = useBuy();
 
   function noStepPrevious() {
     return stepCurrent === 0;

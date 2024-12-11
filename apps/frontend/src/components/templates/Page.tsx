@@ -7,18 +7,11 @@ export interface PaginaProps {
 
 export default function Pagina(props: PaginaProps) {
   return (
-    <div
-      className="
-				flex flex-col items-center
-				py-5 min-h-screen
-				bg-slate-700 h-dvh"
-    >
-      <Logo />
-      <main
-        className={`flex-1 flex flex-col justify-center pt-5 container ml-40 mr-40 pl-10 pr-10 ${props.className}`}
-      >
-        {props.children}
-      </main>
+    <div className="flex flex-col bg-cover bg-center bg-no-repeat image-background h-dvh">
+      <div className="mt-36">
+        <Logo />
+      </div>
+      <main className={`mt-28 ${props.className}`}>{props.children}</main>
     </div>
   );
 }

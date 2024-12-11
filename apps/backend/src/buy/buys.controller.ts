@@ -13,6 +13,15 @@ import { BuyService } from './buy.service';
 export class BuysController {
   constructor(readonly repository: BuyService) {}
 
+  @Get('get/by-product/:id')
+  async coGetBuysByProductId(@Param('id') productId: string) {
+    try {
+      return await this.repository.seGetBuysByProductId(productId);
+    } catch (error) {
+      return { message: 'Erro ao buscar compras para o produto', error };
+    }
+  }
+
   @Get('get/all')
   async coGetBuys() {
     try {

@@ -23,6 +23,7 @@ export interface ContextLocalProps {
   queryLocals: string;
   setQueryLocals: (value: string) => void;
 
+  resetLocal(): void;
   saveLocal(): Promise<void>;
   updateLocal(local: Partial<Local>): void;
   loadingLocal(): Promise<void>;
@@ -35,11 +36,30 @@ export function ProviderContextLocal(props: any) {
   const { msgSucess } = useMessage();
   const { httpGet, httpPost } = useApi();
 
-  const [queryLocals, setQueryLocals] = useState("");
+  const [queryLocals, setQueryLocals] = useState<string>("");
   const [localsData, setLocalsData] = useState<Partial<Local>[]>([]);
 
   const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [local, setLocal] = useState<Partial<Local>>(CreateEmptyLocal());
+
+  const loadingLocal = useCallback(
+    async function () {
+      try {
+        const locals = await httpGet(`${urlGetLocal}`);
+
+        setLocalsData(locals);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [httpGet, setLocalsData]
+  );
+
+  const resetLocal = useCallback(() => {
+    setQueryLocals("");
+    setLocalsData([]);
+    loadingLocal();
+  }, [loadingLocal]);
 
   const saveLocal = useCallback(
     async function () {
@@ -65,31 +85,19 @@ export function ProviderContextLocal(props: any) {
     [local, httpPost, router, setQueryLocals, msgSucess]
   );
 
-  const loadingLocal = useCallback(
-    async function () {
-      try {
-        const locals = await httpGet(`${urlGetLocal}`);
-
-        setLocalsData(locals);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [httpGet, setLocalsData]
-  );
+  const loadLocals = useCallback(async () => {
+    try {
+      const locals = await httpGet(urlGetLocal);
+      setLocalsData(locals);
+    } catch (error) {
+      console.error("Erro ao carregar:", error);
+    }
+  }, [httpGet]);
 
   // Carrega todas as produtos na inicialização
   useEffect(() => {
-    async function loadLocals() {
-      try {
-        const locals = await httpGet(urlGetLocal);
-        setLocalsData(locals);
-      } catch (error) {
-        console.error("Erro ao carregar:", error);
-      }
-    }
     loadLocals();
-  }, [httpGet, localsData]);
+  }, [loadLocals]);
 
   return (
     <ContextLocal.Provider
@@ -99,6 +107,7 @@ export function ProviderContextLocal(props: any) {
         local: local,
         descriptionInUse: descriptionInUse,
         saveLocal,
+        resetLocal,
         loadingLocal,
         setQueryLocals,
         setDescriptionInUse,

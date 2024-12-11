@@ -4,7 +4,7 @@
 
 @layer components {
   .home {
-    @apply flex flex-col justify-center items-center gap-10 h-dvh;
+    @apply flex flex-col bg-cover bg-center bg-no-repeat h-dvh;
   }
   .image-background {
     @apply bg-[url('../../../public/images/background/home.jpeg')] bg-cover;

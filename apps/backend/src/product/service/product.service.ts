@@ -101,7 +101,7 @@ export class ProductService {
           id: product.id,
           description: product.description,
           codeBar: product.codeBar,
-          lastPrice: product.lastPrice,
+          lastPrice: +product.lastPrice.toFixed(2),
           markId: product.markId,
           createDate: product.createDate,
           active: product.active,

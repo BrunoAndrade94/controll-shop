@@ -4,15 +4,27 @@ import MyList from "@/components/lists/my-list";
 import useMark from "@/data/hooks/use-mark";
 
 export default function PageMarksList() {
-  const { mark, loadingMark, marksLocal } = useMark();
-  const headers: (keyof { id: string; description: string })[] = [
-    "description",
+  const { marksData } = useMark();
+
+  const columns = [
+    {
+      key: "description",
+      label: "Descrição",
+    },
   ];
+
+  const columnsModal = columns;
 
   return (
     <div>
       <div>
-        <MyList headers={headers} data={marksLocal as any}></MyList>
+        <MyList
+          windowTitle="Marcas"
+          windowLabel="consultas e modificações"
+          columns={columns}
+          columnsModal={columnsModal}
+          data={marksData}
+        ></MyList>
       </div>
     </div>
   );

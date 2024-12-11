@@ -11,6 +11,24 @@ function getUrl(uri: string): string {
 }
 
 export default function useApi() {
+  ///////////
+  const httpPut = useCallback(async function (path: string, body?: any) {
+    const uri = getUri(path);
+    const url = getUrl(uri);
+
+    const response = await fetch(url, {
+      method: "PUT", // Método PUT para atualizar os dados
+      headers: {
+        "Content-Type": "application/json", // Indica que estamos enviando dados no formato JSON
+      },
+      body: JSON.stringify(body), // Envia os dados convertidos para JSON
+    });
+
+    return extractData(response); // Extrai os dados da resposta
+  }, []);
+
+  /////////////
+
   const httpGet = useCallback(async function (path: string) {
     const uri = getUri(path);
     const url = getUrl(uri);
@@ -52,5 +70,6 @@ export default function useApi() {
   return {
     httpGet,
     httpPost,
+    httpPut,
   };
 }
