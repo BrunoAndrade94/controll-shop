@@ -31,8 +31,10 @@ export class BuyService {
             unitPrice: true, // Valor do produto na compra
             products: {
               select: {
+                id: true,
                 description: true, // Nome do produto
                 lastPrice: true, // Último preço do produto
+                codeBar: true, // Último preço do produto
                 mark: {
                   select: {
                     description: true, // Nome da marca

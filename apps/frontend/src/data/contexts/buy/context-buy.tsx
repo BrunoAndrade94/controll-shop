@@ -25,7 +25,7 @@ export interface ContextBuyProps {
   saveBuy(buyData: Partial<any>): Promise<void>;
   updateBuy(buy: Partial<Buy>): void;
   loadingBuy(id: string): Promise<void>;
-  loadingBuyProducts(productId: string): Promise<void>;
+  loadingBuyProducts(productId: string): any;
 }
 
 const ContextBuy = createContext<ContextBuyProps>({} as any);
@@ -72,9 +72,9 @@ export function ProviderContextBuy(props: any) {
   );
 
   const loadingBuyProducts = useCallback(
-    async function (productId: string) {
+    async function (id: string) {
       try {
-        const buy = await httpGet(`${urlBuyProducts}${productId}`);
+        const buy = await httpGet(`${urlBuyProducts}${id}`);
 
         return buy;
       } catch (error) {

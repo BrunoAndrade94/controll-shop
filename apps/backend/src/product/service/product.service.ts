@@ -31,27 +31,27 @@ export class ProductService {
   //   });
   // }
 
-  async seProductsDescription(search?: string): Promise<Product | null> {
+  async seProductsDescription(): Promise<Product | null> {
     return (await this.prisma.product.findMany({
-      where: {
-        active: true,
-        description: {
-          contains: search,
-        },
-      },
-      select: {
-        id: true,
-        description: true,
-        lastPrice: true,
-        codeBar: true,
-        mark: {
-          select: {
-            id: true,
-            description: true,
-          },
-        },
-      },
-      orderBy: [{ createDate: 'desc' }],
+      // where: {
+      //   active: true,
+      //   description: {
+      //     contains: search,
+      //   },
+      // },
+      // select: {
+      //   id: true,
+      //   description: true,
+      //   lastPrice: true,
+      //   codeBar: true,
+      //   mark: {
+      //     select: {
+      //       id: true,
+      //       description: true,
+      //     },
+      //   },
+      // },
+      // orderBy: [{ description: 'asc' }],
     })) as any;
   }
 
@@ -74,6 +74,18 @@ export class ProductService {
           id: id,
           active: true,
         },
+        select: {
+          id: true,
+          description: true,
+          lastPrice: true,
+          codeBar: true,
+          mark: {
+            select: {
+              id: true,
+              description: true,
+            },
+          },
+        },
       });
     } catch (error) {
       console.error('Erro ao buscar o produto', error.message);
@@ -85,7 +97,19 @@ export class ProductService {
     try {
       const productsAll = await this.prisma.product.findMany({
         where: { active: true },
-        orderBy: [{ createDate: 'desc' }],
+        select: {
+          id: true,
+          description: true,
+          codeBar: true,
+          lastPrice: true,
+          mark: {
+            select: {
+              id: true,
+              description: true,
+            },
+          },
+        },
+        orderBy: { description: 'asc' },
       });
       return productsAll;
     } catch (error) {
@@ -137,8 +161,13 @@ export class ProductService {
       const productUpdate = await this.prisma.product.update({
         where: { id: id },
         data: {
-          description: productData.description.toUpperCase(),
+          description: productData.description,
           codeBar: productData.codeBar,
+          mark: {
+            connect: {
+              id: productData.markId,
+            },
+          },
         },
       });
 

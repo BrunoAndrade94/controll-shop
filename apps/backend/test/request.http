@@ -17,7 +17,7 @@ PUT http://localhost:4000/locals/delete/cb99db88-30b4-4a57-b153-ac798a8ff764
 ///////////////////////////////
 
 ###
-GET http://localhost:4000/buys/get/by-product/f8155d94-fe5a-4f65-99b6-92508b053bc0
+GET http://localhost:4000/buys/get/by-product/e2fee4ba-d4c1-4605-b794-cc428fd47b4e
 
 ###
 GET http://localhost:4000/locals/new/validate/description/arroz
@@ -29,7 +29,7 @@ GET http://localhost:4000/products/new/validate/description/as
 GET https://172.17.10.134:4000/products/new/validate/description/s
 
 ###
-GET http://localhost:4000/products/get/all
+GET http://localhost:4000/products/get/id/e2fee4ba-d4c1-4605-b794-cc428fd47b4e
 
 ###
 PUT http://localhost:4000/products/delete/c36864ab-f03a-4e79-97f8-57a4382abf7b
@@ -37,15 +37,31 @@ PUT http://localhost:4000/products/delete/c36864ab-f03a-4e79-97f8-57a4382abf7b
 ###
 GET http://localhost:4000/products/get/?search=ice
 
+/////////////////
+
 ###
-GET http://localhost:4000/products/get/f8155d94-fe5a-4f65-99b6-92508b053bc0
+GET http://localhost:4000/products/get/id/334ee704-b398-49da-913a-c047bf0002b0
+
+###
+GET http://localhost:4000/products/get/
+
+
+// UPDATE
+###
+PUT http://localhost:4000/products/update/id/334ee704-b398-49da-913a-c047bf0002b0
+Content-Type: application/json
+
+{
+	"markId": "08309c42-d349-4e1b-af81-b11919b048ad"
+}
+
+/////////////////
 
 ###
 GET http://localhost:4000/products/get/mark/83562c16-2781-4256-becf-4cb18550f360
 
 ###
-GET http://localhost:4000/buys/get/07e5ac6d-029a-4708-a222-69e9ea1e073c
-x
+GET http://localhost:4000/buys/get/07e5ac6d-029a-4708-a222-69e9ea1e073cx
 
 ###
 GET http://localhost:4000/buys/1f18bb1a-e263-4c39-9c63-b1e5a5a93901
@@ -83,14 +99,6 @@ Content-Type: application/json
 	"codeBar": "edqdwe",
 	"lastPrice": 28.3,
 	"markId": "ea9669b2-6d04-42d1-b0fc-d2893bfde80c"
-}
-
-###
-PUT http://localhost:4000/products/update/ca3714e3-2da4-4588-8dd2-583485b5c767
-Content-Type: application/json
-
-{
-	"description": "arroz"
 }
 
 

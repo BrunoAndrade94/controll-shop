@@ -8,6 +8,9 @@ import useApi from "../../hooks/use-api";
 import useMark from "../../hooks/use-mark";
 
 const urlProduct = "/products/";
+const urlProductList = "/products/list/";
+const urlGetIdProduct = "/products/get/id/";
+const urlUpdateIdProduct = "/products/update/id/";
 const urlGetProduct = "/products/get/all/";
 const urlDeleteProduct = "/products/delete/";
 const urlNewProducts = "/products/new/";
@@ -15,8 +18,11 @@ const urlValidateProducts = "/products/new/validate/description/";
 // const urlValidateProducts = "/products/get/?search=";
 const urlNewProductsSucess = "/products/new/sucess/";
 
+const urlUpdateProducts = "";
+
 export interface ContextProductProps {
   product: Partial<Product>;
+  setProduct: React.Dispatch<React.SetStateAction<Partial<Product>>>;
 
   markDescription?: string;
 
@@ -35,6 +41,7 @@ export interface ContextProductProps {
   saveProduct(): Promise<void>;
   loadingProduct(): Promise<void>;
   deleteProduct(id: string): void;
+  getProduct(id: string): void;
   updateProduct(product: Partial<Product>): void;
 }
 
@@ -74,6 +81,81 @@ export function ProviderContextProduct(props: any) {
     setProductsData([]);
     loadingProduct();
   }, [loadingProduct, resetMark]);
+  //
+  /// CONSTRUIR A BAIXO
+
+  const updateProduct = useCallback(
+    async function () {
+      try {
+        console.log(product);
+
+        const updateProduct = await httpPut(
+          `${urlUpdateIdProduct}${product.id}`,
+          product
+        );
+
+        // console.log(updateProduct);
+
+        setProduct({ ...updateProduct });
+
+        // Exibe uma mensagem de sucesso
+        msgSucess(
+          `${product.description?.toUpperCase()} atualizado com sucesso.`
+        );
+
+        await loadingProduct();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [httpPut, setProduct, product, msgSucess, loadingProduct]
+  );
+
+  // const updateProduct = useCallback(
+  //   async function () {
+  //     try {
+  //       // Faz a requisição de atualização
+  //       const updatedProduct = await httpPut(
+  //         `${urlUpdateProducts}${product.id}`,
+  //         product
+  //       );
+
+  //       // Atualiza o estado com o produto atualizado
+  //       setProduct({
+  //         ...updatedProduct,
+  //       });
+
+  //       // Exibe uma mensagem de sucesso
+  //       msgSucess(
+  //         `${product.description?.toUpperCase()} atualizado com sucesso.`
+  //       );
+
+  //       // Redireciona para a página de produtos
+  //       router.push(urlProduct);
+
+  //       // Reseta o estado do produto
+  //       resetProduct();
+  //     } catch (error) {
+  //       // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
+  //       console.error("Erro ao atualizar o produto:", error);
+  //     }
+  //   },
+  //   [product, httpPut, router, msgSucess, resetProduct]
+  // );
+
+  const getProduct = useCallback(
+    async function (id: string) {
+      try {
+        const product = await httpGet(`${urlGetIdProduct}${id}`);
+
+        setProduct(product);
+        return product;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [httpGet, setProduct]
+  );
 
   const deleteProduct = useCallback(
     async function (id: string) {
@@ -175,6 +257,8 @@ export function ProviderContextProduct(props: any) {
         queryProducts,
         product: product,
         descriptionInUse: descriptionInUse,
+        getProduct,
+        setProduct,
         saveProduct,
         resetProduct,
         deleteProduct,
@@ -182,7 +266,7 @@ export function ProviderContextProduct(props: any) {
         setProductsData,
         setQueryProducts,
         setDescriptionInUse,
-        updateProduct: setProduct,
+        updateProduct,
       }}
     >
       {props.children}

@@ -1,5 +1,4 @@
 "use client";
-import useBuy from "@/data/hooks/use-buy";
 import { useState } from "react";
 
 export interface StepsProps {
@@ -69,7 +68,7 @@ export default function Steps(props: StepsProps) {
       <div className="select-none flex flex-col text-center">
         {props.children[stepCurrent]}
       </div>
-      <div className="flex justify-between flex-col space-y-2 sm:flex-row sm:space-y-0">
+      <div className="flex justify-between flex-col space-y-2 sm:flex-row sm:space-y-0 space-x-0 sm:space-x-2">
         {noStepNext() ? (
           <button
             type="button"

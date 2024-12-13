@@ -1,8 +1,10 @@
+import ButtonVoltar from "@/components/shared/Button-Voltar";
+import Window from "@/components/shared/Window";
 import Link from "next/link";
 
 export default function PageLocal() {
   return (
-    <div>
+    <Window title="Locais" button={false}>
       <div className="flex flex-col items-center gap-4">
         <div className="space-y-2">
           <Link className="botao laranja" href={"/locals/new"}>
@@ -12,10 +14,10 @@ export default function PageLocal() {
             {"VER LOCAIS"}
           </Link>
         </div>
-        <Link className="botao azul mt-5" href={"/"}>
-          {"voltar"}
-        </Link>
+        <div className="flex-1">
+          <ButtonVoltar />
+        </div>
       </div>
-    </div>
+    </Window>
   );
 }

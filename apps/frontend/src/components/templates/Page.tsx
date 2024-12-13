@@ -7,7 +7,7 @@ export interface PaginaProps {
 
 export default function Pagina(props: PaginaProps) {
   return (
-    <div className="flex flex-col bg-cover bg-center bg-no-repeat image-background h-dvh">
+    <div className="flex flex-col bg-cover bg-center bg-no-repeat image-background h-dvh items-center">
       <div className="mt-36">
         <Logo />
       </div>

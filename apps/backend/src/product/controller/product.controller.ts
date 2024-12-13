@@ -13,9 +13,9 @@ export class ProductController {
     return { inUse: product };
   }
 
-  @Get('get/:search')
+  @Get('get/')
   async coProductsDescription(@Query('search') search?: string) {
-    return await this.productService.seProductsDescription(search);
+    return await this.productService.seProductsDescription();
   }
 
   @Get('get/id/:id')
@@ -28,7 +28,7 @@ export class ProductController {
     return await this.productService.seProductsAll();
   }
 
-  @Put('update/:id')
+  @Put('update/id/:id')
   async coProductUpdate(
     @Param('id') id: string,
     @Body()

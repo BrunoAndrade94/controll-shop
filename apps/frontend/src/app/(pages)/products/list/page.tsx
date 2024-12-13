@@ -12,25 +12,31 @@ export default function PageProductList() {
 
   const columns = [
     { key: "description", label: "Descrição" },
-    {
-      key: "lastPrice",
-      label: "Preço",
-      formatter: (val: any) => `R$ ${val.toFixed(2)}`,
-    },
-    { key: "mark.description", label: "Marca" },
+    // {
+    //   key: "lastPrice",
+    //   label: "Preço",
+    //   formatter: (val: any) => `R$ ${val.toFixed(2)}`,
+    // },
+    // { key: "mark.description", label: "Marca" },
   ];
 
-  const columnsModal = columns;
+  const columnsModal = [
+    { key: "id", label: "ID" },
+    { key: "description", label: "Descrição" },
+    { key: "mark.description", label: "Marca" },
+  ];
 
   return (
     <div className="flex flex-col items-center">
       <div>
+        {/* <ListaProdutos /> */}
         <MyList
           windowTitle="Produtos"
           windowLabel="consultas, modificações e muito mais..."
           columns={columns}
           columnsModal={columnsModal}
           data={productsData}
+          dataModal={productsData}
           onClick={deleteProduct}
         />
       </div>
