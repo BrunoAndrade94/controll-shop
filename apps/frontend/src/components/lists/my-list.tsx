@@ -1,18 +1,16 @@
 "use client";
 
-import useApi from "@/data/hooks/use-api";
 import useBuy from "@/data/hooks/use-buy";
 import useMark from "@/data/hooks/use-mark";
 import useProduct from "@/data/hooks/use-product";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Product } from "core/dist";
-import { useCallback, useState } from "react";
-import AdjustableLine from "../shared/Adjustable-Line";
+import { Product } from "core";
+import { useCallback, useEffect, useState } from "react";
+import PurchaseModal from "../modal/modal-purchase-details";
 import MyInput from "../shared/My-Input";
+import InputComLista from "../shared/My-Input-Selectable";
 import Window from "../shared/Window";
-import MyModal from "./my-modal";
+import BotoesDeAcao from "./botoes-de-acao";
+import MyModal from "./modal-compras-produto";
 
 // Definindo a estrutura da prop para o componente
 interface ColumnConfig<T> {
@@ -36,15 +34,7 @@ interface MyListProps<T> {
   windowLabel?: string;
 }
 
-const MyList = <T,>({
-  data,
-  dataModal,
-  columns,
-  onClick,
-  columnsModal,
-  windowTitle,
-  windowLabel,
-}: MyListProps<T>) => {
+const MyList = <T,>(props: MyListProps<T>) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState<T | null>(null); // Estado para item selecionado
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar o modal
@@ -52,16 +42,23 @@ const MyList = <T,>({
   const [isOpenDelete, setIsOpenDelete] = useState(false); // Estado para controlar o modal
   const [showHead, setShowHead] = useState(true); // Estado para controlar o modal
 
+  const { marksData, queryMarks, setQueryMarks } = useMark();
+
   const { loadingBuyProducts } = useBuy();
-  const { httpGet } = useApi();
 
   const [purchaseData, setPurchaseData] = useState<any>([]); // Dados das compras do produto
 
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
   ); // ID do produto selecionado
-  const { product, setProduct, getProduct, updateProduct, productsData } =
-    useProduct(); // Dados do produto para editar
+  const {
+    product,
+    setProduct,
+    getProduct,
+    updateProduct,
+    productsData,
+    deleteProduct,
+  } = useProduct(); // Dados do produto para editar
   const { mark, updateMark } = useMark(); // Dados do produto para editar
   const [editedProduct, setEditedProduct] = useState<Product | null>(); // Produto sendo editado
 
@@ -72,6 +69,8 @@ const MyList = <T,>({
     // Preencher o produto com os dados do produto selecionado
     const productToEdit: any = getProduct(id);
     setProduct(productToEdit); // Atualizando o estado do produto editado
+
+    deleteProduct(id);
   };
 
   const getValueByPath = (obj: any, path: string) => {
@@ -81,8 +80,8 @@ const MyList = <T,>({
   };
 
   // Filtra os itens com base na pesquisa
-  const filteredData = data.filter((item) => {
-    return columns.some(({ key }) => {
+  const filteredData = props.data.filter((item) => {
+    return props.columns.some(({ key }) => {
       const value =
         typeof key === "string"
           ? getValueByPath(item, key)
@@ -120,10 +119,10 @@ const MyList = <T,>({
       setIsOpenEdit(true); // Abre o modal
 
       try {
-        const data1 = productsData.find(
+        const data = productsData.find(
           (produto) => produto.id === (item as any).id
         );
-        setProduct({ ...data1 }); // Salva os dados das compras no estado
+        setProduct({ ...data }); // Salva os dados das compras no estado
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
         setProduct({}); // Define estado vazio em caso de erro
@@ -142,292 +141,261 @@ const MyList = <T,>({
       setIsOpenEdit(false);
     }
   };
+
+  useEffect(() => {
+    console.log(product);
+  }, [product]);
+
   return (
-    <Window
-      title={windowTitle ? windowTitle : "***titulo não informado"}
-      label={windowLabel ? windowLabel : ""}
-    >
-      <div>
-        <div className="flex flex-row items-center gap-2 mb-2">
-          <div className="flex-1 pb-2">
-            {/* Campo de pesquisa */}
-            <MyInput
-              placeholder="Pesquisar"
-              onChange={(e) => setSearchQuery(e.target.value)}
-              value={searchQuery}
-            />
+    <div className="ml-5 mr-5">
+      <Window
+        title={
+          props.windowTitle ? props.windowTitle : "***titulo não informado"
+        }
+        label={props.windowLabel ? props.windowLabel : ""}
+      >
+        <div className="flex flex-col">
+          <div className="flex flex-row items-center gap-2 mb-2">
+            <div className="flex-1 pb-2">
+              {/* Campo de pesquisa */}
+              <MyInput
+                disabled={productsData.length === 0}
+                placeholder="Pesquisar"
+                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchQuery}
+              />
+            </div>
           </div>
-        </div>
-        {/* Lista com cabeçalhos */}
-        <div
-          className={`overflow-y-auto overflow-x-hidden max-h-[22rem] rounded-lg bg-zinc-800/40`}
-        >
-          <table className="w-screen border-collapse items-center max-w-full">
-            {/* Cabeçalhos */}
-            <thead>
-              <tr>
-                {columns.map(({ label }, index) => (
-                  <th
-                    key={index}
-                    className="border-b px-4 py-2 text-left select-none sticky top-0 bg-purple-200 z-10"
-                  >
-                    {label} {/* Exibe o rótulo */}
+          {/* Lista com cabeçalhos */}
+          <div
+            className={`overflow-y-auto overflow-x-hidden max-h-[22rem] rounded-lg bg-zinc-800/40`}
+          >
+            <table className="w-full border-collapse items-center max-w-screen">
+              {/* Cabeçalhos */}
+              <thead>
+                <tr>
+                  {props.columns.map(({ label }, index) => (
+                    <th
+                      key={index}
+                      className="border-b px-4 py-2 text-left select-none sticky top-0 bg-purple-200 z-10"
+                    >
+                      {label} {/* Exibe o rótulo */}
+                    </th>
+                  ))}
+                  <th className="border-b px-4 py-2 text-left select-none sticky top-0 bg-purple-200 z-10">
+                    Ações {/* Coluna para os botões */}
                   </th>
-                ))}
-                <th className="border-b px-4 py-2 text-left select-none sticky top-0 bg-purple-200 z-10">
-                  Ações {/* Coluna para os botões */}
-                </th>
-              </tr>
-            </thead>
-            {/* Corpo da tabela com dados filtrados */}
-            <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map((item, index) => (
-                  <tr key={index}>
-                    {columns.map(({ key, formatter }, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className="border-b px-3 py-1 text-white select-none xs:text-sm"
-                      >
-                        {formatter
-                          ? formatter(
-                              typeof key === "string"
-                                ? getValueByPath(item, key)
-                                : item[key as keyof T]
-                            )
-                          : String(
-                              typeof key === "string"
-                                ? getValueByPath(item, key)
-                                : item[key as keyof T]
-                            )}
-                      </td>
-                    ))}
-                    {/* Coluna de ações */}
-                    <td className="border-b py-1">
-                      <div className="flex justify-between space-x-2 px-1">
-                        <button
-                          title="Compras"
-                          type="button"
-                          className="bg-blue-400 p-1 rounded-full"
-                          onClick={() => handleClickVerCompras(item)}
+                </tr>
+              </thead>
+              {/* Corpo da tabela com dados filtrados */}
+              <tbody>
+                {filteredData.length > 0 ? (
+                  filteredData.map((item, index) => (
+                    <tr key={index}>
+                      {props.columns.map(({ key, formatter }, colIndex) => (
+                        <td
+                          key={colIndex}
+                          className="border-b px-3 py-1 text-white select-none sm:text-lg xs:text-xs"
                         >
-                          <VisibilityIcon />
-                        </button>
-                        <button
-                          title="Editar"
-                          type="button"
-                          className="bg-yellow-400 p-1 rounded-full"
-                          onClick={() => handleClickEditarProduto(item)}
-                        >
-                          <EditIcon />
-                        </button>
-                        <button
-                          title="Excluir"
-                          type="button"
-                          className="bg-red-400 p-1 rounded-full"
-                          onClick={() => setIsOpenDelete(true)}
-                        >
-                          <DeleteForeverIcon />
-                        </button>
-                      </div>
+                          {formatter
+                            ? formatter(
+                                typeof key === "string"
+                                  ? getValueByPath(item, key)
+                                  : item[key as keyof T]
+                              )
+                            : String(
+                                typeof key === "string"
+                                  ? getValueByPath(item, key)
+                                  : item[key as keyof T]
+                              )}
+                        </td>
+                      ))}
+                      {/* Coluna de ações */}
+                      <BotoesDeAcao
+                        onView={() => handleClickVerCompras(item)}
+                        onEdit={() => handleClickEditarProduto(item)}
+                        onDelete={() => handleEditProduct((item as any).id)}
+                      />
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={props.columns.length}
+                      className="text-center px-4 py-2 text-white select-none"
+                    >
+                      {props.data.length === 0
+                        ? "Aguarde buscando produtos..."
+                        : "Nenhum item encontrado."}
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="text-center px-4 py-2 text-white"
-                  >
-                    {data.length === 0
-                      ? "Buscando produtos..."
-                      : "Nenhum item encontrado."}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
+          {/*CRIADO INICIO MODAL DETALHES*/}
+          <PurchaseModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            purchaseData={purchaseData}
+          />
+          {/*CRIADO FINAL MODAL DETALHES*/}
+
+          {/*CRIADO INICIO MODAL EDIT*/}
+          <MyModal
+            isOpen={isOpenEdit}
+            onClose={() => setIsOpenEdit(false)} // Fecha o modal
+            title={purchaseData[0]?.products[0]?.products.description || ""}
+            label={purchaseData[0]?.products[0]?.products.id || ""}
+          >
+            {isOpenEdit && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-10">
+                <div className="bg-purple-300 rounded-lg shadow-lg w-full max-w-md mx-auto xs:w-full m-3 p-4 flex flex-col">
+                  <div className="flex flex-col justify-between items-start">
+                    <div className="text-[10px] text-black">
+                      ATUALIZAR PRODUTO
+                    </div>
+                    <div className="text-lg font-bold">
+                      {product?.description?.toUpperCase() || "-"}
+                    </div>
+                    <div className="text-xs text-zinc-500">
+                      {product?.id || "-"}
+                    </div>
+                  </div>
+                  <div className="max-h-80 overflow-y-auto">
+                    <label className="block text-sm font-medium text-gray-700 mt-2">
+                      <MyInput
+                        label="Descrição"
+                        className="bg-purple-400"
+                        value={product?.description?.toUpperCase() || ""}
+                        onChange={(e) =>
+                          setProduct({
+                            ...product,
+                            description: e.target.value.toUpperCase(),
+                          })
+                        }
+                      />
+                    </label>
+                    <label className="block text-sm font-medium text-gray-700">
+                      <MyInput
+                        label="Código de Barras"
+                        className="bg-purple-400"
+                        value={product?.codeBar || ""}
+                        onChange={(e) =>
+                          setProduct({ ...product, codeBar: e.target.value })
+                        }
+                      />
+                    </label>
+
+                    <div className="flex flex-col gap-5">
+                      <InputComLista
+                        label="Selecione uma marca"
+                        value={queryMarks || ""}
+                        items={marksData}
+                        onChange={(value) => {
+                          setQueryMarks(value);
+                        }}
+                        onSelect={(id, description) => {
+                          setProduct({
+                            ...product,
+                            markId: id,
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-4 flex justify-end space-x-2">
+                    <button
+                      onClick={() => setIsOpenEdit(false)}
+                      className="botao verde"
+                      type="button"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      className="botao azul"
+                      type="button"
+                    >
+                      Salvar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </MyModal>
+          {/*CRIADO FINAL MODAL EDIT*/}
+
+          {/*CRIADO INICIO MODAL EXCLUIR*/}
+          <MyModal
+            isOpen={isOpenDelete}
+            onClose={() => setIsOpenDelete(false)} // Fecha o modal
+            title={purchaseData[0]?.products[0]?.products.description || ""}
+            label={purchaseData[0]?.products[0]?.products.id || ""}
+          >
+            {isOpenDelete && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-purple-300 rounded-lg shadow-lg w-full max-w-md mx-auto xs:w-full m-3 p-4 flex flex-col">
+                  <div className="flex flex-col justify-between items-start">
+                    <div className="text-[10px] text-black">
+                      DELETAR PRODUTO
+                    </div>
+                    <div className="text-lg font-bold">
+                      {product?.description || "-"}
+                    </div>
+                    <div className="text-xs text-zinc-500">
+                      {product?.id || "-"}
+                    </div>
+                  </div>
+                  <div className="max-h-80 overflow-y-auto">
+                    <label className="block text-sm font-medium text-gray-700 mt-2">
+                      {product?.mark?.description || ""}
+                    </label>
+                    <label className="block text-sm font-medium text-gray-700">
+                      <MyInput
+                        label="Código de Barras"
+                        className="bg-purple-400"
+                        value={product?.codeBar || ""}
+                        onChange={(e) =>
+                          setProduct({ ...product, codeBar: e.target.value })
+                        }
+                      />
+                    </label>
+                    <label className="block text-sm font-medium text-gray-700">
+                      <MyInput
+                        label="Marca"
+                        className="bg-purple-400"
+                        value={product?.mark?.description || ""}
+                        onChange={(e) =>
+                          setProduct({ ...mark, description: e.target.value })
+                        }
+                      />
+                    </label>
+                  </div>
+                  <div className="mt-4 flex justify-end space-x-2">
+                    <button
+                      onClick={() => setIsOpenDelete(false)}
+                      className="botao verde"
+                      type="button"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      className="botao azul"
+                      type="button"
+                    >
+                      Confirmar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </MyModal>
+          {/*CRIADO FINAL MODAL EXCLUIR*/}
         </div>
-        {/* Modal para exibir informações do item selecionado */}
-        <MyModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)} // Fecha o modal
-          title={purchaseData[0]?.products[0]?.products.description || ""}
-          label={purchaseData[0]?.products[0]?.products.id || ""}
-        >
-          {/* Exibir o nome do produto no topo do modal */}
-          {purchaseData.length > 0 ? (
-            <div>
-              {purchaseData.map((purchase: any) => (
-                <div key={purchase.id} className="mb-2">
-                  <p>
-                    <strong>Data:</strong>{" "}
-                    {new Date(purchase.buyDate).toLocaleDateString()}
-                  </p>
-                  <p>
-                    <strong>Local:</strong> {purchase.local.description}
-                  </p>
-                  <div>
-                    {purchase.products.map((prod: any, index: number) => (
-                      <div key={index}>
-                        <p>
-                          <strong>Marca: </strong>
-                          {prod.products.mark.description}
-                        </p>
-                        <p>
-                          <strong>Preço: </strong>
-                          {prod.unitPrice}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                  <AdjustableLine />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>Nenhuma compra encontrada.</p>
-          )}
-        </MyModal>
-        {/*CRIADO INICIO MODAL EDIT*/}
-        <MyModal
-          isOpen={isOpenEdit}
-          onClose={() => setIsOpenEdit(false)} // Fecha o modal
-          title={purchaseData[0]?.products[0]?.products.description || ""}
-          label={purchaseData[0]?.products[0]?.products.id || ""}
-        >
-          {isOpenEdit && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-10">
-              <div className="bg-purple-300 rounded-lg shadow-lg w-full max-w-md mx-auto xs:w-full m-3 p-4 flex flex-col">
-                <div className="flex flex-col justify-between items-start">
-                  <div className="text-[10px] text-black">
-                    ATUALIZAR PRODUTO
-                  </div>
-                  <div className="text-lg font-bold">
-                    {product?.description?.toUpperCase() || "-"}
-                  </div>
-                  <div className="text-xs text-zinc-500">
-                    {product?.id || "-"}
-                  </div>
-                </div>
-                <div className="max-h-80 overflow-y-auto">
-                  <label className="block text-sm font-medium text-gray-700 mt-2">
-                    <MyInput
-                      label="Descrição"
-                      className="bg-purple-400"
-                      value={product?.description?.toUpperCase() || ""}
-                      onChange={(e) =>
-                        setProduct({ ...product, description: e.target.value })
-                      }
-                    />
-                  </label>
-                  <label className="block text-sm font-medium text-gray-700">
-                    <MyInput
-                      label="Código de Barras"
-                      className="bg-purple-400"
-                      value={product?.codeBar || ""}
-                      onChange={(e) =>
-                        setProduct({ ...product, codeBar: e.target.value })
-                      }
-                    />
-                  </label>
-                  <label className="block text-sm font-medium text-gray-700">
-                    <MyInput
-                      label="Marca"
-                      className="bg-purple-400"
-                      value={product?.mark?.description || ""}
-                      onChange={(e) =>
-                        setProduct({ ...product, markId: e.target.value })
-                      }
-                    />
-                  </label>
-                </div>
-                <div className="mt-4 flex justify-end space-x-2">
-                  <button
-                    onClick={() => setIsOpenEdit(false)}
-                    className="botao verde"
-                    type="button"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className="botao azul"
-                    type="button"
-                  >
-                    Salvar
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </MyModal>
-        {/*CRIADO FINAL MODAL EDIT*/}
-        <MyModal
-          isOpen={isOpenDelete}
-          onClose={() => setIsOpenDelete(false)} // Fecha o modal
-          title={purchaseData[0]?.products[0]?.products.description || ""}
-          label={purchaseData[0]?.products[0]?.products.id || ""}
-        >
-          {isOpenDelete && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-purple-300 rounded-lg shadow-lg w-full max-w-md mx-auto xs:w-full m-3 p-4 flex flex-col">
-                <div className="flex flex-col justify-between items-start">
-                  <div className="text-[10px] text-black">DELETAR PRODUTO</div>
-                  <div className="text-lg font-bold">
-                    {product?.description || "-"}
-                  </div>
-                  <div className="text-xs text-zinc-500">
-                    {product?.id || "-"}
-                  </div>
-                </div>
-                <div className="max-h-80 overflow-y-auto">
-                  <label className="block text-sm font-medium text-gray-700 mt-2">
-                    {product?.mark?.description || ""}
-                  </label>
-                  <label className="block text-sm font-medium text-gray-700">
-                    <MyInput
-                      label="Código de Barras"
-                      className="bg-purple-400"
-                      value={product?.codeBar || ""}
-                      onChange={(e) =>
-                        setProduct({ ...product, codeBar: e.target.value })
-                      }
-                    />
-                  </label>
-                  <label className="block text-sm font-medium text-gray-700">
-                    <MyInput
-                      label="Marca"
-                      className="bg-purple-400"
-                      value={product?.mark?.description || ""}
-                      onChange={(e) =>
-                        setProduct({ ...mark, description: e.target.value })
-                      }
-                    />
-                  </label>
-                </div>
-                <div className="mt-4 flex justify-end space-x-2">
-                  <button
-                    onClick={() => setIsOpenDelete(false)}
-                    className="botao verde"
-                    type="button"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className="botao azul"
-                    type="button"
-                  >
-                    Confirmar
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </MyModal>
-      </div>
-    </Window>
+      </Window>
+    </div>
   );
 };
 

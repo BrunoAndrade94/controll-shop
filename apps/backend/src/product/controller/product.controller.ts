@@ -13,11 +13,6 @@ export class ProductController {
     return { inUse: product };
   }
 
-  @Get('get/')
-  async coProductsDescription(@Query('search') search?: string) {
-    return await this.productService.seProductsDescription();
-  }
-
   @Get('get/id/:id')
   async coProductId(@Param('id') id: string) {
     return await this.productService.seProductId(id);
@@ -37,7 +32,7 @@ export class ProductController {
     return await this.productService.seProductUpdate(id, productData);
   }
 
-  @Put('delete/:id')
+  @Put('delete/id/:id')
   async coProductDelete(@Param('id') id: string) {
     return await this.productService.seProductDelete(id);
   }

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import useProduct from "@/data/hooks/use-product";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Product } from "core"; // Tipo do produto
-import useProduct from "@/data/hooks/use-product";
-import MyModal from "../lists/my-modal";
+import { useState } from "react";
+import MyModal from "../lists/modal-compras-produto";
 
 const ProductList = () => {
   const { getProduct, updateProduct, product, setProduct } = useProduct(); // Acessando o contexto do produto

@@ -31,29 +31,29 @@ export class ProductService {
   //   });
   // }
 
-  async seProductsDescription(): Promise<Product | null> {
-    return (await this.prisma.product.findMany({
-      // where: {
-      //   active: true,
-      //   description: {
-      //     contains: search,
-      //   },
-      // },
-      // select: {
-      //   id: true,
-      //   description: true,
-      //   lastPrice: true,
-      //   codeBar: true,
-      //   mark: {
-      //     select: {
-      //       id: true,
-      //       description: true,
-      //     },
-      //   },
-      // },
-      // orderBy: [{ description: 'asc' }],
-    })) as any;
-  }
+  // async seProductsDescription(): Promise<Product | null> {
+  //   return (await this.prisma.product.findMany({
+  //     // where: {
+  //     //   active: true,
+  //     //   description: {
+  //     //     contains: search,
+  //     //   },
+  //     // },
+  //     // select: {
+  //     //   id: true,
+  //     //   description: true,
+  //     //   lastPrice: true,
+  //     //   codeBar: true,
+  //     //   mark: {
+  //     //     select: {
+  //     //       id: true,
+  //     //       description: true,
+  //     //     },
+  //     //   },
+  //     // },
+  //     // orderBy: [{ description: 'asc' }],
+  //   })) as any;
+  // }
 
   async seProductGetDescription(description: string): Promise<Product | null> {
     return (await this.prisma.product.findUnique({
@@ -102,6 +102,7 @@ export class ProductService {
           description: true,
           codeBar: true,
           lastPrice: true,
+          markId: true,
           mark: {
             select: {
               id: true,

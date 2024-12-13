@@ -23,16 +23,15 @@ export default function Window({
   return (
     <div
       className="
-			bg-purple-600 rounded-xl shadow 
-			shadow-black max-w-md mx-auto 
-			-mt-32"
+			bg-purple-600 rounded-xl shadow
+			shadow-black mx-auto -mt-32 max-w-md w-screen"
     >
       {showHead && (
         <div
           className="
-						flex flex-row justify-between gap-7 p-6
+						flex flex-row justify-between gap-7 p-4
 						items-center bg-purple-400/60 rounded-xl
-						shadow shadow-black"
+						shadow shadow-black mb-auto"
         >
           <div className="select-none flex-1 min-w-0">
             <div className="text-lg font-extrabold truncate text-purple-900">
@@ -49,7 +48,7 @@ export default function Window({
           )}
         </div>
       )}
-      <div className="p-5">{children}</div>
+      <div className="p-3">{children}</div>
     </div>
   );
 }

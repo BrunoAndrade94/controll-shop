@@ -32,10 +32,9 @@ export default function MyInput(props: MyInputProps) {
             onKeyDown={props.onKeyDown}
             {...props}
             type={props.type ?? "text"}
-            className={`w-full px-3 py-2 mt-3 rounded-lg bg-purple-300 text-black placeholder:text-black placeholder:focus:text-purple-500 ${props.className}`}
+            className={`w-full px-3 py-2 pr-11 mt-3 rounded-lg bg-purple-300 text-black placeholder:text-black placeholder:focus:text-purple-500 ${props.className}`}
           />
         </div>
-        {/* Ícone de "x" para limpar */}
         {props.value && (
           <button
             title="Limpar"
@@ -48,10 +47,10 @@ export default function MyInput(props: MyInputProps) {
         )}
       </div>
       {props.error && (
-        <span className="pl-2 text-sm text-red-500">{props.error}</span>
+        <span className="pl-2 text-sm text-red-600/80">{props.error}</span>
       )}
       {!props.error && props.observation && (
-        <span className="pl-2 text-sm text-yellow-700">
+        <span className="pl-2 text-sm text-purple-200">
           {props.observation}
         </span>
       )}

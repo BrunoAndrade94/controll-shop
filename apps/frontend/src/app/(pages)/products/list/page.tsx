@@ -27,19 +27,14 @@ export default function PageProductList() {
   ];
 
   return (
-    <div className="flex flex-col items-center">
-      <div>
-        {/* <ListaProdutos /> */}
-        <MyList
-          windowTitle="Produtos"
-          windowLabel="consultas, modificações e muito mais..."
-          columns={columns}
-          columnsModal={columnsModal}
-          data={productsData}
-          dataModal={productsData}
-          onClick={deleteProduct}
-        />
-      </div>
-    </div>
+    <MyList
+      windowTitle="Produtos"
+      windowLabel="consultas, modificações e muito mais..."
+      columns={columns}
+      columnsModal={columnsModal}
+      data={productsData}
+      dataModal={productsData}
+      onClick={deleteProduct}
+    />
   );
 }

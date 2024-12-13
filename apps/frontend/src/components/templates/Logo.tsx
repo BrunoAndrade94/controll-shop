@@ -9,7 +9,7 @@ const font = Righteous({
 
 export default function Logo() {
   return (
-    <div className="-mt-20 mb-10">
+    <div className="-mt-28 mb-10">
       <Link
         href={"../"}
         className={`flex flex-col items-center gap-2 ${font.className}`}

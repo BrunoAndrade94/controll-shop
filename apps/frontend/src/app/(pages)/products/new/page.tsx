@@ -11,10 +11,8 @@ export default function PageNewProduct() {
   const productTitle = `${!!queryProducts ? "Novo Produto" : "Cadastro de Produto"}`;
 
   return (
-    <div>
-      <Window title={productTitle} label={productCurrent}>
-        <FormProduct />
-      </Window>
-    </div>
+    <Window title={productTitle} label={productCurrent}>
+      <FormProduct />
+    </Window>
   );
 }

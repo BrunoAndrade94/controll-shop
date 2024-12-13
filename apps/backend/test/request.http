@@ -43,7 +43,7 @@ GET http://localhost:4000/products/get/?search=ice
 GET http://localhost:4000/products/get/id/334ee704-b398-49da-913a-c047bf0002b0
 
 ###
-GET http://localhost:4000/products/get/
+GET http://localhost:4000/products/get/all
 
 
 // UPDATE

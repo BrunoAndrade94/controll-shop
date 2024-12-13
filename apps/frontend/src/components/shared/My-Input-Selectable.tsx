@@ -1,82 +1,80 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MyInput from "./My-Input";
 
-export interface ItemSelector {
+interface Marca {
   id: string;
   description: string;
 }
 
-// TODO: COLOCAR ONFOCUS E OUTRAS PROPS
-
-export interface MyInputSelectableProps {
+interface InputComListaProps {
   label: string;
-  description: string;
   value: string;
-
-  options: any[];
-
-  onSelect: (id: string, description: string) => void;
-  onChange: (value: string) => void;
-  onFocus?: () => void; // Adicionado onFocus opcional
-  onBlur?: () => void; // Adicionado onBlur opcional
+  disabled?: boolean;
+  items: any[]; // Lista de marcas
+  onChange: (value: string) => void; // Função chamada ao alterar o valor do input
+  onSelect: (id: string, description: string) => void; // Função chamada ao selecionar um item
 }
 
-export default function MyInputSelectable(props: MyInputSelectableProps) {
+export default function InputComLista({
+  label,
+  value,
+  items,
+  disabled = false,
+  onChange,
+  onSelect,
+}: InputComListaProps) {
+  const [filteredItems, setFilteredItems] = useState<any[]>([]);
   const [showList, setShowList] = useState(false);
-  const [filteredOptions, setFilteredOptions] = useState<any[]>(props.options);
 
-  const handleFilter = (query: string) => {
-    setFilteredOptions(
-      props.options.filter((option) =>
-        option.description.toLowerCase().includes(query.toLowerCase())
+  const handleInputChange = (inputValue: string) => {
+    onChange(inputValue); // Atualiza o valor do input
+    setFilteredItems(
+      items.filter((item) =>
+        item.description.toLowerCase().includes(inputValue.toLowerCase())
       )
     );
+    setShowList(true);
   };
 
-  // Atualiza as opções filtradas sempre que as opções iniciais mudam
-  useEffect(() => {
-    setFilteredOptions(props.options);
-  }, [props.options]);
+  const handleSelectItem = (id: string, description: string) => {
+    onChange(description); // Atualiza o input com o valor selecionado
+    onSelect(id, description); // Chama a função de callback para a seleção
+    setShowList(false); // Esconde a lista
+  };
 
   return (
     <div className="flex flex-col gap-5">
       <MyInput
-        label={props.label}
-        value={props.value}
+        value={value}
+        disabled={disabled}
+        label={items.length === 0 ? "Procurando..." : label}
+        onChange={(event) => handleInputChange(event.target.value)}
+        onFocus={() => {
+          setShowList(true);
+          setFilteredItems(items);
+        }}
         onBlur={() => {
           setTimeout(() => {
-            setShowList(false); // Fecha a lista com atraso para evitar conflitos com cliques
-          }, 150);
-          props.onBlur?.(); // Chama onBlur se fornecido
+            setShowList(false);
+            items = [];
+          }, 150); // Delay para permitir o clique na lista
         }}
-        onChange={(event) => {
-          const newValue = event.target.value;
-          props.onChange(newValue);
-          handleFilter(newValue);
-        }}
-        description={props.description}
       />
-      {showList && filteredOptions.length > 0 && (
+
+      {showList && filteredItems.length > 0 && (
         <div
-          onMouseDown={(e) => e.preventDefault()}
-          className="relative top-full left-0 w-full bg-white border rounded-xl border-gray-300 shadow-lg max-h-52 overflow-auto"
+          onMouseDown={(e) => e.preventDefault()} // Evita fechamento ao clicar
+          className="relative top-full left-0 w-full bg-purple-200 border rounded-xl border-purple-600 shadow-lg max-h-52 overflow-auto z-10 -mt-3 -mb-8"
         >
-          {filteredOptions.map((option) => {
-            return (
-              <div
-                key={option.id}
-                className="p-2 cursor-pointer hover:bg-gray-200"
-                onClick={() => {
-                  props.onSelect(option.id, option.description);
-                  setShowList(false);
-                }}
-              >
-                {option.description}
-              </div>
-            );
-          })}
+          {filteredItems.map((item) => (
+            <div
+              key={item.id}
+              className="p-2 cursor-pointer hover:bg-purple-400"
+              onClick={() => handleSelectItem(item.id, item.description)}
+            >
+              {item.description}
+            </div>
+          ))}
         </div>
       )}
     </div>

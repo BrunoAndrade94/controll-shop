@@ -13,7 +13,7 @@ import Steps from "../shared/Steps";
 import FormBuyCart from "./form-buy-cart";
 
 // import BarcodeReader from "react-barcode-reader";
-import Quagga from "quagga";
+import InputComLista from "../shared/My-Input-Selectable";
 
 // Tipo para a lista de produtos no contexto de compra
 type BuyProductItem = {
@@ -27,43 +27,6 @@ type BuyProductItem = {
 
 export default function FormBuy() {
   /// INICIO TESTE DE CAMERA
-  const [showScanner, setShowScanner] = useState(false);
-
-  const startScanner = () => {
-    setShowScanner(true);
-    Quagga.init(
-      {
-        inputStream: {
-          name: "Live",
-          type: "LiveStream",
-          target: document.querySelector("#scanner"), // Alvo onde o scanner será exibido
-        },
-        decoder: {
-          readers: ["code_128_reader"], // Tipos de código de barras suportados
-        },
-      },
-      (err: Error) => {
-        if (err) {
-          console.error("Erro ao inicializar Quagga:", err);
-          return;
-        }
-        Quagga.start();
-      }
-    );
-
-    Quagga.onDetected((result: any) => {
-      if (result && result.codeResult) {
-        console.log("Código detectado:", result.codeResult.code);
-        Quagga.stop();
-        setShowScanner(false); // Fecha o scanner após leitura
-      }
-    });
-  };
-
-  const stopScanner = () => {
-    Quagga.stop();
-    setShowScanner(false);
-  };
 
   // const handleOnChangeProduct = (value: any) => {
   //   setQueryProducts(value);
@@ -306,43 +269,31 @@ export default function FormBuy() {
         actionExec={handleSaveBuy}
         authNextStep={authNextStep}
       >
-        <div className="relative flex flex-col">
-          <MyInput
-            label={`${localsData.length === 0 ? "Procurando locais.." : "Selecione um local"}`}
+        <div className="flex flex-col gap-5">
+          <InputComLista
+            label="Selecione um local"
             value={queryLocals ?? ""}
             disabled={localsData.length === 0}
-            onBlur={() => {
-              setShowList(false);
-              setFilteredLocals([]);
+            items={localsData}
+            onChange={(value) => handleOnChangeLocal(value)}
+            onSelect={(id, description) => {
+              handleSelectLocal(id || "", description || "");
             }}
-            onFocus={() => {
-              setShowList(true);
-              setFilteredLocals(localsData);
-            }}
-            onChange={(event) => {
-              handleOnChangeLocal(event.target.value);
-            }}
-            className={`${localsData.length === 0 ? "bg-gray-200 border-dashed border-gray-400 opacity-50 cursor-not-allowed p-2 rounded-md w-full" : ""}`}
           />
-          {!buy.localId && showList && (
-            <div
-              onMouseDown={(e) => e.preventDefault()}
-              className="absolute top-full mt-1 w-full bg-white border rounded-xl border-gray-300 shadow-lg max-h-48 overflow-auto z-50"
-            >
-              {filteredLocals.map((local) => (
-                <div
-                  key={local.id}
-                  className="p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() =>
-                    handleSelectLocal(local.id || "", local.description || "")
-                  }
-                >
-                  {local.description}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
+
+        {/* <div className="flex flex-col gap-5">
+          <InputComLista
+            label="Selecione um produto"
+            value={queryProducts ?? ""}
+            disabled={productsData.length === 0}
+            items={productsData}
+            onChange={(value) => handleOnChangeProduct(value)}
+            onSelect={(id) => {
+              handleAddProduct(product);
+            }}
+          />
+        </div> */}
 
         <div className="relative flex flex-col">
           <div className="flex flex-row text-center items-end -mt-5">

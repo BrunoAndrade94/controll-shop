@@ -6,6 +6,7 @@ import useProduct from "@/data/hooks/use-product";
 import { FormatMoney, FormatStringMoney, Mark } from "core";
 import { useState } from "react";
 import MyInput from "../shared/My-Input";
+import InputComLista from "../shared/My-Input-Selectable";
 import Steps from "../shared/Steps";
 
 export default function FormProduct() {
@@ -13,8 +14,8 @@ export default function FormProduct() {
   // PADRÃO
   const {
     product,
+    setProduct,
     saveProduct,
-    updateProduct,
     descriptionInUse,
     setDescriptionInUse,
     productsData,
@@ -31,7 +32,7 @@ export default function FormProduct() {
   const [filteredMarks, setFilteredMarks] = useState<Partial<Mark>[]>([]);
 
   const handleSelectMark = (markId: string, description: string) => {
-    updateProduct({ ...product, markId }); // Atualiza a marca no produto com o id da marca
+    setProduct({ ...product, markId }); // Atualiza a marca no produto com o id da marca
     setQueryMarks(description); // Define o texto no input
     setShowList(false); // Fecha a lista de sugestões após a seleção
     msgSucess(`${description} selecionado`);
@@ -75,7 +76,7 @@ export default function FormProduct() {
     } else {
       // Caso nenhum produto corresponda
       setDescriptionInUse(false);
-      updateProduct({ ...product, description: productUser });
+      setProduct({ ...product, description: productUser });
       setFilteredMarks([]); // Limpa sugestões
     }
   };
@@ -173,7 +174,7 @@ export default function FormProduct() {
       actionExec={saveProduct}
       authNextStep={authNextStep}
     >
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 w-full max-w-screen">
         <MyInput
           label="Informe o novo Produto"
           value={queryProducts ?? ""}
@@ -210,7 +211,7 @@ export default function FormProduct() {
           }
           onChange={(event) => {
             const formatString = FormatStringMoney(event.target.value);
-            updateProduct({ ...product, lastPrice: formatString });
+            setProduct({ ...product, lastPrice: formatString });
           }}
         />
       </div>
@@ -219,44 +220,22 @@ export default function FormProduct() {
           label="Código de Barras"
           value={product.codeBar ?? ""}
           onChange={(event) => {
-            updateProduct({ ...product, codeBar: event.target.value });
+            setProduct({ ...product, codeBar: event.target.value });
           }}
         />
       </div>
+
       <div className="flex flex-col gap-5">
-        <MyInput
+        <InputComLista
+          label="Selecione uma marca"
           value={queryMarks ?? ""}
-          onBlur={() => {
-            setShowList(false);
-            setFilteredMarks([]);
+          disabled={marksData.length === 0}
+          items={marksData}
+          onChange={(value) => handleOnChangeMark(value)}
+          onSelect={(id, description) => {
+            handleSelectMark(id || "", description || "");
           }}
-          onFocus={() => {
-            setShowList(true);
-            setFilteredMarks(marksData);
-          }}
-          label="Marca"
-          onChange={(event) => handleOnChangeMark(event.target.value)}
         />
-        {/* TODO: AARRUMAR BUG QUE MOSTRA A LISTA DEPOIS DE CLICAR EM SALVAR */}
-        {/* Lista de Marcas filtradas */}
-        {!product.markId && showList && (
-          <div
-            onMouseDown={(e) => e.preventDefault()}
-            className="relative top-full left-0 w-full bg-white border rounded-xl border-gray-300 shadow-lg max-h-52 overflow-auto"
-          >
-            {filteredMarks.map((mark) => (
-              <div
-                key={mark.id}
-                className="p-2 cursor-pointer hover:bg-gray-200"
-                onClick={() =>
-                  handleSelectMark(mark.id || "", mark.description || "")
-                }
-              >
-                {mark.description}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </Steps>
   );

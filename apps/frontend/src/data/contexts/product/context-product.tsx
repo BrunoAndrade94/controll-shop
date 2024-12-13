@@ -12,7 +12,7 @@ const urlProductList = "/products/list/";
 const urlGetIdProduct = "/products/get/id/";
 const urlUpdateIdProduct = "/products/update/id/";
 const urlGetProduct = "/products/get/all/";
-const urlDeleteProduct = "/products/delete/";
+const urlDeleteProduct = "/products/delete/id/";
 const urlNewProducts = "/products/new/";
 const urlValidateProducts = "/products/new/validate/description/";
 // const urlValidateProducts = "/products/get/?search=";
@@ -87,14 +87,14 @@ export function ProviderContextProduct(props: any) {
   const updateProduct = useCallback(
     async function () {
       try {
-        console.log(product);
+        product.markId = product.mark?.id;
+
+        console.log("PASSEI ONDE NAO DEVIA");
 
         const updateProduct = await httpPut(
           `${urlUpdateIdProduct}${product.id}`,
           product
         );
-
-        // console.log(updateProduct);
 
         setProduct({ ...updateProduct });
 
