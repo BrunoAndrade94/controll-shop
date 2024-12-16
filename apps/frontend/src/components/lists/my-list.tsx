@@ -6,6 +6,7 @@ import useProduct from "@/data/hooks/use-product";
 import { Product } from "core";
 import { useCallback, useEffect, useState } from "react";
 import PurchaseModal from "../modal/modal-purchase-details";
+import InputProductSearch from "../shared/input/Input-Search-Product";
 import MyInput from "../shared/My-Input";
 import InputComLista from "../shared/My-Input-Selectable";
 import Window from "../shared/Window";
@@ -59,6 +60,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
     updateProduct,
     productsData,
     deleteProduct,
+    setFilteredProducts,
   } = useProduct(); // Dados do produto para editar
   const { mark, updateMark } = useMark(); // Dados do produto para editar
   const [editedProduct, setEditedProduct] = useState<Product | null>(); // Produto sendo editado
@@ -293,7 +295,8 @@ const MyList = <T,>(props: MyListProps<T>) => {
                   </div>
                   <div className="max-h-96 overflow-y-auto">
                     <label className="block text-sm font-medium text-gray-700 mt-2">
-                      <MyInput
+                      <InputProductSearch />
+                      {/* <MyInput
                         descriptionFixed="Descrição"
                         label="Descrição"
                         value={product?.description?.toUpperCase() || ""}
@@ -303,7 +306,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
                             description: e.target.value.toUpperCase(),
                           })
                         }
-                      />
+                      /> */}
                     </label>
                     <label className="block text-sm font-medium text-gray-700">
                       <MyInput
@@ -392,7 +395,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
                     </button>
                     <button
                       onClick={handleDelete}
-                      className="botao azul"
+                      className="botao vermelho"
                       type="button"
                     >
                       Confirmar

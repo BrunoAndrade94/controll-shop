@@ -78,3 +78,22 @@ input {
     @apply bg-background text-foreground;
   }
 }
+
+/* Fundo escuro do modal */
+.bg-black.bg-opacity-80 {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Linha de foco retangular */
+.border-green-500 {
+  border-color: #16a34a;
+}
+
+/* Estilo dos botões */
+button {
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}

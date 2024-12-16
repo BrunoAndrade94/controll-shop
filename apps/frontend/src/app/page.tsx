@@ -13,7 +13,7 @@ export default function Home() {
         <div className="-mt-56">
           <Logo />
         </div>
-        <div className="space-y-2 mt-28">
+        <div className="space-y-2 mt-28 p-2">
           <Link
             className="botao verde flex flex-row justify-between"
             href={"/buys"}

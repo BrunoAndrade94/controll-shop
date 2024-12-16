@@ -3,12 +3,13 @@
 import useMark from "@/data/hooks/use-mark";
 import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
-import { FormatMoney, FormatStringMoney, Mark } from "core";
+import { Mark, Product } from "core";
 import { useState } from "react";
 import MyInput from "../shared/My-Input";
 import InputComLista from "../shared/My-Input-Selectable";
 import Steps from "../shared/Steps";
 import InputMoney from "../shared/input/Input-Money";
+import ProductSearch from "../shared/input/Input-Search-Product";
 
 export default function FormProduct() {
   const { msgSucess } = useMessage();
@@ -31,6 +32,9 @@ export default function FormProduct() {
   // const [query, setQuery] = useState(""); // Texto digitado no input
 
   const [filteredMarks, setFilteredMarks] = useState<Partial<Mark>[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Partial<Product>[]>(
+    []
+  );
 
   const handleSelectMark = (markId: string, description: string) => {
     setProduct({ ...product, markId }); // Atualiza a marca no produto com o id da marca
@@ -55,32 +59,32 @@ export default function FormProduct() {
   //   }
   // };
 
-  const handleOnChangeProduct = (productUser: string) => {
-    setQueryProducts(productUser); // Atualiza o estado com o texto digitado pelo usuário
+  // const handleOnChangeProduct = (productUser: string) => {
+  //   setQueryProducts(productUser); // Atualiza o estado com o texto digitado pelo usuário
 
-    // Busca produtos que contenham a string digitada
-    const filteredProducts = productsData.filter((productData) =>
-      productData.description?.toUpperCase().includes(productUser.toUpperCase())
-    );
+  //   // Busca produtos que contenham a string digitada
+  //   const filteredProducts = productsData.filter((productData) =>
+  //     productData.description?.toUpperCase().includes(productUser.toUpperCase())
+  //   );
 
-    if (filteredProducts.length > 0) {
-      // Caso existam produtos semelhantes
-      setDescriptionInUse(
-        filteredProducts.some(
-          (productData) =>
-            productData.description?.toUpperCase() === productUser.toUpperCase()
-        )
-      );
+  //   if (filteredProducts.length > 0) {
+  //     // Caso existam produtos semelhantes
+  //     setDescriptionInUse(
+  //       filteredProducts.some(
+  //         (productData) =>
+  //           productData.description?.toUpperCase() === productUser.toUpperCase()
+  //       )
+  //     );
 
-      // Atualiza o estado com os produtos filtrados (opcional)
-      setFilteredMarks(filteredProducts);
-    } else {
-      // Caso nenhum produto corresponda
-      setDescriptionInUse(false);
-      setProduct({ ...product, description: productUser });
-      setFilteredMarks([]); // Limpa sugestões
-    }
-  };
+  //     // Atualiza o estado com os produtos filtrados (opcional)
+  //     setFilteredProducts(filteredProducts);
+  //   } else {
+  //     // Caso nenhum produto corresponda
+  //     setDescriptionInUse(false);
+  //     setProduct({ ...product, description: productUser });
+  //     setFilteredProducts([]); // Limpa sugestões
+  //   }
+  // };
 
   const handleOnChangeMark = (markUser: string) => {
     setQueryMarks(markUser); // Atualiza o estado com o texto digitado pelo usuário
@@ -160,14 +164,6 @@ export default function FormProduct() {
     !!product.markId,
   ];
 
-  const observation = `${
-    descriptionInUse
-      ? "Produto já cadastrado. Informe outra."
-      : queryProducts
-        ? "Produto liberado para uso."
-        : "Informe para verificar."
-  }`;
-
   return (
     <Steps
       labels={labels}
@@ -175,33 +171,29 @@ export default function FormProduct() {
       actionExec={saveProduct}
       authNextStep={authNextStep}
     >
-      <div className="flex flex-col gap-5 w-full max-w-screen">
+      <ProductSearch />
+
+      {/* <div className="flex flex-col gap-5 w-full max-w-screen">
         <MyInput
           label="Informe o novo Produto"
           value={queryProducts ?? ""}
           observation={observation}
-          // TODO: TROCAR DE BANCO DE DADOS (CONSULTA DIRETAA)
-          // PARA CONSULTA COM A LISTA LOCAL
           onChange={(event) => handleOnChangeProduct(event.target.value)}
           error={descriptionInUse ? "Produto informado já está em uso." : ""}
         />
-        {showList && (
+        {filteredMarks.length > 0 && queryProducts && (
           <div
             onMouseDown={(e) => e.preventDefault()}
             className="relative top-full left-0 w-full bg-white border rounded-xl border-gray-300 shadow-lg max-h-52 overflow-auto"
           >
             {filteredMarks.map((product) => (
-              <div
-                key={product.id}
-                className="p-2 cursor-pointer hover:bg-gray-200"
-                onClick={() => handleOnChangeProduct(product.description || "")}
-              >
+              <div key={product.id} className="p-2 hover:bg-gray-200">
                 {product.description}
               </div>
             ))}
           </div>
         )}
-      </div>
+      </div> */}
       <div className="flex flex-col gap-5">
         <InputMoney
           label="Valor"

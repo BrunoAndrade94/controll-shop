@@ -49,14 +49,16 @@ export default function MyInput(props: MyInputProps) {
           </button>
         )}
       </div>
-      {props.error && (
-        <span className="pl-2 text-sm text-red-600/80">{props.error}</span>
-      )}
-      {!props.error && props.observation && (
-        <span className="pl-2 text-sm text-purple-200">
-          {props.observation}
-        </span>
-      )}
+      <div className="text-center text-white text-sm">
+        {props.error && (
+          <span className="bg-red-700 rounded-full p-1">{props.error}</span>
+        )}
+        {!props.error && props.observation && (
+          <span className="bg-purple-700/80 rounded-full p-1">
+            {props.observation}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

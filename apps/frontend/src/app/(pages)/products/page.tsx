@@ -21,6 +21,9 @@ export default function PageProduct() {
           <Link className="botao roxo" href={"/products/list"}>
             {"VER PRODUTOS"}
           </Link>
+          <Link className="botao amarelo" href={"/products/graphic"}>
+            {"GRÁFICOS"}
+          </Link>
         </div>
         <div className="flex-1">
           <ButtonVoltar />

@@ -32,6 +32,9 @@ export interface ContextProductProps {
   productsData: Partial<Product>[]; // Inclui as produtos disponíveis
   setProductsData: React.Dispatch<React.SetStateAction<Partial<Product>[]>>;
 
+  filteredProducts: Partial<Product>[]; // Inclui as produtos disponíveis
+  setFilteredProducts: React.Dispatch<React.SetStateAction<Partial<Product>[]>>;
+
   marksData: Partial<Mark>[]; // Inclui as produtos disponíveis
 
   queryProducts: string;
@@ -54,6 +57,10 @@ export function ProviderContextProduct(props: any) {
 
   const { marksData, resetMark } = useMark();
 
+  const [filteredProducts, setFilteredProducts] = useState<Partial<Product>[]>(
+    []
+  );
+
   const [productsData, setProductsData] = useState<Partial<Product>[]>([]);
   const [queryProducts, setQueryProducts] = useState<string>("");
 
@@ -67,11 +74,12 @@ export function ProviderContextProduct(props: any) {
         const product = await httpGet(`${urlGetProduct}`);
 
         setProductsData(product);
+        setFilteredProducts([]);
       } catch (error) {
         console.error(error);
       }
     },
-    [httpGet, setProductsData]
+    [httpGet, setProductsData, setFilteredProducts]
   );
 
   const resetProduct = useCallback(() => {
@@ -259,6 +267,8 @@ export function ProviderContextProduct(props: any) {
         saveProduct,
         resetProduct,
         updateProduct,
+        filteredProducts,
+        setFilteredProducts,
         deleteProduct,
         loadingProduct,
         setProductsData,

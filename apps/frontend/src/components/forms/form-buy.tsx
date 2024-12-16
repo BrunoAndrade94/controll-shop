@@ -8,7 +8,7 @@ import useBuy from "@/data/hooks/use-buy";
 import useLocal from "@/data/hooks/use-local";
 import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
-import { FormatMoney, Local, Product } from "core";
+import { FormatMoney, Local } from "core";
 import { useState } from "react";
 import MyInput from "../shared/My-Input";
 import Steps from "../shared/Steps";
@@ -16,6 +16,7 @@ import FormBuyCart from "./form-buy-cart";
 
 // import BarcodeReader from "react-barcode-reader";
 import InputComLista from "../shared/My-Input-Selectable";
+import BarcodeScanner from "../shared/input/barcode-scanner";
 
 // Tipo para a lista de produtos no contexto de compra
 type BuyProductItem = {
@@ -29,6 +30,12 @@ type BuyProductItem = {
 
 export default function FormBuy() {
   /// INICIO TESTE DE CAMERA
+  const [isScannerOpen, setScannerOpen] = useState(false);
+
+  const handleScan = (barcode: string) => {
+    alert(`Código de Barras Escaneado: ${barcode}`);
+    setScannerOpen(false); // Fecha o scanner após ler o código
+  };
 
   // const handleOnChangeProduct = (value: any) => {
   //   setQueryProducts(value);
@@ -44,11 +51,18 @@ export default function FormBuy() {
 
   const [totalValueBuy, setTotalValueBuy] = useState(0);
 
-  const { productsData, setProductsData, queryProducts, setQueryProducts } =
-    useProduct();
-  const [filteredProducts, setFilteredProducts] = useState<Partial<Product>[]>(
-    []
-  );
+  const {
+    productsData,
+    setProductsData,
+    queryProducts,
+    setQueryProducts,
+    filteredProducts,
+    setFilteredProducts,
+  } = useProduct();
+
+  // const [filteredProducts, setFilteredProducts] = useState<Partial<Product>[]>(
+  //   []
+  // );
 
   const { localsData, queryLocals, setQueryLocals, setDescriptionInUse } =
     useLocal();
@@ -321,12 +335,19 @@ export default function FormBuy() {
               <button
                 type="button"
                 className="botao verde"
-                onClick={() => {
-                  msgError("AINDA NÃO SOU FUNCIONAL");
-                }}
+                onClick={() => setScannerOpen(true)}
+                // onClick={() => {
+                //   msgError("AINDA NÃO SOU FUNCIONAL");
+                // }}
               >
                 QRCODE
               </button>
+              {isScannerOpen && (
+                <BarcodeScanner
+                  onClose={() => setScannerOpen(false)}
+                  onScan={handleScan}
+                />
+              )}
             </div>
           </div>
 

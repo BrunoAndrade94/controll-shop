@@ -13,7 +13,7 @@ export default function PageSucessProduct() {
 
   useEffect(() => {
     msgSucess("produto criado com sucesso");
-  }, []); // Atu
+  }, [msgSucess]); // Atu
 
   return (
     <Window label="Produto criado">
