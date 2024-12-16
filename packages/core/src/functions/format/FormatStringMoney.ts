@@ -1,7 +1,6 @@
 export default function FormartStringMoney(valor: string): number {
-  const valorLimitado = valor.slice(0, 9);
+  const valorSlice = valor.slice(0, 11);
+  const valorReplace = +valorSlice.replace(/[^\d]/g, "") / 100;
 
-  return (
-    parseFloat(valorLimitado.replace(/[^\d]/g, "").replace(",", ".")) / 100
-  );
+  return valorReplace;
 }

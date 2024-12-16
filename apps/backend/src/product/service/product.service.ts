@@ -141,6 +141,7 @@ export class ProductService {
 
   async seProductDelete(id: string) {
     try {
+      console.log(id);
       const deletedProduct = await this.prisma.product.update({
         where: { id: id },
         data: {

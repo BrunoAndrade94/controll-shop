@@ -34,7 +34,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = (
         </button>
         <button
           title="Excluir"
-          disabled={true}
           type="button"
           className="bg-red-400 p-1 rounded-full w-5 h-5 flex items-center justify-center"
           onClick={props.onDelete}

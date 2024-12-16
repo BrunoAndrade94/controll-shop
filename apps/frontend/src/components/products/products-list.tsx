@@ -98,8 +98,8 @@ const Modal = ({ type, product, closeModal }: any) => {
   const [value, setValue] = useState("");
 
   const handleSubmit = () => {
-    console.log(`${type} produto:`, product);
-    console.log("Valor:", value);
+    // console.log(`${type} produto:`, product);
+    // console.log("Valor:", value);
     closeModal();
   };
 

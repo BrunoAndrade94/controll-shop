@@ -51,6 +51,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
   ); // ID do produto selecionado
+
   const {
     product,
     setProduct,
@@ -63,15 +64,15 @@ const MyList = <T,>(props: MyListProps<T>) => {
   const [editedProduct, setEditedProduct] = useState<Product | null>(); // Produto sendo editado
 
   // Função para abrir o modal de edição ao selecionar um produto
-  const handleEditProduct = (id: string) => {
-    setSelectedProductId(id);
-    setIsModalOpen(true);
-    // Preencher o produto com os dados do produto selecionado
-    const productToEdit: any = getProduct(id);
-    setProduct(productToEdit); // Atualizando o estado do produto editado
+  // const handleEditProduct = (id: string) => {
+  //   setSelectedProductId(id);
+  //   setIsModalOpen(true);
+  //   // Preencher o produto com os dados do produto selecionado
+  //   const productToEdit: any = getProduct(id);
+  //   setProduct(productToEdit); // Atualizando o estado do produto editado
 
-    deleteProduct(id);
-  };
+  //   deleteProduct(id);
+  // };
 
   const getValueByPath = (obj: any, path: string) => {
     return path
@@ -98,7 +99,6 @@ const MyList = <T,>(props: MyListProps<T>) => {
   // Carrega dados relacionados ao produto
   const handleClickVerCompras = useCallback(
     async (item: T) => {
-      setSelectedItem(item); // Define o item selecionado
       setIsModalOpen(true); // Abre o modal
 
       try {
@@ -113,9 +113,27 @@ const MyList = <T,>(props: MyListProps<T>) => {
   );
 
   // Carrega dados relacionados ao produto
+  const handleClickDeleteProduto = useCallback(
+    async (item: T) => {
+      setIsOpenDelete(true); // Abre o modal
+
+      try {
+        const data = productsData.find(
+          (produto) => produto.id === (item as any).id
+        );
+
+        setProduct({ ...data });
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+        setProduct({}); // Define estado vazio em caso de erro
+      }
+    },
+    [productsData, setProduct] // Dependência do useCallback
+  );
+
+  // Carrega dados relacionados ao produto
   const handleClickEditarProduto = useCallback(
     async (item: T) => {
-      setSelectedItem(item); // Define o item selecionado
       setIsOpenEdit(true); // Abre o modal
 
       try {
@@ -133,7 +151,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
 
   const handleSave = () => {
     const confirmacao = window.confirm(
-      "Você tem certeza que deseja salvar as alterações?"
+      `Deseja salvar ${product.description} ?`
     );
 
     if (confirmacao) {
@@ -142,8 +160,19 @@ const MyList = <T,>(props: MyListProps<T>) => {
     }
   };
 
+  const handleDelete = () => {
+    const confirmacao = window.confirm(
+      `Deseja deletar ${product.description} ?`
+    );
+
+    if (confirmacao) {
+      deleteProduct(product.id ?? "");
+      setIsOpenDelete(false);
+    }
+  };
+
   useEffect(() => {
-    console.log(product);
+    // console.log(product);
   }, [product]);
 
   return (
@@ -214,7 +243,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
                       <BotoesDeAcao
                         onView={() => handleClickVerCompras(item)}
                         onEdit={() => handleClickEditarProduto(item)}
-                        onDelete={() => handleEditProduct((item as any).id)}
+                        onDelete={() => handleClickDeleteProduto(item)}
                       />
                     </tr>
                   ))
@@ -262,11 +291,11 @@ const MyList = <T,>(props: MyListProps<T>) => {
                       {product?.id || "-"}
                     </div>
                   </div>
-                  <div className="max-h-80 overflow-y-auto">
+                  <div className="max-h-96 overflow-y-auto">
                     <label className="block text-sm font-medium text-gray-700 mt-2">
                       <MyInput
+                        descriptionFixed="Descrição"
                         label="Descrição"
-                        className="bg-purple-400"
                         value={product?.description?.toUpperCase() || ""}
                         onChange={(e) =>
                           setProduct({
@@ -278,22 +307,22 @@ const MyList = <T,>(props: MyListProps<T>) => {
                     </label>
                     <label className="block text-sm font-medium text-gray-700">
                       <MyInput
+                        descriptionFixed="Código de Barras"
                         label="Código de Barras"
-                        className="bg-purple-400"
                         value={product?.codeBar || ""}
                         onChange={(e) =>
                           setProduct({ ...product, codeBar: e.target.value })
                         }
                       />
                     </label>
-
                     <div className="flex flex-col gap-5">
                       <InputComLista
+                        descriptionFixed="Marca"
                         label="Selecione uma marca"
-                        value={queryMarks || ""}
+                        value={product.mark?.description || ""}
                         items={marksData}
                         onChange={(value) => {
-                          setQueryMarks(value);
+                          product.mark!.description = value;
                         }}
                         onSelect={(id, description) => {
                           setProduct({
@@ -347,29 +376,10 @@ const MyList = <T,>(props: MyListProps<T>) => {
                       {product?.id || "-"}
                     </div>
                   </div>
-                  <div className="max-h-80 overflow-y-auto">
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mt-2">
+                      <span className="text-zinc-500 text-[10px]">Marca: </span>
                       {product?.mark?.description || ""}
-                    </label>
-                    <label className="block text-sm font-medium text-gray-700">
-                      <MyInput
-                        label="Código de Barras"
-                        className="bg-purple-400"
-                        value={product?.codeBar || ""}
-                        onChange={(e) =>
-                          setProduct({ ...product, codeBar: e.target.value })
-                        }
-                      />
-                    </label>
-                    <label className="block text-sm font-medium text-gray-700">
-                      <MyInput
-                        label="Marca"
-                        className="bg-purple-400"
-                        value={product?.mark?.description || ""}
-                        onChange={(e) =>
-                          setProduct({ ...mark, description: e.target.value })
-                        }
-                      />
                     </label>
                   </div>
                   <div className="mt-4 flex justify-end space-x-2">
@@ -381,7 +391,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
                       Cancelar
                     </button>
                     <button
-                      onClick={handleSave}
+                      onClick={handleDelete}
                       className="botao azul"
                       type="button"
                     >

@@ -16,7 +16,7 @@ export default function New() {
 
   // Função para capturar os valores ao clicar no botão
   const handleSubmit = () => {
-    console.log("Dados do Formulário:", buyProducts, products);
+    // console.log("Dados do Formulário:", buyProducts, products);
     // Aqui você pode armazenar a variável ou enviar os dados para uma API
   };
 

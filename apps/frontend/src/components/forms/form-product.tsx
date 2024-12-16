@@ -8,6 +8,7 @@ import { useState } from "react";
 import MyInput from "../shared/My-Input";
 import InputComLista from "../shared/My-Input-Selectable";
 import Steps from "../shared/Steps";
+import InputMoney from "../shared/input/Input-Money";
 
 export default function FormProduct() {
   const { msgSucess } = useMessage();
@@ -202,16 +203,11 @@ export default function FormProduct() {
         )}
       </div>
       <div className="flex flex-col gap-5">
-        <MyInput
+        <InputMoney
           label="Valor"
-          value={
-            product.lastPrice! > 0
-              ? `R$ ${FormatMoney(product.lastPrice!)}`
-              : "R$ 0,00"
-          }
+          value={product.lastPrice ?? 0}
           onChange={(event) => {
-            const formatString = FormatStringMoney(event.target.value);
-            setProduct({ ...product, lastPrice: formatString });
+            setProduct({ ...product, lastPrice: event });
           }}
         />
       </div>

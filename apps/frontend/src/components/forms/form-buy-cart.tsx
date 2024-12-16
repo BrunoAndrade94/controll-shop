@@ -1,3 +1,6 @@
+import { FormatMoney } from "core/dist";
+import InputMoney from "../shared/input/Input-Money";
+
 export interface FormBuyCartProps {
   listCurrent: any[];
   handleRemoveProduct: (productId: string) => void;
@@ -33,8 +36,8 @@ export default function FormBuyCart(props: FormBuyCartProps) {
               <div className="flex flex-row justify-between items-center">
                 <div className="text-gray-500 text-xs">{product.mark}</div>
               </div>
-              <div className="flex flex-col justify-between items-center">
-                <div>
+              <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row items-center">
                   <label className="text-sm">Quantidade:</label>
                   <input
                     placeholder="quantidade"
@@ -52,25 +55,20 @@ export default function FormBuyCart(props: FormBuyCartProps) {
                   />
                 </div>
                 <div>
-                  <label className="text-sm">Preço: R$</label>
-                  <input
-                    className="w-20 border bg-zinc-300/0 rounded-lg p-1 text-center text-black m-1"
-                    placeholder="Preço"
-                    type="number"
-                    min="0"
-                    value={product.unitPrice.toFixed(2) ?? 0}
+                  <InputMoney
+                    value={product.unitPrice}
                     onChange={(e) =>
                       props.handleUpdateProduct(
                         product.productId,
                         "unitPrice",
-                        +e.target.value
+                        +e
                       )
                     }
                   />
                 </div>
               </div>
               <div className="text-sm text-gray-500 justify-between items-center">
-                Total: R$ {product.totalPrice.toFixed(2) ?? 0}
+                Total: R$ {FormatMoney(product.totalPrice) ?? 0}
               </div>
             </div>
           </div>

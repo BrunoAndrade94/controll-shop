@@ -39,9 +39,9 @@ export interface ContextProductProps {
 
   resetProduct(): void;
   saveProduct(): Promise<void>;
+  getProduct(id: string): void;
   loadingProduct(): Promise<void>;
   deleteProduct(id: string): void;
-  getProduct(id: string): void;
   updateProduct(product: Partial<Product>): void;
 }
 
@@ -87,10 +87,6 @@ export function ProviderContextProduct(props: any) {
   const updateProduct = useCallback(
     async function () {
       try {
-        product.markId = product.mark?.id;
-
-        console.log("PASSEI ONDE NAO DEVIA");
-
         const updateProduct = await httpPut(
           `${urlUpdateIdProduct}${product.id}`,
           product
@@ -160,8 +156,9 @@ export function ProviderContextProduct(props: any) {
   const deleteProduct = useCallback(
     async function (id: string) {
       try {
+        console.log(id);
         if (id.length > 0) {
-          await httpPut(urlDeleteProduct, id);
+          const a = await httpPut(urlDeleteProduct, id);
         }
       } catch (error) {
         // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
@@ -236,12 +233,12 @@ export function ProviderContextProduct(props: any) {
   useEffect(() => {
     async function loadProducts() {
       try {
-        const products = await httpGet(urlGetProduct); // Requisição à API
+        const productsData = await httpGet(urlGetProduct); // Requisição à API
 
         // products.map((products: Partial<Product>) => {
         //   products.lastPrice = +FormatMoney(products.lastPrice ?? 0);
         // });
-        setProductsData(products); // Atualiza o estado com os dados corretos
+        setProductsData(productsData); // Atualiza o estado com os dados corretos
       } catch (error) {
         console.error("Erro ao carregar:", error);
       }
@@ -261,12 +258,12 @@ export function ProviderContextProduct(props: any) {
         setProduct,
         saveProduct,
         resetProduct,
+        updateProduct,
         deleteProduct,
         loadingProduct,
         setProductsData,
         setQueryProducts,
         setDescriptionInUse,
-        updateProduct,
       }}
     >
       {props.children}

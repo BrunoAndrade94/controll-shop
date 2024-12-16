@@ -9,6 +9,7 @@ interface Marca {
 interface InputComListaProps {
   label: string;
   value: string;
+  descriptionFixed?: string;
   disabled?: boolean;
   items: any[]; // Lista de marcas
   onChange: (value: string) => void; // Função chamada ao alterar o valor do input
@@ -19,6 +20,7 @@ export default function InputComLista({
   label,
   value,
   items,
+  descriptionFixed = "",
   disabled = false,
   onChange,
   onSelect,
@@ -45,6 +47,7 @@ export default function InputComLista({
   return (
     <div className="flex flex-col gap-5">
       <MyInput
+        descriptionFixed={descriptionFixed}
         value={value}
         disabled={disabled}
         label={items.length === 0 ? "Procurando..." : label}

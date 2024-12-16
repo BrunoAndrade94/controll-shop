@@ -31,20 +31,25 @@ GET https://172.17.10.134:4000/products/new/validate/description/s
 ###
 GET http://localhost:4000/products/get/id/e2fee4ba-d4c1-4605-b794-cc428fd47b4e
 
-###
-PUT http://localhost:4000/products/delete/c36864ab-f03a-4e79-97f8-57a4382abf7b
 
 ###
 GET http://localhost:4000/products/get/?search=ice
 
-/////////////////
 
+
+///////////////// PRODUTOS
+
+// DELETE ID
+###
+PUT http://localhost:4000/products/delete/id/9c3bef17-fa40-411b-852b-23640c7acdab
+
+// GET ID
 ###
 GET http://localhost:4000/products/get/id/334ee704-b398-49da-913a-c047bf0002b0
 
+// GET ALL
 ###
 GET http://localhost:4000/products/get/all
-
 
 // UPDATE
 ###

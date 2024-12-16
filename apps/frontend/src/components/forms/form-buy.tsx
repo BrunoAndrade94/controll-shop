@@ -2,11 +2,13 @@
 
 // TODO: REFATORAR O CÓDIGO COMPLETO
 
+import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
+
 import useBuy from "@/data/hooks/use-buy";
 import useLocal from "@/data/hooks/use-local";
 import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
-import { Local, Product } from "core";
+import { FormatMoney, Local, Product } from "core";
 import { useState } from "react";
 import MyInput from "../shared/My-Input";
 import Steps from "../shared/Steps";
@@ -372,7 +374,9 @@ export default function FormBuy() {
             }
           }}
         >
-          Carrinho ({productsList.length}) R$ {totalValueBuy}
+          <LocalGroceryStoreIcon />
+          Carrinho ({productsList.length}){" - "} R${" "}
+          {totalValueBuy === 0 ? "0,00" : FormatMoney(totalValueBuy)}
         </button>
       )}
     </div>

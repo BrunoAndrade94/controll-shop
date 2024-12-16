@@ -54,12 +54,6 @@ export function ProviderContextBuy(props: any) {
           ...buyCreate,
         });
 
-        console.log(buy);
-
-        // cleanBuy();
-        // setQueryLocals("");
-        // setQueryProducts("");
-
         resetBuy();
 
         router.push(urlBuy);

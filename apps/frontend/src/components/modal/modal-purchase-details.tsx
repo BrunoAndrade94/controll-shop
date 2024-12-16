@@ -69,7 +69,9 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({
           ))}
         </div>
       ) : (
-        <p className="select-none">Nenhuma compra encontrada.</p>
+        <div className=" flex flex-row select-none">
+          <p>Nenhuma compra encontrada.</p>
+        </div>
       )}
     </MyModal>
   );

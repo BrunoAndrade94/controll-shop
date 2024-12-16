@@ -23,16 +23,19 @@ export default function MyInput(props: MyInputProps) {
       <div className="flex flex-col text-center">
         {<p>{props.description}</p>}
       </div>
-      <div className="relative">
-        <div className="-mb-4 pl-2">{props.descriptionFixed}</div>
-        <div className="mt-4">
+      <div className="-mb-5 text-black">{props.descriptionFixed}</div>
+      <div className={`relative `}>
+        <div className="">
           <input
             title={props.title}
             placeholder={props.label}
             onKeyDown={props.onKeyDown}
             {...props}
             type={props.type ?? "text"}
-            className={`w-full px-3 py-2 pr-11 mt-3 rounded-lg bg-purple-300 text-black placeholder:text-black placeholder:focus:text-purple-500 ${props.className}`}
+            className={`
+							w-full px-3 py-2 pr-11 rounded-lg bg-purple-500 mt-3
+							text-black placeholder:text-black placeholder:focus:text-purple-800
+							${props.className}`}
           />
         </div>
         {props.value && (
