@@ -52,7 +52,7 @@ const ContextProduct = createContext<ContextProductProps>({} as any);
 
 export function ProviderContextProduct(props: any) {
   const router = useRouter();
-  const { msgSucess } = useMessage();
+  const { msgSucess, msgError } = useMessage();
   const { httpGet, httpPost, httpPut } = useApi();
 
   const { marksData, resetMark } = useMark();
@@ -109,10 +109,10 @@ export function ProviderContextProduct(props: any) {
 
         await loadingProduct();
       } catch (error) {
-        console.error(error);
+        msgError(`NÃO FOI POSSIVEL ATUALIZAR ${product.description}`);
       }
     },
-    [httpPut, setProduct, product, msgSucess, loadingProduct]
+    [httpPut, setProduct, product, msgSucess, loadingProduct, msgError]
   );
 
   // const updateProduct = useCallback(
