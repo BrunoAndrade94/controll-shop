@@ -312,7 +312,7 @@ export default function FormBuy() {
         </div> */}
 
         <div className="relative flex flex-col">
-          <div className="flex flex-row text-center items-end -mt-5">
+          <div className="flex flex-row text-center items-center -mt-5">
             <div className="flex-1 items-center">
               <MyInput
                 label={`${productsData.length === 0 ? "Procurando produtos.." : "Selecione um produto"}`}
@@ -335,10 +335,10 @@ export default function FormBuy() {
               <button
                 type="button"
                 className="botao verde"
-                onClick={() => setScannerOpen(true)}
-                // onClick={() => {
-                //   msgError("AINDA NÃO SOU FUNCIONAL");
-                // }}
+                // onClick={() => setScannerOpen(true)}
+                onClick={() => {
+                  msgError("AINDA NÃO SOU FUNCIONAL");
+                }}
               >
                 QRCODE
               </button>

@@ -11,7 +11,6 @@ export interface StepsProps {
 
 export default function Steps(props: StepsProps) {
   const [stepCurrent, setStepCurrent] = useState(0);
-  // const { showCart } = useBuy();
 
   function noStepPrevious() {
     return stepCurrent === 0;

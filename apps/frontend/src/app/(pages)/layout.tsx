@@ -1,4 +1,3 @@
-import Window from "@/components/shared/Window";
 import { Toaster } from "@/components/ui/toaster";
 import { ProviderContextBuy } from "@/data/contexts/buy/context-buy";
 import { ProviderContextLocal } from "@/data/contexts/local/context-local";

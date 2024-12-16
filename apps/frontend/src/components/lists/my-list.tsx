@@ -6,7 +6,6 @@ import useProduct from "@/data/hooks/use-product";
 import { Product } from "core";
 import { useCallback, useEffect, useState } from "react";
 import PurchaseModal from "../modal/modal-purchase-details";
-import InputProductSearch from "../shared/input/Input-Search-Product";
 import MyInput from "../shared/My-Input";
 import InputComLista from "../shared/My-Input-Selectable";
 import Window from "../shared/Window";
@@ -226,7 +225,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
                       {props.columns.map(({ key, formatter }, colIndex) => (
                         <td
                           key={colIndex}
-                          className="border-b px-3 py-1 text-white select-none sm:text-lg xs:text-xs"
+                          className="border-b px-3 py-1 text-white select-none sm:text-xl xs:text-lg"
                         >
                           {formatter
                             ? formatter(
