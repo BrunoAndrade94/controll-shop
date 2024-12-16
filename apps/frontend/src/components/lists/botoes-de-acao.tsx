@@ -19,26 +19,26 @@ const ActionButtons: React.FC<ActionButtonsProps> = (
         <button
           title="Compras"
           type="button"
-          className="bg-blue-400 p-1 rounded-full h-5 w-5 flex items-center justify-center"
+          className="botao-dot azul"
           onClick={props.onView}
         >
-          <VisibilityIcon fontSize="inherit" />
+          <VisibilityIcon />
         </button>
         <button
           title="Editar"
           type="button"
-          className="bg-yellow-400 p-1 rounded-full w-5 h-5 flex items-center justify-center"
+          className="botao-dot amarelo"
           onClick={props.onEdit}
         >
-          <EditIcon fontSize="inherit" />
+          <EditIcon />
         </button>
         <button
           title="Excluir"
           type="button"
-          className="bg-red-400 p-1 rounded-full w-5 h-5 flex items-center justify-center"
+          className="botao-dot vermelho"
           onClick={props.onDelete}
         >
-          <DeleteForeverIcon fontSize="inherit" />
+          <DeleteForeverIcon />
         </button>
       </div>
     </td>

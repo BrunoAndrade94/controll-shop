@@ -295,8 +295,8 @@ const MyList = <T,>(props: MyListProps<T>) => {
                   </div>
                   <div className="max-h-96 overflow-y-auto">
                     <label className="block text-sm font-medium text-gray-700 mt-2">
-                      <InputProductSearch />
-                      {/* <MyInput
+                      {/* <InputProductSearch /> */}
+                      <MyInput
                         descriptionFixed="Descrição"
                         label="Descrição"
                         value={product?.description?.toUpperCase() || ""}
@@ -306,7 +306,7 @@ const MyList = <T,>(props: MyListProps<T>) => {
                             description: e.target.value.toUpperCase(),
                           })
                         }
-                      /> */}
+                      />
                     </label>
                     <label className="block text-sm font-medium text-gray-700">
                       <MyInput

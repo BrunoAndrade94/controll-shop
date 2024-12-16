@@ -8,6 +8,7 @@ body {
 
 @import url("./styles/home.css");
 @import url("./styles/button.css");
+@import url("./styles/button-dot.css");
 @import url("./styles/page.css");
 
 input {

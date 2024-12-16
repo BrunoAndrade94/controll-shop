@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .botao-dot {
+    @apply p-4 rounded-full h-5 w-5 flex items-center justify-center;
+  }
+
+  .botao-dot.disabled {
+    @apply bg-zinc-400 cursor-not-allowed opacity-50;
+  }
+
+  .botao-dot.azul {
+    @apply bg-blue-600 border border-blue-900;
+  }
+
+  .botao-dot.azul:hover {
+    @apply bg-blue-400;
+  }
+
+  .botao-dot.roxo {
+    @apply bg-purple-400 border border-purple-900;
+  }
+
+  .botao-dot.roxo:hover {
+    @apply bg-purple-300;
+  }
+
+  .botao-dot.vermelho {
+    @apply bg-red-600 border border-red-900;
+  }
+
+  .botao-dot.vermelho:hover {
+    @apply bg-red-400;
+  }
+
+  .botao-dot.laranja {
+    @apply bg-orange-600 border border-orange-900;
+  }
+
+  .botao-dot.laranja:hover {
+    @apply bg-orange-400;
+  }
+
+  .botao-dot.verde {
+    @apply bg-green-600 border border-green-900;
+  }
+
+  .botao-dot.verde:hover {
+    @apply bg-green-400;
+  }
+
+  .botao-dot.amarelo {
+    @apply bg-yellow-600 border border-yellow-900;
+  }
+
+  .botao-dot.amarelo:hover {
+    @apply bg-yellow-400;
+  }
+}

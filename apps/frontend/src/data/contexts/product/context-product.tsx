@@ -104,7 +104,7 @@ export function ProviderContextProduct(props: any) {
 
         // Exibe uma mensagem de sucesso
         msgSucess(
-          `${product.description?.toUpperCase()} atualizado com sucesso.`
+          `${product.description?.toUpperCase()} ATUALIZADO COM SUCESSO.`
         );
 
         await loadingProduct();
