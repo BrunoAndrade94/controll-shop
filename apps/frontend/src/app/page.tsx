@@ -47,7 +47,7 @@ export default function PageGraphicProducts() {
         <button className="botao verde" type="button" onClick={onStop}>
           FECHAR CODIGO
         </button>
-        <div>{codigoLido}</div>
+        <div>{codigoLido ? codigoLido : "sem codigo lido"}</div>
       </div>
     </div>
   );
