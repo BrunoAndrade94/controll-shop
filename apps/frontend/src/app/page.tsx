@@ -1,54 +1,49 @@
-"use client";
-import Quagga from "quagga"; // ES6
-import { useEffect } from "react";
+import Window from "@/components/shared/Window";
+import CategoryIcon from "@mui/icons-material/Category";
+import FlagCircleIcon from "@mui/icons-material/FlagCircle";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Link from "next/link";
+import Logo from "../components/templates/Logo";
 
-export default function PageGraphicProducts() {
-  let codigoLido = "";
-
-  const quaggaInit = () => {
-    Quagga.init(
-      {
-        inputStream: {
-          name: "Live",
-          type: "LiveStream",
-          target: document.querySelector("#reader"), // Or '#yourElement' (optional)
-        },
-        decoder: {
-          readers: ["ean_reader"],
-        },
-      },
-      function (err: any) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-        Quagga.onDetected((item: any) => {
-          codigoLido = item;
-        });
-      }
-    );
-  };
-
-  const onStop = () => {
-    Quagga.stop();
-  };
-
-  useEffect(() => {}, []);
-
+export default function Home() {
   return (
-    <div>
-      <div className="m-0 p-0 flex mb-3" id="reader" />
-      <div className="flex flex-col items-center space-y-3">
-        <button className="botao verde" type="button" onClick={quaggaInit}>
-          LER CODIGO
-        </button>{" "}
-        <button className="botao verde" type="button" onClick={onStop}>
-          FECHAR CODIGO
-        </button>
-        <div>{codigoLido ? codigoLido : "sem codigo lido"}</div>
-      </div>
+    <div className="page image-background bg-cover bg-center bg-no-repeat">
+      <Window title="Menu Inicial" button={false}>
+        <div className="-mt-56">
+          <Logo />
+        </div>
+        <div className="space-y-2 mt-28 p-2">
+          <Link
+            className="botao verde flex flex-row justify-between"
+            href={"/buys"}
+          >
+            {"COMPRAR"}
+            <ShoppingCartIcon />
+          </Link>
+          <Link
+            className="botao azul flex flex-row justify-between"
+            href={"/products"}
+          >
+            {"PRODUTOS"}
+            <CategoryIcon />
+          </Link>
+          <Link
+            className="botao laranja flex flex-row justify-between"
+            href={"/marks"}
+          >
+            {"MARCAS"}
+            <FlagCircleIcon />
+          </Link>
+          <Link
+            className="botao amarelo flex flex-row justify-between"
+            href={"/locals"}
+          >
+            {"LOCAIS"}
+            <LocalLibraryIcon />
+          </Link>
+        </div>
+      </Window>
     </div>
   );
 }

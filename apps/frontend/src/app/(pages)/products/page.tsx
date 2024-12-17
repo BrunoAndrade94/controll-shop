@@ -22,7 +22,7 @@ export default function PageProduct() {
             {"VER PRODUTOS"}
           </Link>
           <Link className="botao amarelo" href={"/products/graphic"}>
-            {"GRÁFICOS"}
+            {"TESTE DE LEITOR"}
           </Link>
         </div>
         <div className="flex-1">
