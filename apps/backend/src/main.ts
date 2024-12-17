@@ -10,9 +10,9 @@ async function bootstrap() {
   // Habilita o ValidationPipe globalmente
   // app.useGlobalPipes(new ValidationPipe());
 
-  const port = process.env.PORT ?? 3033;
+  const port = process.env.PORT ?? 4000;
   const host = process.env.HOST ?? '0.0.0.0';
 
-  await app.listen(port);
+  await app.listen(port, host);
 }
 bootstrap();

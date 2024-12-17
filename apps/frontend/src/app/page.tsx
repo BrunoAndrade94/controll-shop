@@ -3,6 +3,8 @@ import Quagga from "quagga"; // ES6
 import { useEffect } from "react";
 
 export default function PageGraphicProducts() {
+  let codigoLido = "";
+
   const quaggaInit = () => {
     Quagga.init(
       {
@@ -22,8 +24,8 @@ export default function PageGraphicProducts() {
         }
         console.log("Initialization finished. Ready to start");
         Quagga.start();
-        Quagga.onDetected(() => {
-          console.log("sdfsdf");
+        Quagga.onDetected((item: any) => {
+          codigoLido = item;
         });
       }
     );
@@ -45,6 +47,7 @@ export default function PageGraphicProducts() {
         <button className="botao verde" type="button" onClick={onStop}>
           FECHAR CODIGO
         </button>
+        <div>{codigoLido}</div>
       </div>
     </div>
   );
