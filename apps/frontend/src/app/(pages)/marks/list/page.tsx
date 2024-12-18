@@ -1,5 +1,6 @@
 "use client";
 
+import MyList from "@/components/lists/my-list";
 import useMark from "@/data/hooks/use-mark";
 
 export default function PageMarksList() {
@@ -16,15 +17,16 @@ export default function PageMarksList() {
 
   return (
     <div>
-      {/* <div>
+      <div>
         <MyList
+          dataModal={marksData}
           windowTitle="Marcas"
           windowLabel="consultas e modificações"
           columns={columns}
           columnsModal={columnsModal}
           data={marksData}
         ></MyList>
-      </div> */}
+      </div>
     </div>
   );
 }

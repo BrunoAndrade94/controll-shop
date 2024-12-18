@@ -24,7 +24,7 @@ export default function Window({
     <div
       className="
 			bg-purple-600 rounded-xl shadow
-			shadow-black mx-auto -mt-32 max-w-md w-screen"
+			shadow-black -mt-32 sm:max-x-lg w-full ml-1 mr-1 flex flex-col"
     >
       {showHead && (
         <div

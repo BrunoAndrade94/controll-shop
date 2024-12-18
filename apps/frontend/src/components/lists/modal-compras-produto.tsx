@@ -15,7 +15,12 @@ const ModalComprasProduto: React.FC<ModalComprasProdutoProps> = (
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-purple-300 rounded-lg shadow-lg w-full max-w-md mx-auto xs:w-full m-10 p-4 flex flex-col">
+      <div
+        className="
+					bg-purple-300 rounded-lg shadow-lg
+					  xs:w-lg mx-7 p-4 flex
+						flex-col max-w-xl w-full"
+      >
         <div className="flex flex-col justify-between items-start">
           <div className="text-xs text-black select-none">
             TODAS AS COMPRAS DESTE PRODUTO

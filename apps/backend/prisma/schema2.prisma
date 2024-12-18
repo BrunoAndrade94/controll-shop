@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  seed     = "ts-node ./prisma/seed.ts"
+}
+
+datasource db {
+  provider  = "postgresql"
+  directUrl = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+}
+
+model Local {
+  id          String   @id @default(uuid())
+  description String   @unique
+  createDate  DateTime
+  active      Boolean
+  Buy         Buy[]
+
+  @@map("locals")
+}
+
+model Mark {
+  id          String    @id @default(uuid())
+  description String    @unique
+  createDate  DateTime
+  active      Boolean
+  Product     Product[]
+
+  @@map("marks")
+}
+
+model Product {
+  id          String        @id @default(uuid())
+  description String        @unique
+  codeBar     String
+  lastPrice   Float
+  markId      String
+  createDate  DateTime
+  active      Boolean
+  buyProducts BuyProducts[]
+  mark        Mark          @relation(fields: [markId], references: [id])
+
+  @@map("products")
+}
+
+model Buy {
+  id            String        @id @default(uuid())
+  buyDate       DateTime
+  products      BuyProducts[]
+  countProducts Int
+  totalValue    Float
+  localId       String
+  local         Local         @relation(fields: [localId], references: [id])
+
+  @@map("buys")
+}
+
+model BuyProducts {
+  id         String  @id @default(uuid())
+  buyId      String
+  productId  String
+  amount     Float
+  unitPrice  Float
+  totalPrice Float
+  buys       Buy     @relation(fields: [buyId], references: [id])
+  products   Product @relation(fields: [productId], references: [id])
+
+  @@map("buy-products")
+}

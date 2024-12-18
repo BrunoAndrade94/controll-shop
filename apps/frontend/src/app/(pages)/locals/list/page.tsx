@@ -1,5 +1,6 @@
 "use client";
 
+import MyList from "@/components/lists/my-list";
 import useLocal from "@/data/hooks/use-local";
 
 export default function PageLocalsList() {
@@ -16,15 +17,16 @@ export default function PageLocalsList() {
 
   return (
     <div>
-      {/* <div>
+      <div>
         <MyList
           windowTitle="Locais"
           windowLabel="consultas e modicações"
           columns={columns}
           columnsModal={columnsModal}
-          data={localsData as any}
+          data={localsData}
+          dataModal={localsData}
         ></MyList>
-      </div> */}
+      </div>
     </div>
   );
 }
