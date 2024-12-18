@@ -18,7 +18,7 @@ export function ProviderContextMessage(props: any) {
       toast({
         title: type == "sucess" ? "OK, FEITO (:" : "OPS, ALGO DEU ERRADO ):",
         duration: 2200,
-        description: text,
+        description: text.toUpperCase(),
         variant: type == "sucess" ? "default" : "destructive",
       });
     },

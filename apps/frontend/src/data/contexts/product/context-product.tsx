@@ -29,6 +29,9 @@ export interface ContextProductProps {
   descriptionInUse: boolean;
   setDescriptionInUse: (value: boolean) => void;
 
+  showListProducts: boolean;
+  setShowListProducts: (value: boolean) => void;
+
   productsData: Partial<Product>[]; // Inclui as produtos disponíveis
   setProductsData: React.Dispatch<React.SetStateAction<Partial<Product>[]>>;
 
@@ -54,6 +57,8 @@ export function ProviderContextProduct(props: any) {
   const router = useRouter();
   const { msgSucess, msgError } = useMessage();
   const { httpGet, httpPost, httpPut } = useApi();
+
+  const [showListProducts, setShowListProducts] = useState(false);
 
   const { marksData, resetMark } = useMark();
 
@@ -180,6 +185,7 @@ export function ProviderContextProduct(props: any) {
     async function () {
       try {
         const productCreate = await httpPost(urlNewProducts, product);
+        console.log(productCreate);
 
         setProduct({
           ...productCreate,
@@ -257,6 +263,8 @@ export function ProviderContextProduct(props: any) {
   return (
     <ContextProduct.Provider
       value={{
+        setShowListProducts,
+        showListProducts,
         marksData,
         productsData,
         queryProducts,

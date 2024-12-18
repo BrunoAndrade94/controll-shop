@@ -15,6 +15,8 @@ const InputProductSearch: React.FC = ({}) => {
     setFilteredProducts,
     product,
     filteredProducts,
+    setProductsData,
+    setShowListProducts,
   } = useProduct();
   const observation = `${
     descriptionInUse
@@ -24,8 +26,16 @@ const InputProductSearch: React.FC = ({}) => {
         : "Informe para verificar."
   }`;
 
+  const onDisabled = () => {
+    return productsData.length === 0;
+  };
+
   const handleOnChangeProduct = (productUser: string) => {
     setQueryProducts(productUser); // Atualiza o estado com o texto digitado pelo usuário
+    setProduct({
+      ...product,
+      description: productUser.toUpperCase(),
+    });
 
     // Busca produtos que contenham a string digitada
     const filteredProducts1 = productsData.filter((productData) =>
@@ -54,17 +64,20 @@ const InputProductSearch: React.FC = ({}) => {
   return (
     <div className="flex flex-col gap-5 w-full max-w-screen">
       <MyInput
-        label="Informe o novo Produto"
+        onBlur={() => {
+          setShowListProducts(false);
+          setFilteredProducts([]);
+        }}
+        onFocus={() => {
+          setShowListProducts(true);
+          setFilteredProducts(productsData);
+        }}
+        // descriptionFixed={"Descrição"}
+        disabled={onDisabled()}
+        label={`${productsData.length === 0 ? "Buscando produtos..." : "Produto"}`}
         value={product.description?.toUpperCase() || ""}
         observation={observation}
-        descriptionFixed={"Descrição"}
-        onChange={(e) =>
-          setProduct({
-            ...product,
-            description: e.target.value.toUpperCase(),
-          })
-        }
-        // onChange={(event) => handleOnChangeProduct(event.target.value)}
+        onChange={(event) => handleOnChangeProduct(event.target.value)}
         error={descriptionInUse ? "Produto informado já está em uso." : ""}
       />
       {filteredProducts.length > 0 && (
@@ -73,7 +86,7 @@ const InputProductSearch: React.FC = ({}) => {
           className="relative top-full left-0 w-full bg-white border rounded-xl border-gray-300 shadow-lg max-h-52 overflow-auto"
         >
           {filteredProducts.map((product) => (
-            <div key={product.id} className="p-2 hover:bg-gray-200">
+            <div key={product.id} className="p-2">
               {product.description}
             </div>
           ))}

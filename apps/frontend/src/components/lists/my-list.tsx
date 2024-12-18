@@ -6,6 +6,7 @@ import useProduct from "@/data/hooks/use-product";
 import { Product } from "core";
 import { useCallback, useEffect, useState } from "react";
 import PurchaseModal from "../modal/modal-purchase-details";
+import InputProductSearch from "../shared/input/Input-Search-Product";
 import MyInput from "../shared/My-Input";
 import InputComLista from "../shared/My-Input-Selectable";
 import Window from "../shared/Window";
@@ -292,24 +293,13 @@ const MyList = <T,>(props: MyListProps<T>) => {
                       {product?.id || "-"}
                     </div>
                   </div>
-                  <div className="max-h-96 overflow-y-auto">
+                  <div className="max-h-96 overflow-y-full max-y-screen space-y-3">
                     <label className="block text-sm font-medium text-gray-700 mt-2">
-                      {/* <InputProductSearch /> */}
-                      <MyInput
-                        descriptionFixed="Descrição"
-                        label="Descrição"
-                        value={product?.description?.toUpperCase() || ""}
-                        onChange={(e) =>
-                          setProduct({
-                            ...product,
-                            description: e.target.value.toUpperCase(),
-                          })
-                        }
-                      />
+                      <InputProductSearch />
                     </label>
                     <label className="block text-sm font-medium text-gray-700">
                       <MyInput
-                        descriptionFixed="Código de Barras"
+                        // descriptionFixed="Código de Barras"
                         label="Código de Barras"
                         value={product?.codeBar || ""}
                         onChange={(e) =>
@@ -317,9 +307,9 @@ const MyList = <T,>(props: MyListProps<T>) => {
                         }
                       />
                     </label>
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-7">
                       <InputComLista
-                        descriptionFixed="Marca"
+                        // descriptionFixed="Marca"
                         label="Selecione uma marca"
                         value={product.mark?.description || ""}
                         items={marksData}

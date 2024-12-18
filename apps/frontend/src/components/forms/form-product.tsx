@@ -172,7 +172,6 @@ export default function FormProduct() {
       authNextStep={authNextStep}
     >
       <ProductSearch />
-
       {/* <div className="flex flex-col gap-5 w-full max-w-screen">
         <MyInput
           label="Informe o novo Produto"

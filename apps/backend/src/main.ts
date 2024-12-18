@@ -7,17 +7,6 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ErrorFilter());
 
-  // Habilita o ValidationPipe globalmente
-  // app.useGlobalPipes(new ValidationPipe());
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const cors = require('cors');
-
-  app.use(
-    cors({
-      origin: 'https://controle-de-compras.netlify.app/',
-    }),
-  ); // URL do frontend
-
   const port = process.env.PORT ?? 4000;
   const host = process.env.HOST ?? '0.0.0.0';
 
