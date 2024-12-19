@@ -29,6 +29,7 @@ export interface ContextBuyProps {
   buy: Partial<Buy>;
   localDescription?: string;
   localsData: Partial<Local>[];
+  buysData: Partial<Buy>[];
   productsData: Partial<Product>[];
   productsList: Partial<BuyProductItem>[];
   setProductsList: React.Dispatch<
@@ -58,11 +59,26 @@ export function ProviderContextBuy(props: any) {
   const { localsData, resetLocal } = useLocal();
   const { productsData, resetProduct } = useProduct();
   const [buy, setBuy] = useState<Partial<Buy>>(CreateEmptyBuy());
+  const [buysData, setBuysData] = useState<Partial<Buy>[]>([]);
   /// CONST FINAL
   ///
 
   ///
   /// FUNCAO INICIO
+  const loadingBuy = useCallback(
+    async function () {
+      try {
+        const buysData = await httpGet(`${urlGetBuy}`);
+
+        setBuysData(buysData);
+        console.log(buysData.length);
+      } catch (error) {
+        msgError("compras nao carregadas");
+      }
+    },
+    [httpGet, msgError, setBuysData]
+  );
+
   const resetBuy = useCallback(() => {
     setProductsList([]);
 
@@ -70,7 +86,8 @@ export function ProviderContextBuy(props: any) {
     resetLocal();
     resetProduct();
     setStepCurrent(0);
-  }, [resetLocal, resetProduct, setStepCurrent]);
+    loadingBuy();
+  }, [resetLocal, resetProduct, setStepCurrent, loadingBuy]);
 
   const saveBuy = useCallback(
     async function (buy: any) {
@@ -104,21 +121,6 @@ export function ProviderContextBuy(props: any) {
     [httpGet, msgError]
   );
 
-  const loadingBuy = useCallback(
-    async function (description: string) {
-      try {
-        const buy = await httpGet(`${urlGetBuy}${description}`);
-
-        setBuy({
-          ...buy,
-          // createDate: Data.unformat(buy.createDate),
-        });
-      } catch (error) {
-        msgError("compras nao carregadas");
-      }
-    },
-    [setBuy, httpGet, msgError]
-  );
   /// FUNCAO FINAL
   ///
 
@@ -128,6 +130,7 @@ export function ProviderContextBuy(props: any) {
     <ContextBuy.Provider
       value={{
         buy: buy,
+        buysData,
         localsData,
         productsData,
         productsList,

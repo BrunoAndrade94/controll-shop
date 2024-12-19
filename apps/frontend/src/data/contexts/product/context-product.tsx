@@ -85,7 +85,7 @@ export function ProviderContextProduct(props: any) {
     setProductsData([]);
     setQueryProducts("");
     loadingProduct();
-  }, [loadingProduct]);
+  }, [loadingProduct, resetMark, setStepCurrent]);
 
   const updateProduct = useCallback(
     async function () {
@@ -127,7 +127,6 @@ export function ProviderContextProduct(props: any) {
   const deleteProduct = useCallback(
     async function (id: string) {
       try {
-        console.log(id);
         if (id.length > 0) {
           const a = await httpPut(urlDeleteProduct, id);
         }
@@ -142,7 +141,6 @@ export function ProviderContextProduct(props: any) {
     async function () {
       try {
         const productCreate = await httpPost(urlNewProducts, product);
-        console.log(productCreate);
 
         setProduct({
           ...productCreate,

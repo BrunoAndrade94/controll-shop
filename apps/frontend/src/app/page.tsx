@@ -1,6 +1,7 @@
 "use client";
 
 import Window from "@/components/shared/Window";
+import useBuy from "@/data/hooks/use-buy";
 import useLocal from "@/data/hooks/use-local";
 import useMark from "@/data/hooks/use-mark";
 import useProduct from "@/data/hooks/use-product";
@@ -15,6 +16,7 @@ export default function Home() {
   const { productsData } = useProduct();
   const { marksData } = useMark();
   const { localsData } = useLocal();
+  const { buysData } = useBuy();
 
   return (
     <div className="page image-background bg-cover bg-center bg-no-repeat">
@@ -28,7 +30,7 @@ export default function Home() {
               className="botao verde flex flex-row justify-between"
               href={"/buys"}
             >
-              {`COMPRAR (0)`}
+              {`COMPRAR (${buysData?.length ?? 0})`}
               <ShoppingCartIcon />
             </Link>
             <Link

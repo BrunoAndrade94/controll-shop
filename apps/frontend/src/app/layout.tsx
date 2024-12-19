@@ -4,6 +4,7 @@ import { ProviderContextProduct } from "@/data/contexts/product/context-product"
 import type { Metadata } from "next";
 import { Lora } from "next/font/google";
 import "./globals.css";
+import { ProviderContextBuy } from "@/data/contexts/buy/context-buy";
 const font = Lora({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,7 +22,9 @@ export default function RootLayout({
       <body className={font.className}>
         <ProviderContextMark>
           <ProviderContextProduct>
-            <ProviderContextLocal>{children}</ProviderContextLocal>
+            <ProviderContextLocal>
+              <ProviderContextBuy>{children}</ProviderContextBuy>
+            </ProviderContextLocal>
           </ProviderContextProduct>
         </ProviderContextMark>
       </body>

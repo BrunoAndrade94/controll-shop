@@ -19,10 +19,10 @@ export default function PageGraphicProducts() {
       },
       function (err: any) {
         if (err) {
-          console.log(err);
+          console.error(err);
           return;
         }
-        console.log("Initialization finished. Ready to start");
+        // console.log("Initialization finished. Ready to start");
         Quagga.start();
         Quagga.onDetected((item: any) => {
           codigoLido = item;
@@ -45,7 +45,7 @@ export default function PageGraphicProducts() {
           LER CODIGO
         </button>{" "}
         <button className="botao verde" type="button" onClick={onStop}>
-          FECHAR CAMAERA
+          FECHAR CAMERA
         </button>
         <div>{codigoLido ? codigoLido : "sem codigo lido"}</div>
       </div>

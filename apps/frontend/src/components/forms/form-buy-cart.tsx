@@ -38,7 +38,7 @@ export default function FormBuyCart(props: FormBuyCartProps) {
                 <div className="text-gray-500 text-xs">{product.mark}</div>
               </div>
               <div className="flex flex-row justify-between items-center">
-                <div className="flex flex-row items-center">
+                <div className="flex flex-row items-center space-x-2">
                   <label className="text-sm">Quantidade:</label>
                   <input
                     type="number"
@@ -54,7 +54,7 @@ export default function FormBuyCart(props: FormBuyCartProps) {
                     className="w-16 border bg-zinc-300/0 rounded-lg p-1 text-center text-black"
                   />
                 </div>
-                <div>
+                <div className="flex items-center -mt-5 max-w-96">
                   <InputMoney
                     value={product.unitPrice}
                     onChange={(e) =>
@@ -67,7 +67,8 @@ export default function FormBuyCart(props: FormBuyCartProps) {
                   />
                 </div>
               </div>
-              <div className="text-sm text-gray-500 justify-between items-center">
+
+              <div className="text-sm text-gray-500 justify-between items-center mt-3">
                 Total: R$ {FormatMoney(product.totalPrice) ?? 0}
               </div>
             </div>

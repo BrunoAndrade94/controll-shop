@@ -23,7 +23,7 @@ export default function Window({
   return (
     <div
       className="
-			bg-purple-600 rounded-xl shadow
+			bg-purple-600 rounded-xl shadow mx-5
 			shadow-black -mt-32 sm:max-x-lg w-full ml-1 mr-1 flex flex-col"
     >
       {showHead && (
