@@ -47,7 +47,7 @@ export default function InputComLista({
   return (
     <div className="flex flex-col gap-5">
       <MyInput
-        descriptionFixed={descriptionFixed}
+        // descriptionFixed={descriptionFixed}
         value={value}
         disabled={disabled}
         label={items.length === 0 ? "Procurando..." : label}

@@ -4,7 +4,7 @@ export interface MyInputProps extends React.HTMLProps<HTMLInputElement> {
   value: string | number;
   onChange: (event: any) => void;
   description?: string;
-  descriptionFixed?: string;
+  // descriptionFixed?: string;
   observation?: string;
   error?: string;
 }
@@ -23,7 +23,7 @@ export default function MyInput(props: MyInputProps) {
       <div className="flex flex-col text-center">
         {<p>{props.description}</p>}
       </div>
-      <div className="-mb-5 text-black">{props.descriptionFixed}</div>
+      {/* <div className="-mb-5 text-black">{props.descriptionFixed}</div> */}
       <div className={`relative `}>
         <div className="">
           <input

@@ -80,11 +80,16 @@ const ModalComCamera = () => {
 
         <div className="w-full h-72 bg-gray-300 rounded-lg mt-4 relative">
           {/* Coloque o componente da câmera aqui */}
-          <div id="reader" className="flex flex-col items-center">
+          <div
+            id="reader"
+            className="w-full h-full bg-gray-700 text-white flex justify-center items-center"
+          >
             <video
-              className=" bg-gray-700 text-white flex justify-center items-center object-cover"
+              id="video"
+              className="w-full h-full object-cover"
               autoPlay
               playsInline
+              // ref={"reader"} // Se necessário, para o controle do vídeo via React
             >
               {/* A câmera será exibida aqui */}
             </video>

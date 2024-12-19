@@ -81,10 +81,10 @@ export function ProviderContextProduct(props: any) {
         setProductsData(product);
         setFilteredProducts([]);
       } catch (error) {
-        console.error(error);
+        msgError("erro ao carregar produtos");
       }
     },
-    [httpGet, setProductsData, setFilteredProducts]
+    [httpGet, setProductsData, setFilteredProducts, msgError]
   );
 
   const resetProduct = useCallback(() => {
@@ -160,10 +160,10 @@ export function ProviderContextProduct(props: any) {
         setProduct(product);
         return product;
       } catch (error) {
-        console.error(error);
+        msgError("erro ao obter produto");
       }
     },
-    [httpGet, setProduct]
+    [httpGet, setProduct, msgError]
   );
 
   const deleteProduct = useCallback(
@@ -174,11 +174,10 @@ export function ProviderContextProduct(props: any) {
           const a = await httpPut(urlDeleteProduct, id);
         }
       } catch (error) {
-        // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
-        console.error(error);
+        msgError("erro ao deletar produto");
       }
     },
-    [httpPut]
+    [httpPut, msgError]
   );
 
   const saveProduct = useCallback(
@@ -199,11 +198,10 @@ export function ProviderContextProduct(props: any) {
 
         resetProduct();
       } catch (error) {
-        // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
-        console.error(error);
+        msgError("erro ao salvar produto");
       }
     },
-    [product, httpPost, router, msgSucess, resetProduct]
+    [product, httpPost, router, msgSucess, resetProduct, msgError]
   );
 
   // const validateDescription = useCallback(
@@ -254,11 +252,11 @@ export function ProviderContextProduct(props: any) {
         // });
         setProductsData(productsData); // Atualiza o estado com os dados corretos
       } catch (error) {
-        console.error("Erro ao carregar:", error);
+        msgError("erro ao carregar produtos");
       }
     }
     loadProducts();
-  }, [httpGet, setProductsData]);
+  }, [httpGet, setProductsData, msgError]);
 
   return (
     <ContextProduct.Provider

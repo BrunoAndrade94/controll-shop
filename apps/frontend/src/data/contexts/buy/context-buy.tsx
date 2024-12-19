@@ -1,6 +1,7 @@
 "use client";
 
 import useLocal from "@/data/hooks/use-local";
+import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
 import { Buy, CreateEmptyBuy, Local, Product } from "core";
 import { useRouter } from "next/navigation";
@@ -32,6 +33,7 @@ const ContextBuy = createContext<ContextBuyProps>({} as any);
 
 export function ProviderContextBuy(props: any) {
   const { httpGet, httpPost } = useApi();
+  const { msgSucess, msgError } = useMessage();
 
   const router = useRouter();
   const { localsData, resetLocal } = useLocal();
@@ -58,11 +60,10 @@ export function ProviderContextBuy(props: any) {
 
         router.push(urlBuy);
       } catch (error) {
-        // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
-        console.error(error);
+        msgError("compra nao salva");
       }
     },
-    [httpPost, router, resetBuy]
+    [httpPost, router, resetBuy, msgError]
   );
 
   const loadingBuyProducts = useCallback(
@@ -72,10 +73,10 @@ export function ProviderContextBuy(props: any) {
 
         return buy;
       } catch (error) {
-        console.error(error);
+        msgError("produtos nao carregados");
       }
     },
-    [httpGet]
+    [httpGet, msgError]
   );
 
   const loadingBuy = useCallback(
@@ -88,10 +89,10 @@ export function ProviderContextBuy(props: any) {
           // createDate: Data.unformat(buy.createDate),
         });
       } catch (error) {
-        console.error(error);
+        msgError("compras nao carregadas");
       }
     },
-    [setBuy, httpGet]
+    [setBuy, httpGet, msgError]
   );
 
   useEffect(() => {

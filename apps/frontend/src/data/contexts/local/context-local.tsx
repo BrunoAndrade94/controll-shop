@@ -33,7 +33,8 @@ const ContextLocal = createContext<ContextLocalProps>({} as any);
 
 export function ProviderContextLocal(props: any) {
   const router = useRouter();
-  const { msgSucess } = useMessage();
+  const { msgSucess, msgError } = useMessage();
+
   const { httpGet, httpPost } = useApi();
 
   const [queryLocals, setQueryLocals] = useState<string>("");
@@ -78,11 +79,10 @@ export function ProviderContextLocal(props: any) {
 
         setQueryLocals("");
       } catch (error) {
-        // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
-        console.error(error);
+        msgError("local não salvo");
       }
     },
-    [local, httpPost, router, setQueryLocals, msgSucess]
+    [local, httpPost, router, setQueryLocals, msgSucess, msgError]
   );
 
   const loadLocals = useCallback(async () => {
@@ -90,9 +90,9 @@ export function ProviderContextLocal(props: any) {
       const locals = await httpGet(urlGetLocal);
       setLocalsData(locals);
     } catch (error) {
-      console.error("Erro ao carregar:", error);
+      msgError("erro ao carregar locais");
     }
-  }, [httpGet]);
+  }, [httpGet, msgError]);
 
   // Carrega todas as produtos na inicialização
   useEffect(() => {

@@ -12,6 +12,7 @@ import InputComLista from "../shared/My-Input-Selectable";
 import Window from "../shared/Window";
 import BotoesDeAcao from "./botoes-de-acao";
 import MyModal from "./modal-compras-produto";
+import useMessage from "@/data/hooks/use-message";
 
 // Definindo a estrutura da prop para o componente
 interface ColumnConfig<T> {
@@ -36,6 +37,7 @@ interface MyListProps<T> {
 }
 
 const MyList = <T,>(props: MyListProps<T>) => {
+  const { msgSucess, msgError } = useMessage();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState<T | null>(null); // Estado para item selecionado
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar o modal
@@ -79,7 +81,8 @@ const MyList = <T,>(props: MyListProps<T>) => {
   const getValueByPath = (obj: any, path: string) => {
     return path
       .split(".")
-      .reduce((acc, key) => (acc ? acc[key] : undefined), obj);
+      .reduce((acc, key) => (acc ? acc[key] : undefined), obj)
+      .toUpperCase();
   };
 
   // Filtra os itens com base na pesquisa
@@ -126,11 +129,11 @@ const MyList = <T,>(props: MyListProps<T>) => {
 
         setProduct({ ...data });
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        msgError("Erro ao carregar dados");
         setProduct({}); // Define estado vazio em caso de erro
       }
     },
-    [productsData, setProduct] // Dependência do useCallback
+    [productsData, setProduct, msgError] // Dependência do useCallback
   );
 
   // Carrega dados relacionados ao produto
@@ -144,11 +147,11 @@ const MyList = <T,>(props: MyListProps<T>) => {
         );
         setProduct({ ...data }); // Salva os dados das compras no estado
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        msgError("Erro ao carregar dados");
         setProduct({}); // Define estado vazio em caso de erro
       }
     },
-    [productsData, setProduct] // Dependência do useCallback
+    [productsData, setProduct, msgError] // Dependência do useCallback
   );
 
   const handleSave = () => {

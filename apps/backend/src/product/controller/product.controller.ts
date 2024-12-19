@@ -8,8 +8,9 @@ export class ProductController {
 
   @Get('new/validate/description/:description')
   async validateDescription(@Param('description') description: string) {
-    const product =
-      await this.productService.seProductGetDescription(description);
+    const product = await this.productService.seProductGetDescription(
+      description.toUpperCase(),
+    );
     return { inUse: product };
   }
 

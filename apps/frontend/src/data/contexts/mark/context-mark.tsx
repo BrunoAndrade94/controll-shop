@@ -33,7 +33,8 @@ const ContextMark = createContext<ContextMarkProps>({} as any);
 
 export function ProviderContextMark(props: any) {
   const router = useRouter();
-  const { msgSucess } = useMessage();
+  const { msgSucess, msgError } = useMessage();
+
   const { httpGet, httpPost } = useApi();
 
   const [queryMarks, setQueryMarks] = useState("");
@@ -62,11 +63,10 @@ export function ProviderContextMark(props: any) {
 
         setQueryMarks("");
       } catch (error) {
-        // TODO: IMPLEMENTAR TRATAMENTO DE ERRO
-        console.error(error);
+        msgError("marca não salva");
       }
     },
-    [mark, httpPost, msgSucess, router]
+    [mark, httpPost, msgSucess, router, msgError]
   );
 
   const loadingMark = useCallback(
@@ -76,10 +76,10 @@ export function ProviderContextMark(props: any) {
 
         setMarksData(marks);
       } catch (error) {
-        console.error(error);
+        msgError("marcas não carregadas");
       }
     },
-    [setMarksData, httpGet]
+    [setMarksData, httpGet, msgError]
   );
 
   // const validateDescription = useCallback(
@@ -126,11 +126,11 @@ export function ProviderContextMark(props: any) {
         const marks = await httpGet(urlGetMark); // Requisição à API
         setMarksData(marks); // Atualiza o estado com os dados corretos
       } catch (error) {
-        console.error("Erro ao carregar marcas:", error);
+        msgError("erro ao carregar marcas");
       }
     }
     loadMarks();
-  }, [httpGet, marksData]);
+  }, [httpGet, marksData, msgError]);
 
   return (
     <ContextMark.Provider
