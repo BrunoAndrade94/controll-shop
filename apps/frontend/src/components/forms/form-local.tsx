@@ -6,16 +6,18 @@ export default function FormLocal() {
   const {
     local,
     saveLocal,
-    updateLocal,
-    descriptionInUse,
-    setDescriptionInUse,
     localsData,
     queryLocals,
-    setQueryLocals,
+    updateLocal,
     loadingLocal,
+    setQueryLocals,
+    descriptionInUse,
+    setDescriptionInUse,
   } = useLocal();
 
-  const authNextStep: boolean[] = [!!queryLocals && !descriptionInUse];
+  const authNextStep: boolean[] = [
+    (local.description?.length || 0) > 2 && !descriptionInUse,
+  ];
 
   const labels = ["Descrição"];
 

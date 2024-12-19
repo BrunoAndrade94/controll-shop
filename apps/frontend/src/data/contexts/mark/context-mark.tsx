@@ -39,6 +39,8 @@ export function ProviderContextMark(props: any) {
 
   const [queryMarks, setQueryMarks] = useState("");
 
+  const [filteredMarks, setFilteredMarks] = useState<Partial<Mark>[]>([]);
+
   const [marksData, setMarksData] = useState<Partial<Mark>[]>([]);
   const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [mark, setMark] = useState<Partial<Mark>>(CreateEmptyMark());

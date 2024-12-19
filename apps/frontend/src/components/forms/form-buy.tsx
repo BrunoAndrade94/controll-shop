@@ -64,8 +64,9 @@ export default function FormBuy() {
   //   []
   // );
 
-  const { localsData, queryLocals, setQueryLocals, setDescriptionInUse } =
-    useLocal();
+  const [queryLocals, setQueryLocals] = useState("");
+
+  const { localsData, setDescriptionInUse } = useLocal();
   const [filteredLocals, setFilteredLocals] = useState<Partial<Local>[]>([]);
 
   const [showList, setShowList] = useState(false);
@@ -124,8 +125,8 @@ export default function FormBuy() {
     // setShowList(true);
   };
 
-  const handleSelectLocal = (localId: string, description: string) => {
-    updateBuy({ ...buy, localId }); // Atualiza a marca no produto com o id da marca
+  const handleSelectLocal = (id: string, description: string) => {
+    updateBuy({ ...buy, localId: id }); // Atualiza a marca no produto com o id da marca
     setQueryLocals(description); // Define o texto no input
     setShowList(false); // Fecha a lista de sugestões após a seleção
     msgSucess(`Comprando em ${description}.`);
@@ -219,8 +220,6 @@ export default function FormBuy() {
     }
 
     handleSearchProduct(queryProducts);
-
-    // handleSelectProduct(queryProducts);
   };
 
   const handleOnChangeLocal = (value: string) => {
@@ -287,13 +286,13 @@ export default function FormBuy() {
       >
         <div className="flex flex-col gap-5">
           <InputComLista
-            label="Selecione um local"
-            value={queryLocals ?? ""}
-            disabled={localsData.length === 0}
             items={localsData}
+            value={queryLocals ?? ""}
+            label="Selecione um local"
+            disabled={localsData.length === 0}
             onChange={(value) => handleOnChangeLocal(value)}
             onSelect={(id, description) => {
-              handleSelectLocal(id || "", description || "");
+              handleSelectLocal(id, description);
             }}
           />
         </div>

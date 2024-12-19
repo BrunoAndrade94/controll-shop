@@ -6,16 +6,16 @@ import MyInput from "../My-Input";
 
 const InputProductSearch: React.FC = ({}) => {
   const {
-    descriptionInUse,
-    setDescriptionInUse,
-    queryProducts,
-    setQueryProducts,
-    productsData,
-    setProduct,
-    setFilteredProducts,
     product,
-    filteredProducts,
+    setProduct,
+    productsData,
+    queryProducts,
     setProductsData,
+    descriptionInUse,
+    setQueryProducts,
+    filteredProducts,
+    setFilteredProducts,
+    setDescriptionInUse,
     setShowListProducts,
   } = useProduct();
   const observation = `${

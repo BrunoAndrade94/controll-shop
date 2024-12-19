@@ -1,4 +1,7 @@
+"use client";
+
 import useMark from "@/data/hooks/use-mark";
+import useMessage from "@/data/hooks/use-message";
 import MyInput from "../shared/My-Input";
 import Steps from "../shared/Steps";
 
@@ -6,17 +9,19 @@ export default function FormMark() {
   const {
     mark,
     saveMark,
-    updateMark,
-    descriptionInUse,
-    setDescriptionInUse,
     marksData,
     queryMarks,
+    updateMark,
     setQueryMarks,
+    descriptionInUse,
+    setDescriptionInUse,
   } = useMark();
 
-  // const [filteredMarks, setFilteredMarks] = useState<Partial<Mark>[]>([]);
+  const { msgSucess } = useMessage();
 
-  const authNextStep: boolean[] = [queryMarks.length > 2 && !descriptionInUse];
+  const authNextStep: boolean[] = [
+    (mark.description?.length || 0) > 2 && !descriptionInUse,
+  ];
 
   const labels = ["Descrição"];
 

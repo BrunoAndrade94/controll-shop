@@ -247,9 +247,6 @@ export function ProviderContextProduct(props: any) {
       try {
         const productsData = await httpGet(urlGetProduct); // Requisição à API
 
-        // products.map((products: Partial<Product>) => {
-        //   products.lastPrice = +FormatMoney(products.lastPrice ?? 0);
-        // });
         setProductsData(productsData); // Atualiza o estado com os dados corretos
       } catch (error) {
         msgError("erro ao carregar produtos");

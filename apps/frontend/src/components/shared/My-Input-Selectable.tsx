@@ -6,7 +6,7 @@ interface Marca {
   description: string;
 }
 
-interface InputComListaProps {
+interface MyInputSelectableProps {
   label: string;
   value: string;
   descriptionFixed?: string;
@@ -16,7 +16,7 @@ interface InputComListaProps {
   onSelect: (id: string, description: string) => void; // Função chamada ao selecionar um item
 }
 
-export default function InputComLista({
+export default function MyInputSelectable({
   label,
   value,
   items,
@@ -24,7 +24,7 @@ export default function InputComLista({
   disabled = false,
   onChange,
   onSelect,
-}: InputComListaProps) {
+}: MyInputSelectableProps) {
   const [filteredItems, setFilteredItems] = useState<any[]>([]);
   const [showList, setShowList] = useState(false);
 

@@ -5,15 +5,15 @@ import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
 import { Buy, CreateEmptyBuy, Local, Product } from "core";
 import { useRouter } from "next/navigation";
-import { createContext, useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import useApi from "../../hooks/use-api";
 
 const urlBuy = "/buys/";
-const urlGetBuy = "/buys/get/all/";
 const urlNewBuys = "/buys/new/";
-const urlValidateBuys = "/buys/new/validate/description/";
-const urlBuyProducts = "/buys/get/by-product/";
+const urlGetBuy = "/buys/get/all/";
 const urlNewBuysSucess = "/buys/new/sucess/";
+const urlBuyProducts = "/buys/get/by-product/";
+const urlValidateBuys = "/buys/new/validate/description/";
 
 export interface ContextBuyProps {
   buy: Partial<Buy>;
@@ -45,7 +45,7 @@ export function ProviderContextBuy(props: any) {
     resetProduct();
     resetLocal();
     setBuy({});
-  }, [setBuy, resetLocal, resetProduct]);
+  }, [resetLocal, resetProduct]);
 
   const saveBuy = useCallback(
     async function (buy: any) {
@@ -95,9 +95,9 @@ export function ProviderContextBuy(props: any) {
     [setBuy, httpGet, msgError]
   );
 
-  useEffect(() => {
-    resetBuy();
-  }, [resetBuy]);
+  // useEffect(() => {
+  //   resetBuy();
+  // }, [resetBuy]);
 
   return (
     <ContextBuy.Provider
