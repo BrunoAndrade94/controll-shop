@@ -1,10 +1,15 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ComplementProduct, Product } from 'core';
 import { ProductService } from '../service/product.service';
 
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+
+  @Get('get/count')
+  async coGetTotalProducts() {
+    return await this.productService.seProductsAll();
+  }
 
   @Get('new/validate/description/:description')
   async validateDescription(@Param('description') description: string) {

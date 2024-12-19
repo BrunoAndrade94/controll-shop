@@ -1,11 +1,14 @@
+import { ProviderContextLocal } from "@/data/contexts/local/context-local";
+import { ProviderContextMark } from "@/data/contexts/mark/context-mark";
+import { ProviderContextProduct } from "@/data/contexts/product/context-product";
 import type { Metadata } from "next";
 import { Lora } from "next/font/google";
 import "./globals.css";
 const font = Lora({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Controle de Compras",
-  description: "Compras de uma Forma Fácil",
+  title: "Minhas Compras",
+  description: "Controle de uma Forma Fácil",
 };
 
 export default function RootLayout({
@@ -15,7 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="pt-BR">
-      <body className={font.className}>{children}</body>
+      <body className={font.className}>
+        <ProviderContextMark>
+          <ProviderContextProduct>
+            <ProviderContextLocal>{children}</ProviderContextLocal>
+          </ProviderContextProduct>
+        </ProviderContextMark>
+      </body>
     </html>
   );
 }

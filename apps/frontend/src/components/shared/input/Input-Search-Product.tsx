@@ -72,9 +72,8 @@ const InputProductSearch: React.FC = ({}) => {
           setShowListProducts(true);
           setFilteredProducts(productsData);
         }}
-        // descriptionFixed={"Descrição"}
         disabled={onDisabled()}
-        label={`${productsData.length === 0 ? "Buscando produtos..." : "Produto"}`}
+        label={`${productsData.length === 0 ? "Aguarde..." : "Produto"}`}
         value={product.description?.toUpperCase() || ""}
         observation={observation}
         onChange={(event) => handleOnChangeProduct(event.target.value)}

@@ -1,17 +1,34 @@
 "use client";
-import { useState } from "react";
+
+import useSteps from "@/data/hooks/use-steps";
 
 export interface StepsProps {
+  children: any;
   labels: string[];
   labelAction: string;
-  authNextStep?: boolean[];
   actionExec: () => void;
-  children: any;
+  authNextStep?: boolean[];
 }
 
 export default function Steps(props: StepsProps) {
-  const [stepCurrent, setStepCurrent] = useState(0);
+  ///
+  /// CONST INICIO
+  const {
+    stepCurrent,
+    setStepCurrent,
+    // noStepNext,
+    // stepNext,
+    // stepPrevious,
+    // noStepPrevious,
+  } = useSteps();
 
+  // const [stepCurrent, setStepCurrent] = useState(0);
+  const authNextStep = props.authNextStep?.[stepCurrent] ?? true;
+  /// CONST FINAL
+  ///
+
+  ///
+  /// FUNCOES INICIO
   function noStepPrevious() {
     return stepCurrent === 0;
   }
@@ -58,9 +75,11 @@ export default function Steps(props: StepsProps) {
       </div>
     );
   }
+  /// FUNCOES FINAL
+  ///
 
-  const authNextStep = props.authNextStep?.[stepCurrent] ?? true;
-
+  ///
+  /// RETURN
   return (
     <div className="flex-1 flex flex-col gap-10 w-full">
       <div className="self-center">{renderLabels()}</div>

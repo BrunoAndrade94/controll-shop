@@ -1,74 +1,72 @@
 "use client";
 
 import useMessage from "@/data/hooks/use-message";
+import useSteps from "@/data/hooks/use-steps";
 import { CreateEmptyMark, Mark } from "core";
-import { useRouter } from "next/navigation";
 import { createContext, useCallback, useEffect, useState } from "react";
 import useApi from "../../hooks/use-api";
 
-const urlMark = "/marks/";
 const urlGetMark = "/marks/get/";
 const urlNewMarks = "/marks/new/";
 const urlValidateMarks = "/marks/new/validate/description/";
-const urlNewMarksSucess = "/marks/new/sucess/";
 
+///
+/// INTERFACE INICIO
 export interface ContextMarkProps {
-  mark: Partial<Mark>;
-  descriptionInUse: boolean;
-  setDescriptionInUse: (value: boolean) => void;
-
-  marksData: Partial<Mark>[];
-  setMarksData: React.Dispatch<React.SetStateAction<Partial<Mark>[]>>;
-
-  queryMarks: string;
-  setQueryMarks: (value: string) => void;
-
   resetMark(): void;
+  queryMarks: string;
+  mark: Partial<Mark>;
   saveMark(): Promise<void>;
-  updateMark(mark: Partial<Mark>): void;
+  descriptionInUse: boolean;
+  marksData: Partial<Mark>[];
   loadingMark(): Promise<void>;
+  updateMark(mark: Partial<Mark>): void;
+  setQueryMarks: (value: string) => void;
+  setDescriptionInUse: (value: boolean) => void;
+  setMarksData: React.Dispatch<React.SetStateAction<Partial<Mark>[]>>;
 }
+/// INTERFACE FINAL
+///
 
 const ContextMark = createContext<ContextMarkProps>({} as any);
 
 export function ProviderContextMark(props: any) {
-  const router = useRouter();
+  ///
+  /// CONST INICIO
+  const { setStepCurrent } = useSteps();
   const { msgSucess, msgError } = useMessage();
-
   const { httpGet, httpPost } = useApi();
-
   const [queryMarks, setQueryMarks] = useState("");
-
-  const [filteredMarks, setFilteredMarks] = useState<Partial<Mark>[]>([]);
-
+  // const [filteredMarks, setFilteredMarks] = useState<Partial<Mark>[]>([]);
   const [marksData, setMarksData] = useState<Partial<Mark>[]>([]);
   const [descriptionInUse, setDescriptionInUse] = useState(false);
   const [mark, setMark] = useState<Partial<Mark>>(CreateEmptyMark());
+  /// CONST FINAL
+  ///
 
+  ///
+  /// FUNCAO INICIO
   const resetMark = useCallback(() => {
     setMark({});
+    setStepCurrent(0);
     setQueryMarks("");
-  }, []);
+  }, [setStepCurrent]);
 
   const saveMark = useCallback(
     async function () {
       try {
         const markCreate = await httpPost(urlNewMarks, mark);
 
-        setMark({
-          ...markCreate,
-        });
+        setMark({ ...markCreate });
 
-        msgSucess(`${mark.description?.toUpperCase()} cadastrado com sucesso.`);
+        msgSucess(`${mark.description?.toUpperCase()} cadastrada com sucesso.`);
 
-        router.push(urlMark);
-
-        setQueryMarks("");
+        resetMark();
       } catch (error) {
-        msgError("marca não salva");
+        msgError("marca não cadastrada");
       }
     },
-    [mark, httpPost, msgSucess, router, msgError]
+    [mark, httpPost, msgSucess, msgError, resetMark]
   );
 
   const loadingMark = useCallback(
@@ -83,45 +81,11 @@ export function ProviderContextMark(props: any) {
     },
     [setMarksData, httpGet, msgError]
   );
+  /// FUNCAO FINAL
+  ///
 
-  // const validateDescription = useCallback(
-  //   async function () {
-  //     try {
-  //       if (mark.description == "") {
-  //         console.error("Informe uma descrição");
-  //       }
-
-  //       const { inUse } = await httpGet(
-  //         `${urlValidateMarks}${mark.description}`
-  //       );
-
-  //       setDescriptionInUse(inUse);
-  //     } catch (error) {
-  //       // TODO: IMPLEMENTAR ERRO
-  //       console.error(error);
-  //     }
-  //   },
-  //   [httpGet, mark]
-  // );
-
-  // TODO: IMPLEMENTAR EM CONTEXT-BUY
-  // const adicionarConvidado = useCallback(
-  //   async function () {
-  //     try {
-  //       await httpPost(`/eventos/${evento.alias}/convidado`, convidado);
-  //       router.push("/convite/obrigado");
-  //     } catch (error: any) {
-  //       adicionarErro(error.messagem ?? "Ocorreu um erro inesperado!");
-  //     }
-  //   },
-  //   [httpPost, evento, convidado, router]
-  // );
-
-  // useEffect(() => {
-  //   if (mark?.description) validateDescription();
-  // }, [mark?.description, validateDescription]);
-
-  // Carrega todas as marcas na inicialização
+  ///
+  /// USE EFFECT INICIO
   useEffect(() => {
     async function loadMarks() {
       try {
@@ -133,21 +97,25 @@ export function ProviderContextMark(props: any) {
     }
     loadMarks();
   }, [httpGet, marksData, msgError]);
+  /// USE EFFECT FINAL
+  ///
 
+  ///
+  /// RETURN
   return (
     <ContextMark.Provider
       value={{
-        mark: mark,
-        queryMarks,
-        descriptionInUse,
-        marksData: marksData,
         saveMark,
         resetMark,
+        mark: mark,
+        queryMarks,
         loadingMark,
         setMarksData,
         setQueryMarks,
+        descriptionInUse,
         updateMark: setMark,
         setDescriptionInUse,
+        marksData: marksData,
       }}
     >
       {props.children}

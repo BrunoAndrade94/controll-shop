@@ -3,6 +3,7 @@
 import useLocal from "@/data/hooks/use-local";
 import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
+import useSteps from "@/data/hooks/use-steps";
 import { Buy, CreateEmptyBuy, Local, Product } from "core";
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useState } from "react";
@@ -11,41 +12,65 @@ import useApi from "../../hooks/use-api";
 const urlBuy = "/buys/";
 const urlNewBuys = "/buys/new/";
 const urlGetBuy = "/buys/get/all/";
-const urlNewBuysSucess = "/buys/new/sucess/";
 const urlBuyProducts = "/buys/get/by-product/";
-const urlValidateBuys = "/buys/new/validate/description/";
 
+///
+/// INTERFACE INICIO
+// Tipo para a lista de produtos no contexto de compra
+type BuyProductItem = {
+  productId: string;
+  description: string;
+  mark: string;
+  unitPrice: number;
+  amount: number;
+  totalPrice: number;
+};
 export interface ContextBuyProps {
   buy: Partial<Buy>;
   localDescription?: string;
+  localsData: Partial<Local>[];
+  productsData: Partial<Product>[];
+  productsList: Partial<BuyProductItem>[];
+  setProductsList: React.Dispatch<
+    React.SetStateAction<Partial<BuyProductItem>[]>
+  >;
 
-  localsData: Partial<Local>[]; // Inclui as produtos disponíveis
-  productsData: Partial<Product>[]; // Inclui as produtos disponíveis
-
+  ///
   resetBuy(): void;
-  saveBuy(buyData: Partial<any>): Promise<void>;
   updateBuy(buy: Partial<Buy>): void;
   loadingBuy(id: string): Promise<void>;
   loadingBuyProducts(productId: string): any;
+  saveBuy(buyData: Partial<any>): Promise<void>;
 }
+/// INTERFACE FINAL
+///
 
 const ContextBuy = createContext<ContextBuyProps>({} as any);
 
 export function ProviderContextBuy(props: any) {
+  const [productsList, setProductsList] = useState<BuyProductItem[]>([]);
+  ///
+  /// CONST INICIO
+  const router = useRouter();
+  const { setStepCurrent } = useSteps();
   const { httpGet, httpPost } = useApi();
   const { msgSucess, msgError } = useMessage();
-
-  const router = useRouter();
   const { localsData, resetLocal } = useLocal();
   const { productsData, resetProduct } = useProduct();
-
   const [buy, setBuy] = useState<Partial<Buy>>(CreateEmptyBuy());
+  /// CONST FINAL
+  ///
 
+  ///
+  /// FUNCAO INICIO
   const resetBuy = useCallback(() => {
-    resetProduct();
-    resetLocal();
+    setProductsList([]);
+
     setBuy({});
-  }, [resetLocal, resetProduct]);
+    resetLocal();
+    resetProduct();
+    setStepCurrent(0);
+  }, [resetLocal, resetProduct, setStepCurrent]);
 
   const saveBuy = useCallback(
     async function (buy: any) {
@@ -60,10 +85,10 @@ export function ProviderContextBuy(props: any) {
 
         router.push(urlBuy);
       } catch (error) {
-        msgError("compra nao salva");
+        msgError("compra não salva");
       }
     },
-    [httpPost, router, resetBuy, msgError]
+    [httpPost, resetBuy, msgError, router]
   );
 
   const loadingBuyProducts = useCallback(
@@ -94,20 +119,23 @@ export function ProviderContextBuy(props: any) {
     },
     [setBuy, httpGet, msgError]
   );
+  /// FUNCAO FINAL
+  ///
 
-  // useEffect(() => {
-  //   resetBuy();
-  // }, [resetBuy]);
-
+  ///
+  /// RETURN
   return (
     <ContextBuy.Provider
       value={{
         buy: buy,
         localsData,
         productsData,
-        resetBuy,
+        productsList,
+        ///
         saveBuy,
+        resetBuy,
         loadingBuy,
+        setProductsList: () => productsList,
         updateBuy: setBuy,
         loadingBuyProducts,
       }}

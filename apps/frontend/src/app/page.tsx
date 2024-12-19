@@ -1,4 +1,9 @@
+"use client";
+
 import Window from "@/components/shared/Window";
+import useLocal from "@/data/hooks/use-local";
+import useMark from "@/data/hooks/use-mark";
+import useProduct from "@/data/hooks/use-product";
 import CategoryIcon from "@mui/icons-material/Category";
 import FlagCircleIcon from "@mui/icons-material/FlagCircle";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -7,6 +12,10 @@ import Link from "next/link";
 import Logo from "../components/templates/Logo";
 
 export default function Home() {
+  const { productsData } = useProduct();
+  const { marksData } = useMark();
+  const { localsData } = useLocal();
+
   return (
     <div className="page image-background bg-cover bg-center bg-no-repeat">
       <div className="sm:max-x-lg w-11/12 ml-5 mr-5 flex flex-col items-center">
@@ -19,28 +28,28 @@ export default function Home() {
               className="botao verde flex flex-row justify-between"
               href={"/buys"}
             >
-              {"COMPRAR"}
+              {`COMPRAR (0)`}
               <ShoppingCartIcon />
             </Link>
             <Link
               className="botao azul flex flex-row justify-between"
               href={"/products"}
             >
-              {"PRODUTOS"}
+              {`PRODUTOS (${productsData?.length ?? 0})`}
               <CategoryIcon />
             </Link>
             <Link
               className="botao laranja flex flex-row justify-between"
               href={"/marks"}
             >
-              {"MARCAS"}
+              {`MARCAS (${marksData?.length ?? 0})`}
               <FlagCircleIcon />
             </Link>
             <Link
               className="botao amarelo flex flex-row justify-between"
               href={"/locals"}
             >
-              {"LOCAIS"}
+              {`LOCAIS (${localsData?.length ?? 0})`}
               <LocalLibraryIcon />
             </Link>
           </div>

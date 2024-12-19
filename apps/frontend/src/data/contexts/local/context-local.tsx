@@ -9,8 +9,8 @@ import useApi from "../../hooks/use-api";
 const urlLocal = "/locals/";
 const urlGetLocal = "/locals/get/";
 const urlNewLocals = "/locals/new/";
-const urlValidateLocals = "/locals/new/validate/description/";
 const urlNewLocalsSucess = "/locals/new/sucess/";
+const urlValidateLocals = "/locals/new/validate/description/";
 
 export interface ContextLocalProps {
   local: Partial<Local>;
@@ -25,8 +25,8 @@ export interface ContextLocalProps {
 
   resetLocal(): void;
   saveLocal(): Promise<void>;
-  updateLocal(local: Partial<Local>): void;
   loadingLocal(): Promise<void>;
+  updateLocal(local: Partial<Local>): void;
 }
 
 const ContextLocal = createContext<ContextLocalProps>({} as any);
@@ -50,10 +50,10 @@ export function ProviderContextLocal(props: any) {
 
         setLocalsData(locals);
       } catch (error) {
-        console.error(error);
+        msgError("erro ao carregar");
       }
     },
-    [httpGet, setLocalsData]
+    [httpGet, setLocalsData, msgError]
   );
 
   const resetLocal = useCallback(() => {
@@ -75,14 +75,12 @@ export function ProviderContextLocal(props: any) {
           `${local.description?.toUpperCase()} cadastrado com sucesso.`
         );
 
-        router.push(urlLocal);
-
-        setQueryLocals("");
+        resetLocal();
       } catch (error) {
-        msgError("local não salvo");
+        msgError(`${local.description?.toUpperCase()} não cadastrado.`);
       }
     },
-    [local, httpPost, router, setQueryLocals, msgSucess, msgError]
+    [local, httpPost, resetLocal, msgSucess, msgError]
   );
 
   const loadLocals = useCallback(async () => {

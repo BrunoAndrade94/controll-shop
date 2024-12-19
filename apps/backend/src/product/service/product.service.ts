@@ -6,55 +6,6 @@ import { PrismaProvider } from 'src/db/prisma.provider';
 export class ProductService {
   constructor(private readonly prisma: PrismaProvider) {}
 
-  // Obter todos os produtos (com busca opcional)
-  // async seProductsDescription(search?: string) {
-  //   return await this.prisma.product.findMany({
-  //     where: search
-  //       ? {
-  //           active: true,
-  //           description: {
-  //             contains: search,
-  //           },
-  //         }
-  //       : undefined,
-  //     select: {
-  //       id: true,
-  //       description: true,
-  //       lastPrice: true,
-  //       mark: {
-  //         select: {
-  //           id: true,
-  //           description: true,
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
-
-  // async seProductsDescription(): Promise<Product | null> {
-  //   return (await this.prisma.product.findMany({
-  //     // where: {
-  //     //   active: true,
-  //     //   description: {
-  //     //     contains: search,
-  //     //   },
-  //     // },
-  //     // select: {
-  //     //   id: true,
-  //     //   description: true,
-  //     //   lastPrice: true,
-  //     //   codeBar: true,
-  //     //   mark: {
-  //     //     select: {
-  //     //       id: true,
-  //     //       description: true,
-  //     //     },
-  //     //   },
-  //     // },
-  //     // orderBy: [{ description: 'asc' }],
-  //   })) as any;
-  // }
-
   async seProductGetDescription(description: string): Promise<Product | null> {
     return (await this.prisma.product.findUnique({
       where: {

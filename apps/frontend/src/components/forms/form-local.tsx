@@ -57,7 +57,7 @@ export default function FormLocal() {
       >
         <div className="flex flex-col gap-5">
           <MyInput
-            label="Informe o novo Local"
+            label="Local"
             observation={observation}
             value={queryLocals ?? ""}
             onFocus={loadingLocal}

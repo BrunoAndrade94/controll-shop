@@ -67,11 +67,7 @@ declare function ComplementProduct(partialProduct: Partial<Product$1>): Product$
 
 declare function CalcTotalPrice(amount: number, price: number): number;
 
-type Items = {
-    amount: number;
-    unitPrice: number;
-}[];
-declare function CalcTotalValueBuy(items: Items): number;
+declare function CalcTotalValueBuy(items: any): number;
 
 declare function FormartMoney(valor: number): string;
 

@@ -8,15 +8,15 @@ import useBuy from "@/data/hooks/use-buy";
 import useLocal from "@/data/hooks/use-local";
 import useMessage from "@/data/hooks/use-message";
 import useProduct from "@/data/hooks/use-product";
-import { FormatMoney, Local } from "core";
+import { CalcTotalValueBuy, FormatMoney } from "core";
 import { useState } from "react";
-import MyInput from "../shared/My-Input";
 import Steps from "../shared/Steps";
 import FormBuyCart from "./form-buy-cart";
 
 // import BarcodeReader from "react-barcode-reader";
+import useSteps from "@/data/hooks/use-steps";
 import InputComLista from "../shared/My-Input-Selectable";
-import BarcodeScanner from "../shared/input/barcode-scanner";
+import SelectorProduct from "../shared/selector/Selector-Product";
 
 // Tipo para a lista de produtos no contexto de compra
 type BuyProductItem = {
@@ -29,28 +29,18 @@ type BuyProductItem = {
 };
 
 export default function FormBuy() {
-  /// INICIO TESTE DE CAMERA
+  ///
+  /// CAMERA INICIO
   const [isScannerOpen, setScannerOpen] = useState(false);
-
   const handleScan = (barcode: string) => {
     alert(`Código de Barras Escaneado: ${barcode}`);
     setScannerOpen(false); // Fecha o scanner após ler o código
   };
+  /// CAMERA FINAL
+  ///
 
-  // const handleOnChangeProduct = (value: any) => {
-  //   setQueryProducts(value);
-  //   const filteredProducts = productsData.filter((product) =>
-  //     product.description?.toUpperCase().includes(value.toUpperCase())
-  //   );
-  //   setFilteredProducts(filteredProducts);
-  // };
-
-  /// FIM TESTE DE CAMERA
-  const { buy, saveBuy, updateBuy } = useBuy();
-  const { msgSucess, msgError } = useMessage();
-
-  const [totalValueBuy, setTotalValueBuy] = useState(0);
-
+  ///
+  /// CONST INICIO
   const {
     productsData,
     setProductsData,
@@ -59,35 +49,23 @@ export default function FormBuy() {
     filteredProducts,
     setFilteredProducts,
   } = useProduct();
-
-  // const [filteredProducts, setFilteredProducts] = useState<Partial<Product>[]>(
-  //   []
-  // );
-
-  const [queryLocals, setQueryLocals] = useState("");
-
-  const { localsData, setDescriptionInUse } = useLocal();
-  const [filteredLocals, setFilteredLocals] = useState<Partial<Local>[]>([]);
-
+  const { stepCurrent } = useSteps();
+  const labelAction = "Finalizar Compra";
+  const { buy, saveBuy, updateBuy } = useBuy();
+  const { msgSucess, msgError } = useMessage();
   const [showList, setShowList] = useState(false);
   const [showCart, setShowCart] = useState(false);
-
-  const [productsList, setProductsList] = useState<BuyProductItem[]>([]);
-
+  const [totalValueBuy, setTotalValueBuy] = useState(0);
   const labels = ["Local de Compra", "Adicionar Produtos"];
-
+  const { localsData, queryLocals, setQueryLocals } = useLocal();
+  const [productsList, setProductsList] = useState<BuyProductItem[]>([]);
   const authNextStep: boolean[] = [!!buy.localId, productsList.length > 0];
+  /// CONST FINAL
+  ///
 
-  function calculateTotalValue(
-    productsList: { amount: number; unitPrice: number }[]
-  ): number {
-    return productsList.reduce(
-      (acc, product) => +(acc + product.amount * product.unitPrice).toFixed(2),
-      0
-    );
-  }
-
-  const atualizarListaProduto = (description: string) => {
+  ///
+  /// FUNCAO INICIO
+  const updateListProduct = (description: string) => {
     return productsData.filter(
       (productData) =>
         productData.description?.toUpperCase() !== description.toUpperCase()
@@ -95,8 +73,8 @@ export default function FormBuy() {
   };
 
   const handleAddProduct = (product: any) => {
-    setProductsData(atualizarListaProduto(product.description));
-    setFilteredProducts(atualizarListaProduto(product.description));
+    setProductsData(updateListProduct(product.description));
+    setFilteredProducts(updateListProduct(product.description));
 
     setProductsList((prev) => {
       const updatedList = [
@@ -112,13 +90,13 @@ export default function FormBuy() {
       ];
 
       // Recalcular o valor total
-      setTotalValueBuy(calculateTotalValue(updatedList));
+      setTotalValueBuy(CalcTotalValueBuy(updatedList));
 
       return updatedList;
     });
 
     msgSucess(
-      `${product.description} INCLUÍDO. ***VALOR DE R$ ${product.lastPrice}`
+      `${product.description} INCLUÍDO. VALOR DE R$ ${product.lastPrice}`
     );
 
     setQueryProducts("");
@@ -145,15 +123,15 @@ export default function FormBuy() {
               [field]: value,
               totalPrice:
                 field === "amount" || field === "unitPrice"
-                  ? (field === "amount" ? value : product.amount) *
-                    (field === "unitPrice" ? value : product.unitPrice)
+                  ? (field === "amount" ? value : (product.amount ?? 0)) *
+                    (field === "unitPrice" ? value : (product.unitPrice ?? 0))
                   : product.totalPrice,
             }
           : product
       );
 
       // Recalcular o valor total após a atualização
-      setTotalValueBuy(calculateTotalValue(updatedList));
+      setTotalValueBuy(CalcTotalValueBuy(updatedList));
 
       return updatedList;
     });
@@ -166,7 +144,7 @@ export default function FormBuy() {
       );
 
       // Recalcular o valor total após a remoção
-      setTotalValueBuy(calculateTotalValue(updatedList));
+      setTotalValueBuy(CalcTotalValueBuy(updatedList));
       return updatedList;
     });
   };
@@ -193,21 +171,6 @@ export default function FormBuy() {
     setFilteredProducts(filteredProducts);
   };
 
-  const handleSelectProduct = (id: string) => {
-    // remover produto da lista
-    const updatedProductsData = productsData.filter(
-      (product) => product.id !== id
-    );
-
-    setProductsData(updatedProductsData);
-
-    // Atualizar filteredProducts para refletir a lista atualizada
-    const updatedFilteredProducts = filteredProducts.filter(
-      (product) => product.id !== id
-    );
-    setFilteredProducts(updatedFilteredProducts);
-  };
-
   const handleOnChangeProduct = (value: string) => {
     setQueryProducts(value);
 
@@ -231,56 +194,17 @@ export default function FormBuy() {
       updateBuy({});
       return;
     }
-    // Busca produtos que contenham a string digitada
-    const filteredLocals = localsData.filter((localData) =>
-      localData.description?.toUpperCase().includes(value.toUpperCase())
-    );
-
-    setFilteredLocals(filteredLocals);
   };
+  /// FUNCAO FINAL
+  ///
 
-  // useEffect(() => {
-  //   cleanAll();
-  // }, [cleanAll]);
-
-  // useEffect(() => {
-  //   // if (queryLocals) {
-  //   const filtered = localsData.filter((local) =>
-  //     local.description?.toUpperCase().includes(queryLocals.toUpperCase())
-  //   );
-  //   setFilteredLocals(filtered);
-  //   setShowList(!!filtered);
-  //   return;
-  //   // } else {
-  //   //   setFilteredLocals([]);
-  //   //   setShowList(false);
-  //   //   setQueryLocals("");
-  //   //   updateBuy({});
-  //   // }
-  // }, [localsData, queryLocals, setQueryLocals, updateBuy]);
-
-  // useEffect(() => {
-  //   if (queryProducts) {
-  //     const filtered = productsData.filter((product) =>
-  //       product.description?.toUpperCase().includes(queryProducts.toUpperCase())
-  //     );
-  //     setFilteredProducts(filtered);
-  //     setShowList(!!filtered);
-  //     return;
-  //   } else {
-  //     setFilteredProducts([]);
-  //     setShowList(false);
-  //     setQueryProducts("");
-  //     updateBuy({});
-  //   }
-  // }, [queryProducts, productsData, setQueryProducts, updateBuy]);
-
-  // TODO: REFATORAR O COMPONENTE INPUT DE LISTA
+  ///
+  /// RETURN
   return (
     <div>
       <Steps
         labels={labels}
-        labelAction="Finalizar Compra"
+        labelAction={labelAction}
         actionExec={handleSaveBuy}
         authNextStep={authNextStep}
       >
@@ -296,22 +220,20 @@ export default function FormBuy() {
             }}
           />
         </div>
-
-        {/* <div className="flex flex-col gap-5">
-          <InputComLista
-            label="Selecione um produto"
-            value={queryProducts ?? ""}
-            disabled={productsData.length === 0}
-            items={productsData}
-            onChange={(value) => handleOnChangeProduct(value)}
-            onSelect={(id) => {
-              handleAddProduct(product);
-            }}
-          />
-        </div> */}
-
         <div className="relative flex flex-col">
-          <div className="flex flex-row text-center items-center -mt-5">
+          <SelectorProduct
+            productsData={productsData}
+            queryProducts={queryProducts}
+            setShowList={setShowList}
+            setFilteredProducts={setFilteredProducts}
+            setShowCart={setShowCart}
+            handleOnChangeProduct={handleOnChangeProduct}
+            msgError={msgError}
+            isScannerOpen={isScannerOpen}
+            setScannerOpen={setScannerOpen}
+            handleScan={handleScan}
+          />
+          {/* <div className="flex flex-row text-center items-center -mt-5">
             <div className="flex-1 items-center">
               <MyInput
                 label={`${productsData.length === 0 ? "Procurando produtos.." : "Selecione um produto"}`}
@@ -348,7 +270,7 @@ export default function FormBuy() {
                 />
               )}
             </div>
-          </div>
+          </div> */}
 
           {!showCart && showList && (
             <div
@@ -382,7 +304,7 @@ export default function FormBuy() {
           )}
         </div>
       </Steps>
-      {!showList && productsList.length > 0 && (
+      {stepCurrent > 0 && productsList.length > 0 && (
         <button
           type="button"
           className="w-full botao amarelo mt-2"

@@ -1,11 +1,11 @@
-type Items = {
+type Item = {
   amount: number;
   unitPrice: number;
 }[];
 
-export default function CalcTotalValueBuy(items: Items): number {
+export default function CalcTotalValueBuy(items: any): number {
   return items.reduce(
-    (acc, item) => +(acc + item.amount * item.unitPrice).toFixed(2),
+    (acc: any, item: any) => +(acc + item.amount * item.unitPrice).toFixed(2),
     0
   );
 }

@@ -76,7 +76,7 @@ export default function FormMark() {
       >
         <div className="flex flex-col gap-5">
           <MyInput
-            label="Informe a nova Marca"
+            label="Marca"
             observation={observation}
             value={queryMarks ?? ""}
             onChange={(event) => onChange(event.target.value)}

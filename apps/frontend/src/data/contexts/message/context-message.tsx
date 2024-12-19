@@ -16,7 +16,7 @@ export function ProviderContextMessage(props: any) {
   const addMessage = useCallback(
     function (type: "sucess" | "error", text: string) {
       toast({
-        title: type == "sucess" ? "OK, FEITO (:" : "OPS, ALGO DEU ERRADO ):",
+        title: type == "sucess" ? "TUDO CERTO (:" : "ALGO DEU ERRADO ):",
         duration: 2200,
         description: text.toUpperCase(),
         variant: type == "sucess" ? "default" : "destructive",

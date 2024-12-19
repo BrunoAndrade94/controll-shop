@@ -1,3 +1,4 @@
+import ClearIcon from "@mui/icons-material/Clear";
 import { FormatMoney } from "core/dist";
 import InputMoney from "../shared/input/Input-Money";
 
@@ -29,7 +30,7 @@ export default function FormBuyCart(props: FormBuyCartProps) {
                     title="Excluir"
                     onClick={() => props.handleRemoveProduct(product.productId)}
                   >
-                    X
+                    <ClearIcon />
                   </button>
                 </div>
               </div>
@@ -40,9 +41,8 @@ export default function FormBuyCart(props: FormBuyCartProps) {
                 <div className="flex flex-row items-center">
                   <label className="text-sm">Quantidade:</label>
                   <input
-                    placeholder="quantidade"
                     type="number"
-                    min="1"
+                    placeholder="quantidade"
                     value={product.amount ?? 1}
                     onChange={(e) =>
                       props.handleUpdateProduct(

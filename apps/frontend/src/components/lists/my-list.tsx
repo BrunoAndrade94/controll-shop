@@ -110,11 +110,11 @@ const MyList = <T,>(props: MyListProps<T>) => {
         const data = await loadingBuyProducts((item as any).id ?? "");
         setPurchaseData(data); // Salva os dados das compras no estado
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        msgError("erro ao carregar dados");
         setPurchaseData([]); // Define estado vazio em caso de erro
       }
     },
-    [loadingBuyProducts] // Dependência do useCallback
+    [loadingBuyProducts, msgError] // Dependência do useCallback
   );
 
   // Carrega dados relacionados ao produto

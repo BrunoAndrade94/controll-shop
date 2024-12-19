@@ -17,20 +17,13 @@ export default function FormProduct() {
     product,
     setProduct,
     saveProduct,
-    queryProducts,
     descriptionInUse,
     setDescriptionInUse,
   } = useProduct();
+
   const labels = ["Descrição", "Valor Inicial", "Código de Barras", "Marca"];
-  // VERIFICADO
 
-  // const [showList, setShowList] = useState(false);
-
-  const { mark, updateMark, marksData } = useMark(); // Pega as marcas do contexto
-
-  const [queryMarks, setQueryMarks] = useState(""); // Texto digitado no input
-
-  // const [filteredMarks, setFilteredMarks] = useState<Partial<Mark>[]>([]);
+  const labelAction = "Salvar Produto";
 
   const authNextStep: boolean[] = [
     (product.description?.length || 0) > 2 && !descriptionInUse,
@@ -38,11 +31,15 @@ export default function FormProduct() {
     !!product.codeBar,
     !!product.markId,
   ];
+  // VERIFICADO
+
+  const { mark, updateMark, marksData } = useMark(); // Pega as marcas do contexto
+
+  const [queryMarks, setQueryMarks] = useState(""); // Texto digitado no input
 
   const handleSelectMark = (markId: string, description: string) => {
     setProduct({ ...product, markId: markId }); // Atualiza a marca no produto com o id da marca
     setQueryMarks(description); // Define o texto no input
-    // setShowList(false); // Fecha a lista de sugestões após a seleção
     msgSucess(`${description} selecionado`);
   };
 
@@ -51,11 +48,8 @@ export default function FormProduct() {
 
     if (markUser.length === 0) {
       // Se o campo está vazio
-      // setShowList(true);
       setDescriptionInUse(false); // Marca não está em uso
       setProduct({ ...product, markId: "" }); // Atualiza a marca no produto com o id da marca
-      // updateMark({ ...mark, description: "" }); // Limpa a marca selecionada
-      // setFilteredMarks([]); // Limpa as sugestões
       return;
     }
     // Busca produtos que contenham a string digitada
@@ -82,69 +76,14 @@ export default function FormProduct() {
     }
   };
 
-  // const onChangeMark = (markUser: string) => {
-  //   setQueryMarks(markUser);
-
-  //   const filtered = marksData.filter(
-  //     (mark) =>
-  //       mark.description?.toUpperCase().includes(queryMarks.toUpperCase()) // Filtra as marcas conforme o texto
-  //   );
-  //   if (filtered) {
-  //     setFilteredMarks(filtered);
-  //     setShowList(!!filtered);
-  //   }
-  //   if (!queryMarks) {
-  //     setFilteredMarks([]);
-  //     setShowList(false);
-  //   } // Esconde a lista quando não há texto no input
-  // };
-
-  // useEffect(() => {
-  //   if (!queryMarks) {
-  //     const filtered = marksData.filter(
-  //       (mark) =>
-  //         mark.description?.toUpperCase().includes(queryMarks.toUpperCase()) // Filtra as marcas conforme o texto
-  //     );
-  //     if (filtered) {
-  //       setFilteredMarks(filtered);
-  //       setShowList(!!filtered);
-  //     }
-  //   }
-  //   if (queryMarks) {
-  //     setFilteredMarks([]);
-  //     setShowList(false);
-  //   } // Esconde a lista quando não há texto no input
-  // }, [queryMarks, marksData]); // Atualiza sempre que a query ou fetchMarks muda
-
   return (
     <Steps
       labels={labels}
-      labelAction="Salvar Produto"
+      labelAction={labelAction}
       actionExec={saveProduct}
       authNextStep={authNextStep}
     >
       <ProductSearch />
-      {/* <div className="flex flex-col gap-5 w-full max-w-screen">
-        <MyInput
-          label="Informe o novo Produto"
-          value={queryProducts ?? ""}
-          observation={observation}
-          onChange={(event) => handleOnChangeProduct(event.target.value)}
-          error={descriptionInUse ? "Produto informado já está em uso." : ""}
-        />
-        {filteredMarks.length > 0 && queryProducts && (
-          <div
-            onMouseDown={(e) => e.preventDefault()}
-            className="relative top-full left-0 w-full bg-white border rounded-xl border-gray-300 shadow-lg max-h-52 overflow-auto"
-          >
-            {filteredMarks.map((product) => (
-              <div key={product.id} className="p-2 hover:bg-gray-200">
-                {product.description}
-              </div>
-            ))}
-          </div>
-        )}
-      </div> */}
       <div className="flex flex-col gap-5">
         <InputMoney
           label="Valor"
@@ -163,7 +102,6 @@ export default function FormProduct() {
           }}
         />
       </div>
-
       <div className="flex flex-col gap-5">
         <MyInputSelectable
           label="Selecione uma marca"
