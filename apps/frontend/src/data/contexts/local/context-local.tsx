@@ -83,19 +83,10 @@ export function ProviderContextLocal(props: any) {
     [local, httpPost, resetLocal, msgSucess, msgError]
   );
 
-  const loadLocals = useCallback(async () => {
-    try {
-      const locals = await httpGet(urlGetLocal);
-      setLocalsData(locals);
-    } catch (error) {
-      msgError("erro ao carregar locais");
-    }
-  }, [httpGet, msgError]);
-
   // Carrega todas as produtos na inicialização
   useEffect(() => {
-    loadLocals();
-  }, [loadLocals]);
+    loadingLocal();
+  }, [loadingLocal]);
 
   return (
     <ContextLocal.Provider

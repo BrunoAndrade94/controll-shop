@@ -19,7 +19,7 @@ export default function FormBuyCart(props: FormBuyCartProps) {
         {props.listCurrent.map((product) => (
           <div
             key={product.productId}
-            className="flex items-center gap-4 p-2 pt-1 border rounded-md bg-zinc-200 mb-2 mr-2"
+            className="flex items-center gap-4 p-2 pt-1 border rounded-md bg-zinc-200 mb-1 mr-2"
           >
             <div className="flex-1">
               <div className="flex flex-row justify-between items-center">

@@ -6,7 +6,7 @@ import { CreateEmptyMark, Mark } from "core";
 import { createContext, useCallback, useEffect, useState } from "react";
 import useApi from "../../hooks/use-api";
 
-const urlGetMark = "/marks/get/";
+const urlGetMark = "/marks/get/all";
 const urlNewMarks = "/marks/new/";
 const urlValidateMarks = "/marks/new/validate/description/";
 
@@ -20,6 +20,7 @@ export interface ContextMarkProps {
   descriptionInUse: boolean;
   marksData: Partial<Mark>[];
   loadingMark(): Promise<void>;
+  validadeMark(): Promise<void>;
   updateMark(mark: Partial<Mark>): void;
   setQueryMarks: (value: string) => void;
   setDescriptionInUse: (value: boolean) => void;
@@ -69,10 +70,23 @@ export function ProviderContextMark(props: any) {
     [mark, httpPost, msgSucess, msgError, resetMark]
   );
 
-  const loadingMark = useCallback(
+  const validadeMark = useCallback(
     async function () {
       try {
         const marks = await httpGet(`${urlValidateMarks}`);
+
+        setMarksData(marks);
+      } catch (error) {
+        msgError("marcas não carregadas");
+      }
+    },
+    [setMarksData, httpGet, msgError]
+  );
+
+  const loadingMark = useCallback(
+    async function () {
+      try {
+        const marks = await httpGet(`${urlGetMark}`);
 
         setMarksData(marks);
       } catch (error) {
@@ -87,16 +101,8 @@ export function ProviderContextMark(props: any) {
   ///
   /// USE EFFECT INICIO
   useEffect(() => {
-    async function loadMarks() {
-      try {
-        const marks = await httpGet(urlGetMark); // Requisição à API
-        setMarksData(marks); // Atualiza o estado com os dados corretos
-      } catch (error) {
-        msgError("erro ao carregar marcas");
-      }
-    }
-    loadMarks();
-  }, [httpGet, marksData, msgError]);
+    loadingMark();
+  }, [loadingMark]);
   /// USE EFFECT FINAL
   ///
 
@@ -111,6 +117,7 @@ export function ProviderContextMark(props: any) {
         queryMarks,
         loadingMark,
         setMarksData,
+        validadeMark,
         setQueryMarks,
         descriptionInUse,
         updateMark: setMark,

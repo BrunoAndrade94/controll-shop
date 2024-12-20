@@ -1,45 +1,80 @@
-import BarcodeScannerModal from "../input/barcode-scanner";
+"use client";
+
+import useBuy from "@/data/hooks/use-buy";
+import useMessage from "@/data/hooks/use-message";
+import useProduct from "@/data/hooks/use-product";
 import MyInput from "../My-Input";
 
 interface SelectorProductProps {
-  productsData: any[];
-  queryProducts: string | undefined;
-  setShowList: (value: boolean) => void;
-  setFilteredProducts: (products: any[]) => void;
-  setShowCart: (value: boolean) => void;
-  handleOnChangeProduct: (value: string) => void;
-  msgError: (message: string) => void;
-  isScannerOpen: boolean;
-  setScannerOpen: (value: boolean) => void;
-  handleScan: (scannedData: string) => void;
+  isScannerOpen?: boolean;
+  setScannerOpen?: (value: boolean) => void;
+  handleScan?: (scannedData: string) => void;
 }
 
-const SelectorProduct: React.FC<SelectorProductProps> = (
-  props: SelectorProductProps
-) => {
+export default function SelectorProduct(props: SelectorProductProps) {
+  ///
+  /// CONST INICIO
+  const { productsData, queryProducts, setQueryProducts, setFilteredProducts } =
+    useProduct();
+
+  const { buy, updateBuy, setShowList, setShowCart } = useBuy();
+
+  const { msgError } = useMessage();
+  /// CONST FINAL
+  ///
+
+  ///
+  /// FUNCAO INICIO
+  const handleSearchProduct = (description: string) => {
+    // Busca produtos que contenham a string digitada
+    const filteredProducts = productsData.filter((productData) =>
+      productData.description?.toUpperCase().includes(description.toUpperCase())
+    );
+
+    setFilteredProducts(filteredProducts);
+  };
+
+  const handleOnChangeProduct = (value: string) => {
+    setQueryProducts(value);
+
+    if (value.length === 0) {
+      setShowList(true);
+      setQueryProducts("");
+      updateBuy({ ...buy, products: [] });
+      setFilteredProducts(productsData);
+      return;
+    }
+
+    handleSearchProduct(queryProducts);
+  };
+  /// FUNCAO FINAL
+  ///
+
+  ///
+  /// RETURN
   return (
-    <div className="flex flex-row text-center items-center -mt-5">
-      <div className="flex-1 items-center">
+    <div className="flex flex-row text-center items-center">
+      <div className="flex-1 items-center -mt-6">
         <MyInput
           label={`${
-            props.productsData.length === 0
+            productsData.length === 0
               ? "Procurando produtos.."
               : "Selecione um produto"
           }`}
-          value={props.queryProducts ?? ""}
-          disabled={props.productsData.length === 0}
+          value={queryProducts ?? ""}
+          disabled={productsData.length === 0}
           onBlur={() => {
-            props.setShowList(false);
-            props.setFilteredProducts([]);
+            setShowList(false);
+            setFilteredProducts([]);
           }}
           onFocus={() => {
-            props.setShowList(true);
-            props.setShowCart(false);
-            props.setFilteredProducts(props.productsData);
+            setShowList(true);
+            setShowCart(false);
+            setFilteredProducts(productsData);
           }}
-          onChange={(event) => props.handleOnChangeProduct(event.target.value)}
+          onChange={(event) => handleOnChangeProduct(event.target.value)}
           className={`${
-            props.productsData.length === 0
+            productsData.length === 0
               ? "bg-gray-200 border-dashed border-gray-400 opacity-50 cursor-not-allowed p-2 rounded-md w-full"
               : ""
           }`}
@@ -50,20 +85,18 @@ const SelectorProduct: React.FC<SelectorProductProps> = (
           type="button"
           className="botao verde"
           onClick={() => {
-            props.msgError("AINDA NÃO SOU FUNCIONAL");
+            msgError("ainda não sou funcional.");
           }}
         >
           QRCODE
         </button>
-        {props.isScannerOpen && (
+        {/* {props.isScannerOpen && (
           <BarcodeScannerModal
             onClose={() => props.setScannerOpen(false)}
             onScan={props.handleScan}
           />
-        )}
+        )} */}
       </div>
     </div>
   );
-};
-
-export default SelectorProduct;
+}

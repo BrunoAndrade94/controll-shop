@@ -163,17 +163,8 @@ export function ProviderContextProduct(props: any) {
   ///
   /// USE EFFECT INICIO
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        const productsData = await httpGet(urlGetProduct); // Requisição à API
-
-        setProductsData(productsData); // Atualiza o estado com os dados corretos
-      } catch (error) {
-        msgError("erro ao carregar produtos");
-      }
-    }
-    loadProducts();
-  }, [httpGet, setProductsData, msgError]);
+    loadingProduct();
+  }, []);
   /// USE EFFECT FINAL
   ///
 

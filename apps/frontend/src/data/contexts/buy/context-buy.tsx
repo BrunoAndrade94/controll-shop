@@ -6,7 +6,7 @@ import useProduct from "@/data/hooks/use-product";
 import useSteps from "@/data/hooks/use-steps";
 import { Buy, CreateEmptyBuy, Local, Product } from "core";
 import { useRouter } from "next/navigation";
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import useApi from "../../hooks/use-api";
 
 const urlBuy = "/buys/";
@@ -17,25 +17,30 @@ const urlBuyProducts = "/buys/get/by-product/";
 ///
 /// INTERFACE INICIO
 // Tipo para a lista de produtos no contexto de compra
-type BuyProductItem = {
-  productId: string;
-  description: string;
-  mark: string;
-  unitPrice: number;
-  amount: number;
-  totalPrice: number;
-};
+// type BuyProductItem = {
+//   productId: string;
+//   description: string;
+//   mark: string;
+//   unitPrice: number;
+//   amount: number;
+//   totalPrice: number;
+// };
+///
 export interface ContextBuyProps {
   buy: Partial<Buy>;
   localDescription?: string;
   localsData: Partial<Local>[];
   buysData: Partial<Buy>[];
   productsData: Partial<Product>[];
-  productsList: Partial<BuyProductItem>[];
-  setProductsList: React.Dispatch<
-    React.SetStateAction<Partial<BuyProductItem>[]>
-  >;
 
+  // buyProductsList: BuyProductItem[];
+  // setBuyProductsList: (value: BuyProductItem[]) => void;
+
+  showList: boolean;
+  setShowList: (value: boolean) => void;
+
+  showCart: boolean;
+  setShowCart: (value: boolean) => void;
   ///
   resetBuy(): void;
   updateBuy(buy: Partial<Buy>): void;
@@ -49,7 +54,10 @@ export interface ContextBuyProps {
 const ContextBuy = createContext<ContextBuyProps>({} as any);
 
 export function ProviderContextBuy(props: any) {
-  const [productsList, setProductsList] = useState<BuyProductItem[]>([]);
+  ///
+  /// TESTES
+  const [showList, setShowList] = useState(false);
+  const [showCart, setShowCart] = useState(false);
   ///
   /// CONST INICIO
   const router = useRouter();
@@ -60,6 +68,7 @@ export function ProviderContextBuy(props: any) {
   const { productsData, resetProduct } = useProduct();
   const [buy, setBuy] = useState<Partial<Buy>>(CreateEmptyBuy());
   const [buysData, setBuysData] = useState<Partial<Buy>[]>([]);
+  // const [buyProductsList, setBuyProductsList] = useState<BuyProductItem[]>([]);
   /// CONST FINAL
   ///
 
@@ -71,7 +80,6 @@ export function ProviderContextBuy(props: any) {
         const buysData = await httpGet(`${urlGetBuy}`);
 
         setBuysData(buysData);
-        console.log(buysData.length);
       } catch (error) {
         msgError("compras nao carregadas");
       }
@@ -80,7 +88,7 @@ export function ProviderContextBuy(props: any) {
   );
 
   const resetBuy = useCallback(() => {
-    setProductsList([]);
+    // setBuyProductsList([]);
 
     setBuy({});
     resetLocal();
@@ -120,8 +128,15 @@ export function ProviderContextBuy(props: any) {
     },
     [httpGet, msgError]
   );
-
   /// FUNCAO FINAL
+  ///
+
+  ///
+  /// USE EFFECT INICIO
+  useEffect(() => {
+    loadingBuy();
+  }, [loadingBuy]);
+  /// USE EFFECT FINAL
   ///
 
   ///
@@ -129,16 +144,19 @@ export function ProviderContextBuy(props: any) {
   return (
     <ContextBuy.Provider
       value={{
+        ...props,
         buy: buy,
+        showCart,
+        showList,
         buysData,
         localsData,
         productsData,
-        productsList,
         ///
         saveBuy,
         resetBuy,
         loadingBuy,
-        setProductsList: () => productsList,
+        setShowCart,
+        setShowList,
         updateBuy: setBuy,
         loadingBuyProducts,
       }}
