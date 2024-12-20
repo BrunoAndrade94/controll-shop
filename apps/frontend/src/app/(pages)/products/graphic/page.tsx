@@ -17,7 +17,7 @@ const ModalComCamera = () => {
       {
         inputStream: {
           type: "LiveStream",
-          target: document.querySelector("#camera-view"), // Elemento DOM onde o vídeo será exibido
+          target: document.querySelector("#camera-view"),
           constraints: {
             facingMode: "environment", // Usar câmera traseira
           },
@@ -25,6 +25,13 @@ const ModalComCamera = () => {
         decoder: {
           readers: ["ean_reader"], // Formato EAN
         },
+        locator: {
+          patchSize: "large", // "small", "medium", "large"
+          halfSample: true, // Melhora a precisão em troca de desempenho
+        },
+        // Controla a taxa de leitura
+        numOfWorkers: 4, // Tente aumentar para melhorar a precisão, se necessário
+        frequency: 10, // Intervalo em milissegundos para tentativas de leitura
       },
       (err: Error) => {
         if (err) {
@@ -41,7 +48,7 @@ const ModalComCamera = () => {
     Quagga.onDetected((data: any) => {
       msgSucess("Código de barras detectado: " + data.codeResult.code);
       // Opcional: você pode fechar a câmera automaticamente após uma detecção.
-      // stopCamera();
+      stopCamera();
     });
   };
 
